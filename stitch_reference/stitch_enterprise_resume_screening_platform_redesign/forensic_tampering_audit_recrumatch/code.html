@@ -1,0 +1,622 @@
+<!DOCTYPE html><html class="dark" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_standard" name="shell-type"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"inverse-surface":"#e0e2ef","outline":"#958ea0","on-secondary-fixed-variant":"#4a3d7c","tertiary-fixed":"#6ffbbe","surface-variant":"#32343f","background":"#10131c","on-tertiary-fixed-variant":"#005236","secondary-fixed-dim":"#ccbeff","on-tertiary":"#003824","primary-container":"#a078ff","surface-container-high":"#272a34","surface-dim":"#10131c","error-container":"#93000a","on-primary-container":"#340080","on-error-container":"#ffdad6","tertiary-container":"#00a572","outline-variant":"#494454","secondary":"#ccbeff","on-primary-fixed":"#23005c","inverse-primary":"#6d3bd7","primary-fixed-dim":"#d0bcff","surface":"#10131c","surface-bright":"#363943","on-error":"#690005","secondary-container":"#4a3d7c","on-primary-fixed-variant":"#5516be","on-tertiary-fixed":"#002113","on-secondary-fixed":"#1e0e4e","tertiary-fixed-dim":"#4edea3","surface-container-low":"#181b25","secondary-fixed":"#e7deff","error":"#ffb4ab","tertiary":"#4edea3","surface-container-lowest":"#0b0e17","on-background":"#e0e2ef","surface-tint":"#d0bcff","primary":"#d0bcff","on-primary":"#3c0091","on-secondary":"#332664","surface-container-highest":"#32343f","on-surface-variant":"#cbc3d7","on-secondary-container":"#baabf3","on-surface":"#e0e2ef","surface-container":"#1c1f29","primary-fixed":"#e9ddff","on-tertiary-container":"#00311f","inverse-on-surface":"#2d303a"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-sm":"0.5rem","space-lg":"1.5rem","margin-sm":"1rem","margin":"2rem","space-xl":"2.5rem","space-md":"1rem","space-xs":"0.25rem","gutter-sm":"1rem","gutter":"1.5rem","gutter-lg":"2rem","margin-lg":"3rem"},"fontFamily":{"headline-md":["Inter"],"headline-lg":["Inter"],"body-md":["Inter"],"body-lg":["Inter"],"label-sm":["JetBrains Mono"],"headline-xl":["Inter"],"headline-sm":["Inter"],"headline-lg-mobile":["Inter"],"body-sm":["Inter"],"headline-xl-mobile":["Inter"],"label-md":["JetBrains Mono"],"label-xs":["JetBrains Mono"]},"fontSize":{"headline-md":["22px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.015em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"20px","letterSpacing":"0em","fontWeight":"400"}],"body-lg":["16px",{"lineHeight":"24px","letterSpacing":"0em","fontWeight":"400"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"500"}],"headline-xl":["40px",{"lineHeight":"48px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-sm":["18px",{"lineHeight":"24px","letterSpacing":"-0.005em","fontWeight":"600"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"16px","letterSpacing":"0.01em","fontWeight":"400"}],"headline-xl-mobile":["30px",{"lineHeight":"38px","letterSpacing":"-0.015em","fontWeight":"600"}],"label-md":["13px",{"lineHeight":"18px","letterSpacing":"0.02em","fontWeight":"500"}],"label-xs":["10px",{"lineHeight":"12px","letterSpacing":"0.05em","fontWeight":"400"}]}}}}</script></head><body class="bg-surface text-on-surface font-body-md text-body-md min-h-screen flex flex-col antialiased selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 left-0 w-full z-50 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 w-full px-margin flex items-center justify-between gap-gutter"><div class="flex items-center gap-space-xl"><div class="flex items-center gap-space-sm"><div class="w-7 h-7 rounded-lg bg-surface-container-high flex items-center justify-center"><span class="material-symbols-outlined text-primary text-[18px]">shield_with_heart</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight leading-none">RecruMatch</span><span class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-widest mt-0.5">Forensic AI v4.2</span></div></div><nav class="hidden xl:flex items-center gap-space-xs" data-active-classes="bg-surface-container-high text-on-surface rounded-lg"><a class="px-space-md py-space-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors font-body-sm text-body-sm" data-path="screening-workspace" href="#">Screening Workspace</a><a class="px-space-md py-space-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors font-body-sm text-body-sm" data-path="ranked-leaderboard" href="#">Ranked Leaderboard</a><a class="px-space-md py-space-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors font-body-sm text-body-sm" data-path="candidate-deep-dive" href="#">Candidate Deep Dive</a><a aria-current="page" class="px-space-md py-space-sm transition-colors font-body-sm flex items-center gap-space-sm bg-surface-container-high text-on-surface rounded-lg" data-path="forensic-tampering-audit" href="#"><span>Forensic Tampering Audit</span><span class="px-1.5 py-0.5 rounded bg-error-container text-on-error-container font-label-xs text-label-xs">1 Risk</span></a></nav></div><div class="flex items-center gap-gutter"><div class="hidden lg:flex items-center gap-space-xs px-space-sm py-1 rounded bg-surface-container-low"><div class="w-2 h-2 rounded-full bg-tertiary"></div><span class="font-label-xs text-label-xs text-tertiary tracking-wide">100% Deterministic • Local / Air-Gapped</span></div><div class="hidden md:flex items-center gap-space-sm px-space-sm py-1 rounded bg-surface-container-low"><span class="material-symbols-outlined text-on-surface-variant text-[16px]">security</span><span class="font-label-xs text-label-xs text-on-surface-variant">Blind Mode</span><div class="w-7 h-4 rounded-full bg-surface-container-high relative p-0.5 cursor-pointer flex items-center"><div class="w-3 h-3 rounded-full bg-outline"></div></div></div></div></div></header><main class="w-full pt-16 bg-surface flex-1"><div class="flex flex-col w-full">
+<!-- FORENSIC INVESTIGATION HERO BANNER (COMMAND NOTIFICATION) -->
+<section class="w-full px-margin py-space-lg">
+<div class="w-full bg-surface-container-low rounded-xl p-space-lg shadow-xl relative overflow-hidden">
+<!-- Decorative ambient violet glow containment -->
+<div class="absolute -right-24 -top-24 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -left-12 -bottom-12 w-64 h-64 bg-error/5 rounded-full blur-2xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-space-xl">
+<!-- Threat Metadata Column -->
+<div class="flex flex-col gap-space-sm max-w-3xl">
+<div class="flex flex-wrap items-center gap-space-sm">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-error-container text-on-error-container font-label-xs text-label-xs uppercase tracking-wider font-semibold">
+<span class="material-symbols-outlined text-[14px]">gpp_bad</span>
+              Severity Tier 0 • Adversarial Threat
+            </span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container font-label-xs text-label-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[13px] text-tertiary">fingerprint</span>
+              SHA-256: d8f49e0c1a...710b
+            </span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container font-label-xs text-label-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[13px]">alarm</span>
+              Triggered 14m ago
+            </span>
+</div>
+<div class="flex flex-col gap-1 mt-1">
+<h1 class="font-headline-lg text-headline-lg text-on-surface font-semibold tracking-tight">
+              Critical Adversarial Anomaly — Resume Tampering Detected
+            </h1>
+<div class="flex flex-wrap items-center gap-x-3 gap-y-1 font-body-sm text-body-sm text-on-surface-variant">
+<span>Target File:</span>
+<span class="font-label-sm text-label-sm text-secondary px-1.5 py-0.5 rounded bg-surface-container-highest">Vikram_Malhotra_Adversarial_Exploit.pdf</span>
+<span>•</span>
+<span>Vector: Multi-Layer Document Masking &amp; AST Bypass</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl mt-1 leading-relaxed">
+            Deterministic spatial rasterizer detected systematic semantic injection intended to corrupt keyword density algorithms and inflate competitive ranking by +22.9 percentile points.
+          </p>
+</div>
+<!-- Gauge & Impact Metric -->
+<div class="flex items-center gap-space-lg bg-surface-container-lowest/80 p-space-md rounded-xl backdrop-blur-md self-start lg:self-center">
+<!-- Circular Ring Chart -->
+<div class="relative w-24 h-24 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+<circle class="text-surface-container-highest fill-none" cx="50" cy="50" r="40" stroke="currentColor" stroke-width="8"></circle>
+<!-- Circumference = 2 * PI * 40 = 251.32. Offset for 85% = 251.32 * (1 - 0.85) = 37.7 -->
+<circle class="text-error fill-none transition-all duration-1000 ease-out" cx="50" cy="50" r="40" stroke="currentColor" stroke-dasharray="251.32" stroke-dashoffset="37.7" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<span class="font-headline-md text-headline-md text-on-surface font-bold leading-none">85</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-widest mt-0.5">/ 100</span>
+</div>
+</div>
+<div class="flex flex-col gap-1 pr-space-sm">
+<span class="font-label-xs text-label-xs text-error uppercase tracking-wider font-semibold">Composite Tamper Index</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">Severe Exploitation</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-error">warning</span>
+              Unsafe for automated shortlist
+            </span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- FORENSIC INVESTIGATOR SPOTLIGHT: CANDIDATE VS PAYLOAD -->
+<section class="w-full px-margin pb-space-lg">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-stretch">
+<!-- Candidate Dossier Overview (4 Cols) -->
+<div class="lg:col-span-4 bg-surface-container rounded-xl p-space-lg flex flex-col justify-between shadow-md">
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-sm">
+<span class="font-label-xs text-label-xs uppercase tracking-widest text-outline">Subject Dossier</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high font-label-xs text-label-xs text-secondary">ID #AK-9041</span>
+</div>
+<div class="flex items-center gap-space-md">
+<div class="relative w-16 h-16 rounded-xl overflow-hidden bg-surface-container-highest flex-shrink-0 shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Close-up professional identity portrait of an adult tech applicant, neutral corporate lighting, minimalist studio, dark navy aesthetic backdrop, high contrast photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuYk_Bz-jTEw6kYAWbY_KH7xVS8XqnuPw0FYh1lp2F4zb9vwP9PneyPjf1_63vyB42j9Qb9ltcjHLDnKz4BeHBd0cFFi4SKvwTV8fXhGQefaQftKGxEJVbc_i_dwSjphCK-gAK5yxNj_oCJCKE6G0pWeAl0JfpefR_lIuqifHv2aiVtg3bPy6PjmqqnSwQPC_CY2skdTcfHVeCUSItxFKZMiEBaFGOzafUIe_qZ7dc">
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate font-semibold">Vikram Malhotra</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Applied: Principal Systems Architect</span>
+<div class="flex items-center gap-1.5 mt-1">
+<div class="w-2 h-2 rounded-full bg-error animate-pulse"></div>
+<span class="font-label-xs text-label-xs text-error font-semibold">Quarantine State Active</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-space-sm mt-2">
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col">
+<span class="font-label-xs text-label-xs text-outline">Reported Experience</span>
+<span class="font-body-lg text-body-lg font-semibold text-on-surface">11.4 yrs</span>
+<span class="font-label-xs text-label-xs text-secondary">Verified: 5.2 yrs</span>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col">
+<span class="font-label-xs text-label-xs text-outline">Submission Vector</span>
+<span class="font-body-lg text-body-lg font-semibold text-on-surface">Direct Portal</span>
+<span class="font-label-xs text-label-xs text-tertiary">Parsed via PDFbox</span>
+</div>
+</div>
+<!-- Cryptographic Hash Telemetry Block -->
+<div class="p-space-sm rounded-lg bg-surface-container-lowest font-label-xs text-label-xs flex flex-col gap-1.5 text-on-surface-variant">
+<div class="flex justify-between items-center text-outline">
+<span>PDF DOM ROOT OBJECT</span>
+<button class="hover:text-primary transition-colors flex items-center gap-1" onclick="navigator.clipboard.writeText('0x9F41C2B018EE')">
+<span class="material-symbols-outlined text-[13px]">content_copy</span>
+<span>Copy</span>
+</button>
+</div>
+<div class="font-label-sm text-label-sm text-secondary truncate">0x9F41C2B018EE88102A</div>
+<div class="flex justify-between text-outline text-[10px]">
+<span>Layers: 4 Canvas Objects</span>
+<span>Enc: Standard AES-128</span>
+</div>
+</div>
+</div>
+<div class="pt-space-md mt-space-sm flex items-center justify-between text-outline font-label-xs text-label-xs">
+<span>Engine: DetMatch v4.2.1</span>
+<span class="text-tertiary">Deterministic Pass Confirmed</span>
+</div>
+</div>
+<!-- Exploit Summary Canvas with Micro Visualizer (8 Cols) -->
+<div class="lg:col-span-8 bg-surface-container rounded-xl p-space-lg flex flex-col justify-between shadow-md">
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">troubleshoot</span>
+<span class="font-label-xs text-label-xs uppercase tracking-widest text-outline">Vector Distribution Telemetry</span>
+</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant font-medium">3 Distinct Injection Vectors Identified</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-3xl">
+            Analysis reveals deliberate engineering rather than accidental rendering artifacts. Micro-matrices and masked glyphs targeted high-weight criteria in distributed consensus and real-time kernels.
+          </p>
+<!-- Vector Breakdown Visual Metric Strip -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md mt-space-sm">
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col justify-between gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs uppercase tracking-wide text-error font-semibold">Invisible Text</span>
+<span class="material-symbols-outlined text-error text-[18px]">visibility_off</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-on-surface font-bold">18 Strings</div>
+<div class="font-label-xs text-label-xs text-outline mt-0.5">RGB(1.0, 1.0, 1.0) on Canvas</div>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+<div class="bg-error h-full rounded-full w-[88%]"></div>
+</div>
+</div>
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col justify-between gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs uppercase tracking-wide text-secondary font-semibold">Micro-Font Stacking</span>
+<span class="material-symbols-outlined text-secondary text-[18px]">compress</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-on-surface font-bold">42 Tokens</div>
+<div class="font-label-xs text-label-xs text-outline mt-0.5">Scale &lt; 2.0pt Matrix</div>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full w-[64%]"></div>
+</div>
+</div>
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col justify-between gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs uppercase tracking-wide text-tertiary font-semibold">Cyrillic Spoofing</span>
+<span class="material-symbols-outlined text-tertiary text-[18px]">translate</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-on-surface font-bold">29 Glyphs</div>
+<div class="font-label-xs text-label-xs text-outline mt-0.5">Homoglyph Code-point Swap</div>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+<div class="bg-tertiary h-full rounded-full w-[45%]"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex flex-wrap items-center justify-between gap-space-sm font-label-xs text-label-xs text-on-surface-variant">
+<div class="flex items-center gap-space-md">
+<span class="flex items-center gap-1 text-error"><span class="w-2 h-2 rounded-full bg-error"></span> +22.9% Fake Lift Nullified</span>
+<span class="flex items-center gap-1 text-tertiary"><span class="w-2 h-2 rounded-full bg-tertiary"></span> Exact ATS Ground-Truth Restored</span>
+</div>
+<span class="text-outline">Spatial Boundary Inspection: Fully Indexed</span>
+</div>
+</div>
+</div>
+</section>
+<!-- MULTI-LAYER PDF EXPLOIT ANATOMY (3 DISTINCT SPATIOUS CARDS) -->
+<section class="w-full px-margin pb-space-lg">
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold tracking-tight">
+            Multi-Layer PDF Exploit Anatomy
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+            Isolated structural anomalies captured by RecruMatch raster scan and AST lexical parser.
+          </p>
+</div>
+<div class="flex items-center gap-space-xs font-label-xs text-label-xs text-outline">
+<span>Sort: Threat Severity</span>
+<span class="material-symbols-outlined text-[16px]">tune</span>
+</div>
+</div>
+<!-- 3 Spacious Forensic Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter items-stretch">
+<!-- CARD 1: CRITICAL [Coral Red Tone] -->
+<div class="rounded-xl bg-surface-container p-space-lg flex flex-col justify-between shadow-lg relative overflow-hidden group hover:bg-surface-container-high transition-colors">
+<div class="absolute top-0 left-0 w-full h-1 bg-error"></div>
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded bg-error-container text-on-error-container font-label-xs text-label-xs font-semibold uppercase tracking-wider">
+                Critical Severity
+              </span>
+<span class="font-label-xs text-label-xs text-error font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">flag</span>
+                Quarantined
+              </span>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Hidden White Text (#FFFFFF)</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                18 dense keyword strings rendered in RGB(1.0, 1.0, 1.0) exact color match against canvas page background to mislead keyword-density indexing.
+              </p>
+</div>
+<!-- Monospaced Forensic Inspector Box -->
+<div class="bg-surface-container-lowest p-space-sm rounded-lg flex flex-col gap-1.5 font-label-xs text-label-xs">
+<div class="flex justify-between items-center text-outline">
+<span class="uppercase">Spatial Matrix / Bounding Box</span>
+<span class="text-error">Alpha: 0.0%</span>
+</div>
+<div class="font-label-sm text-label-sm text-on-surface">
+                bbox: [42.0, 718.5, 510.0, 12.0]
+              </div>
+<div class="text-outline text-[10px] leading-tight">
+                Intercepted Payload: "Kubernetes Certified Architect GCP Cloud Security Rust Concurrency Zero-Knowledge LLM Orchestrator..."
+              </div>
+</div>
+<!-- Status Indicator Details -->
+<div class="flex flex-col gap-space-xs font-body-sm text-body-sm pt-space-xs">
+<div class="flex justify-between text-on-surface-variant">
+<span>Human Visibility:</span>
+<span class="text-error font-semibold font-label-xs text-label-xs">0.0% (Total Mask)</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span>Algorithmic Lift:</span>
+<span class="text-error font-semibold font-label-xs text-label-xs">+14.2% Keyword Density</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span>Parser Action:</span>
+<span class="text-on-surface font-label-xs text-label-xs font-medium">Render Suppressed</span>
+</div>
+</div>
+</div>
+<div class="mt-space-lg pt-space-sm flex items-center justify-between text-outline font-label-xs text-label-xs">
+<span>Filter: Spatial Alpha Validator</span>
+<span class="material-symbols-outlined text-error text-[18px]">verified_user</span>
+</div>
+</div>
+<!-- CARD 2: REVIEW [Warm Amber Tone] -->
+<div class="rounded-xl bg-surface-container p-space-lg flex flex-col justify-between shadow-lg relative overflow-hidden group hover:bg-surface-container-high transition-colors">
+<div class="absolute top-0 left-0 w-full h-1 bg-secondary-container"></div>
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded bg-surface-container-highest text-secondary font-label-xs text-label-xs font-semibold uppercase tracking-wider">
+                Advisory Review
+              </span>
+<span class="font-label-xs text-label-xs text-secondary font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">auto_fix_high</span>
+                Auto-Stripped
+              </span>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Micro-Font Stacking (&lt; 2.0 pt)</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                42 high-demand infrastructure competencies scaled to 1.5pt font matrices compressed into margin whitespace outside natural reading visual flow.
+              </p>
+</div>
+<!-- Monospaced Forensic Inspector Box -->
+<div class="bg-surface-container-lowest p-space-sm rounded-lg flex flex-col gap-1.5 font-label-xs text-label-xs">
+<div class="flex justify-between items-center text-outline">
+<span class="uppercase">Matrix Scale Telemetry</span>
+<span class="text-secondary">Scale: 1.48pt</span>
+</div>
+<div class="font-label-sm text-label-sm text-on-surface">
+                matrix: [0.015, 0.0, 0.0, 0.015, 580, 24]
+              </div>
+<div class="text-outline text-[10px] leading-tight">
+                Compressed Token Stack: "ISO27001 PCI-DSS Terraform eBPF Envoy WireGuard Distributed Systems Consensus"
+              </div>
+</div>
+<!-- Status Indicator Details -->
+<div class="flex flex-col gap-space-xs font-body-sm text-body-sm pt-space-xs">
+<div class="flex justify-between text-on-surface-variant">
+<span>Human Readability:</span>
+<span class="text-secondary font-semibold font-label-xs text-label-xs">Illegible (&lt; 2pt)</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span>Target Score Gain:</span>
+<span class="text-secondary font-semibold font-label-xs text-label-xs">+18.4% Naive Match</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span>Parser Action:</span>
+<span class="text-on-surface font-label-xs text-label-xs font-medium">Pruned from Lexicon</span>
+</div>
+</div>
+</div>
+<div class="mt-space-lg pt-space-sm flex items-center justify-between text-outline font-label-xs text-label-xs">
+<span>Filter: Geometry Scaler v3.1</span>
+<span class="material-symbols-outlined text-secondary text-[18px]">verified</span>
+</div>
+</div>
+<!-- CARD 3: REVIEW [Soft Lavender / Indigo Tone] -->
+<div class="rounded-xl bg-surface-container p-space-lg flex flex-col justify-between shadow-lg relative overflow-hidden group hover:bg-surface-container-high transition-colors">
+<div class="absolute top-0 left-0 w-full h-1 bg-primary"></div>
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded bg-surface-container-highest text-primary font-label-xs text-label-xs font-semibold uppercase tracking-wider">
+                Evasion Vector
+              </span>
+<span class="font-label-xs text-label-xs text-primary font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">spellcheck</span>
+                ASCII Sanitized
+              </span>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Cyrillic Homoglyph Injection</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Intentional swap of standard Latin characters with identical Cyrillic code points to evade keyword suppression while maintaining identical optical appearance.
+              </p>
+</div>
+<!-- Monospaced Forensic Inspector Box -->
+<div class="bg-surface-container-lowest p-space-sm rounded-lg flex flex-col gap-1.5 font-label-xs text-label-xs">
+<div class="flex justify-between items-center text-outline">
+<span class="uppercase">Glyph Code Point Diff</span>
+<span class="text-primary">Unicode Swap</span>
+</div>
+<div class="font-label-sm text-label-sm text-on-surface">
+                U+0430 ('а') ↔ U+0061 | U+043E ('о') ↔ U+006F
+              </div>
+<div class="text-outline text-[10px] leading-tight">
+                Disguised Tokens: "Dоcker", "Jаva", "Pythоn", "Micrоsеrvicеs" mapped to Cyrillic range.
+              </div>
+</div>
+<!-- Status Indicator Details -->
+<div class="flex flex-col gap-space-xs font-body-sm text-body-sm pt-space-xs">
+<div class="flex justify-between text-on-surface-variant">
+<span>Optical Perception:</span>
+<span class="text-primary font-semibold font-label-xs text-label-xs">100% Identical to Eye</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span>Targeted Defense:</span>
+<span class="text-primary font-semibold font-label-xs text-label-xs">Legacy Regex Bypassed</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span>Parser Action:</span>
+<span class="text-on-surface font-label-xs text-label-xs font-medium">NFKD Canonical Normalize</span>
+</div>
+</div>
+</div>
+<div class="mt-space-lg pt-space-sm flex items-center justify-between text-outline font-label-xs text-label-xs">
+<span>Filter: Unicode Homoglyph Engine</span>
+<span class="material-symbols-outlined text-primary text-[18px]">verified_user</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SIDE-BY-SIDE STREAM SANITIZATION DIFF (PRECISION SPLIT VIEW) -->
+<section class="w-full px-margin pb-space-lg">
+<div class="flex flex-col gap-space-md">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold tracking-tight">
+            Side-by-Side Stream Sanitization Diff
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+            Transparent deterministic stream comparison between un-sanitized legacy ATS extraction and RecruMatch Forensic Core.
+          </p>
+</div>
+<div class="flex items-center gap-space-sm font-label-xs text-label-xs">
+<span class="flex items-center gap-1.5 text-error">
+<span class="w-2.5 h-2.5 rounded bg-error-container"></span> Exploitative / Injected Token
+          </span>
+<span class="flex items-center gap-1.5 text-tertiary">
+<span class="w-2.5 h-2.5 rounded bg-tertiary-container"></span> Ground-Truth Lexeme
+          </span>
+</div>
+</div>
+<!-- Diff Container Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
+<!-- LEFT PANEL: RAW NAIVE STREAM -->
+<div class="bg-surface-container-low rounded-xl overflow-hidden shadow-md flex flex-col">
+<!-- Header Bar -->
+<div class="p-space-md bg-surface-container-high flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-error text-[20px]">warning</span>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface font-semibold">Raw Parsed Stream — Naive ATS Engine</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">Evaluated without spatial or font matrix verification</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-headline-sm text-headline-sm text-error font-bold leading-tight">96.0%</span>
+<span class="font-label-xs text-label-xs text-error uppercase tracking-wider font-semibold">Artificial Score</span>
+</div>
+</div>
+<!-- Parsed Content Body -->
+<div class="p-space-lg flex-1 bg-surface-container-lowest font-label-sm text-label-sm leading-relaxed overflow-x-auto text-on-surface-variant flex flex-col gap-space-sm">
+<div class="text-outline uppercase text-[10px] tracking-widest pb-1">Line 1-08 • Executive Summary &amp; Skills Block</div>
+<p class="text-on-surface">
+              Senior Technology Leader with over 11 years orchestrating core architectures. Proven acumen in distributed backend platforms, microservices resilience, and multi-region cloud resilience.
+            </p>
+<!-- Manipulated Injected White Text String -->
+<div class="p-space-sm rounded bg-error-container/40 text-on-error-container flex flex-col gap-1">
+<div class="flex items-center justify-between text-[10px] uppercase font-semibold text-error">
+<span>[INJECTED WHITE TEXT LAYER • RGB(1.0, 1.0, 1.0)]</span>
+<span>Count: 18 Tokens</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface font-medium">
+                Kubernetes Certified Architect GCP Cloud Security Rust Concurrency Zero-Knowledge LLM Orchestrator Quantum Key Exchange Apache Kafka Flink Snowflake Redis Cluster High-Throughput Linux Kernel Optimization Distributed Consensus Raft Paxos
+              </p>
+</div>
+<p class="text-on-surface">
+              Led team of 18 engineers delivering fintech payment reconciliation pipelines handling over $120M daily transactional throughput with 99.995% service availability.
+            </p>
+<!-- Micro-Font Injected Block -->
+<div class="p-space-sm rounded bg-secondary-container/40 text-secondary flex flex-col gap-1">
+<div class="flex items-center justify-between text-[10px] uppercase font-semibold text-secondary-fixed">
+<span>[MICRO-FONT MARGIN STACK • FONT-SIZE: 1.48pt]</span>
+<span>Target Lift: +18.4%</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface font-medium">
+                AWS Lambda Istio Helm Terraform eBPF Envoy WireGuard WebAssembly OpenTelemetry GraphQL Prometheus Datadog Vault Cilium Spire SOC2 GDPR HIPAA
+              </p>
+</div>
+<!-- Cyrillic Injected Segment -->
+<div class="p-space-sm rounded bg-primary-container/20 text-on-surface flex flex-col gap-1">
+<div class="flex items-center justify-between text-[10px] uppercase font-semibold text-primary">
+<span>[HOMOGLYPH INJECTION DETECTED]</span>
+<span>Unicode U+0430 / U+043E</span>
+</div>
+<p>
+                Core competencies include <span class="bg-primary/20 text-primary px-1 rounded">Dоcker</span> containment, <span class="bg-primary/20 text-primary px-1 rounded">Pythоn</span> async loops, and <span class="bg-primary/20 text-primary px-1 rounded">Jаva</span> enterprise backends.
+              </p>
+</div>
+</div>
+<!-- Bottom Warning Callout -->
+<div class="p-space-sm px-space-md bg-surface-container-high flex items-center justify-between text-outline font-label-xs text-label-xs">
+<span class="flex items-center gap-1 text-error">
+<span class="material-symbols-outlined text-[15px]">cancel</span>
+              Uncritically accepted 60 exploitative markers
+            </span>
+<span>Parsing Latency: 42ms</span>
+</div>
+</div>
+<!-- RIGHT PANEL: RECRUMATCH SANITIZED STREAM -->
+<div class="bg-surface-container-low rounded-xl overflow-hidden shadow-md flex flex-col">
+<!-- Header Bar -->
+<div class="p-space-md bg-surface-container-high flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-tertiary text-[20px]">verified</span>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface font-semibold">RecruMatch Sanitized Stream</span>
+<span class="font-label-xs text-label-xs text-tertiary">Cryptographically cleansed ground-truth model</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-headline-sm text-headline-sm text-tertiary font-bold leading-tight">73.1%</span>
+<span class="font-label-xs text-label-xs text-tertiary uppercase tracking-wider font-semibold">Corrected Match</span>
+</div>
+</div>
+<!-- Sanitized Clean Content Body -->
+<div class="p-space-lg flex-1 bg-surface-container-lowest font-label-sm text-label-sm leading-relaxed overflow-x-auto text-on-surface-variant flex flex-col gap-space-sm">
+<div class="text-tertiary uppercase text-[10px] tracking-widest pb-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">check_circle</span>
+              Line 1-08 • Sanitized Lexical Representation
+            </div>
+<p class="text-on-surface">
+              Senior Technology Leader with over 11 years orchestrating core architectures. Proven acumen in distributed backend platforms, microservices resilience, and multi-region cloud resilience.
+            </p>
+<!-- Sanitized Callout Marker (Removed White Text) -->
+<div class="p-space-sm rounded bg-surface-container flex items-center justify-between font-label-xs text-label-xs text-outline">
+<span class="flex items-center gap-1.5 text-error">
+<span class="material-symbols-outlined text-[14px]">delete_sweep</span>
+                18 White-Text Tokens Stripped (BBox [42.0, 718.5, 510.0, 12.0])
+              </span>
+<span class="text-tertiary font-semibold">Purged</span>
+</div>
+<p class="text-on-surface">
+              Led team of 18 engineers delivering fintech payment reconciliation pipelines handling over $120M daily transactional throughput with 99.995% service availability.
+            </p>
+<!-- Sanitized Callout Marker (Removed Micro-Fonts) -->
+<div class="p-space-sm rounded bg-surface-container flex items-center justify-between font-label-xs text-label-xs text-outline">
+<span class="flex items-center gap-1.5 text-secondary">
+<span class="material-symbols-outlined text-[14px]">filter_alt</span>
+                42 Micro-Font Marginal Tokens Quarantined (&lt; 2.0pt scale)
+              </span>
+<span class="text-tertiary font-semibold">Quarantined</span>
+</div>
+<!-- Normalized Cyrillic Segment -->
+<div class="p-space-sm rounded bg-tertiary-container/20 text-on-surface flex flex-col gap-1">
+<div class="flex items-center justify-between text-[10px] uppercase font-semibold text-tertiary">
+<span>[UNICODE NFKD NORMALIZED • ASCII RESTORED]</span>
+<span>3 Code-points Remapped</span>
+</div>
+<p>
+                Core competencies include <span class="text-tertiary font-medium">Docker</span> containment, <span class="text-tertiary font-medium">Python</span> async loops, and <span class="text-tertiary font-medium">Java</span> enterprise backends.
+              </p>
+</div>
+</div>
+<!-- Bottom Verification Callout -->
+<div class="p-space-sm px-space-md bg-surface-container-high flex items-center justify-between text-outline font-label-xs text-label-xs">
+<span class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-[15px]">security</span>
+              Zero hallucination • Ground truth established
+            </span>
+<span class="text-on-surface-variant">Deterministic Delta: -22.9%</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- FORENSIC EVIDENCE TIMELINE & EVENT AUDIT LOG -->
+<section class="w-full px-margin pb-space-lg">
+<div class="w-full bg-surface-container rounded-xl p-space-lg shadow-md flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">history_edu</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold tracking-tight">
+            Parser Telemetry &amp; Audit Evidence Trail
+          </h2>
+</div>
+<span class="font-label-xs text-label-xs text-outline">Session Hash: 8bfa-9921-cc40</span>
+</div>
+<!-- Log Entries Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-space-sm">
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-1">
+<div class="flex justify-between items-center font-label-xs text-label-xs text-outline">
+<span>T-00:00.012</span>
+<span class="text-tertiary">OK</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">PDF Payload Ingested</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">PDFbox 3.0.1 stream deserialized. 4 DOM layers created.</span>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-1">
+<div class="flex justify-between items-center font-label-xs text-label-xs text-outline">
+<span>T-00:00.114</span>
+<span class="text-error font-semibold">TRIGGER</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">BBox Alpha Match</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">Contrast ratio calculated: 1.00:1 (RGB 255/255/255). Quarantined.</span>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-1">
+<div class="flex justify-between items-center font-label-xs text-label-xs text-outline">
+<span>T-00:00.285</span>
+<span class="text-secondary font-semibold">ADVISORY</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Matrix Scale Check</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">42 tokens detected at point-size &lt; 2.0pt in margins. Pruned.</span>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-1">
+<div class="flex justify-between items-center font-label-xs text-label-xs text-outline">
+<span>T-00:00.381</span>
+<span class="text-tertiary font-semibold">VERIFIED</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">NFKD Canonical Parse</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">Unicode homoglyphs remapped to ASCII standard. Complete.</span>
+</div>
+</div>
+</div>
+</section>
+<!-- BOTTOM ACTION TOOLBAR & ACADEMIC AUDIT BADGE -->
+<section class="w-full px-margin pb-space-xl">
+<div class="w-full bg-surface-container-high rounded-xl p-space-lg flex flex-col xl:flex-row items-center justify-between gap-space-lg shadow-xl">
+<!-- Academic Verification Seal & Info -->
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-surface-container-lowest flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary text-[28px]">verified_user</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface font-semibold">
+            Dept. of Computer Science &amp; Engineering • GNIOT (AKTU)
+          </span>
+<span class="font-label-xs text-label-xs text-on-surface-variant mt-0.5">
+            Zero-Hallucination Forensic Pipeline Standard 2026 • Mini-Project Final Release
+          </span>
+</div>
+</div>
+<!-- Operational Action Buttons -->
+<div class="flex flex-wrap items-center gap-space-sm w-full xl:w-auto justify-end">
+<button class="px-space-md h-10 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface font-body-sm text-body-sm font-medium transition-colors flex items-center gap-2" onclick="simulateAction('download')">
+<span class="material-symbols-outlined text-[18px] text-outline">download</span>
+<span>Download Sanitized Audit Log</span>
+</button>
+<button class="px-space-md h-10 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface font-body-sm text-body-sm font-medium transition-colors flex items-center gap-2" onclick="simulateAction('export')">
+<span class="material-symbols-outlined text-[18px] text-primary">assessment</span>
+<span>Export Forensic Report</span>
+</button>
+<button class="px-space-lg h-10 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-body-sm text-body-sm font-semibold transition-colors flex items-center gap-2 shadow-md" onclick="simulateAction('flag')">
+<span class="material-symbols-outlined text-[18px]">gavel</span>
+<span>Flag for Mandatory Technical Verification</span>
+</button>
+</div>
+</div>
+</section>
+<!-- MICRO-INTERACTION SCRIPT -->
+<script>
+    function simulateAction(type) {
+      if (type === 'download') {
+        alert('Deterministic Log Exported: Vikram_Malhotra_Sanitized_Log_v4.2.json (SHA-256 Verified)');
+      } else if (type === 'export') {
+        alert('Forensic Committee Packet generated with full raster bounding-box evidence attachments.');
+      } else if (type === 'flag') {
+        alert('Candidate dossier locked into Mandatory Forensic Verification Queue. Email notice transmitted to Hiring Board.');
+      }
+    }
+  </script>
+</div></main><footer class="w-full bg-surface-container-lowest py-space-lg"><div class="w-full px-margin flex flex-col md:flex-row items-center justify-between gap-space-md font-label-xs text-label-xs text-on-surface-variant"><div class="flex items-center gap-space-sm"><span>RecruMatch © 2026 Forensic Talent Systems AG. Zero-hallucination deterministic NLP pipeline. GNIOT (AKTU) CSE Mini-Project.</span></div><div class="flex items-center gap-space-md text-outline"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[13px] text-tertiary">speed</span> Latency: 381.9ms</span><span>•</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[13px] text-primary">memory</span> Model: Deterministic Matcher v4.2.1-EE</span></div></div></footer>
+
+</body></html>

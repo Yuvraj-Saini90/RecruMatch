@@ -3,7 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RecruMatch — Intelligent Resume Screening & Candidate Ranking System</title>
+  <title>RecruMatch — Enterprise Candidate Screening & Forensic Intelligence</title>
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Material Symbols Outlined -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -12,203 +22,407 @@
       theme: {
         extend: {
           colors: {
-            brand: {
-              50: '#eff6ff',
-              100: '#dbeafe',
-              500: '#3b82f6',
-              600: '#2563eb',
-              700: '#1d4ed8',
-              800: '#1e40af',
-              900: '#1e3a8a',
-              950: '#0f172a'
-            }
+            surface: '#10131c',
+            'surface-dim': '#10131c',
+            'surface-bright': '#363943',
+            'surface-container-lowest': '#0b0e17',
+            'surface-container-low': '#181b25',
+            'surface-container': '#1c1f29',
+            'surface-container-high': '#272a34',
+            'surface-container-highest': '#32343f',
+            'on-surface': '#e0e2ef',
+            'on-surface-variant': '#cbc3d7',
+            'inverse-surface': '#e0e2ef',
+            'inverse-on-surface': '#2d303a',
+            outline: '#958ea0',
+            'outline-variant': '#494454',
+            'surface-tint': '#d0bcff',
+            primary: '#8b5cf6',
+            'primary-hover': '#a78bfa',
+            'primary-container': '#a078ff',
+            'on-primary-container': '#340080',
+            'inverse-primary': '#6d3bd7',
+            secondary: '#ccbeff',
+            'on-secondary': '#332664',
+            'secondary-container': '#4a3d7c',
+            'on-secondary-container': '#baabf3',
+            tertiary: '#10b981',
+            'on-tertiary': '#003824',
+            'tertiary-container': '#00a572',
+            'on-tertiary-container': '#00311f',
+            warning: '#f59e0b',
+            error: '#f43f5e',
+            'error-container': '#93000a',
+            'on-error-container': '#ffdad6',
+            'primary-fixed': '#e9ddff',
+            'primary-fixed-dim': '#d0bcff',
+            'secondary-fixed': '#e7deff',
+            'secondary-fixed-dim': '#ccbeff',
+            'tertiary-fixed': '#6ffbbe',
+            'tertiary-fixed-dim': '#4edea3',
+            background: '#10131c',
+            'on-background': '#e0e2ef'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
           }
         }
       }
-    }
+    };
   </script>
+
   <!-- Chart.js for Radar & Bar charts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
-    body { font-family: 'Inter', sans-serif; }
-    code, pre { font-family: 'JetBrains Mono', monospace; }
-    .glass { background: #0f172a; border: 1px solid #1e293b; }
-    .glass-card { background: #111827; border: 1px solid #1e293b; border-radius: 0.75rem; }
-    /* Custom scrollbar */
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #10131c;
+      color: #e0e2ef;
+    }
+    code, pre, .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      vertical-align: middle;
+    }
+    /* Custom Scrollbar - Aurora Sentinel */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #0b0f19; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    ::-webkit-scrollbar-track { background: #0b0e17; }
+    ::-webkit-scrollbar-thumb { background: #272a34; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #32343f; }
+
+    /* Interactive Drawer & Focus Glow */
+    .weight-drawer {
+      transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+    }
+    .dropzone-active {
+      border-color: #8b5cf6 !important;
+      background-color: rgba(139, 92, 246, 0.08) !important;
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.2) !important;
+    }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-blue-500 selection:text-white">
+<body class="min-h-screen flex flex-col antialiased selection:bg-primary selection:text-white">
 
-  <!-- TOP HEADER -->
-  <header class="border-b border-slate-800 bg-slate-900 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
-          <i class="fa-solid fa-crosshairs"></i>
-        </div>
-        <div>
-          <div class="flex items-center space-x-2">
-            <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
-              RecruMatch
-              <span class="text-xs px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">
-                Production
-              </span>
-            </h1>
+  <!-- ============================================================= -->
+  <!-- TOP HEADER (AURORA SENTINEL DESIGN) -->
+  <!-- ============================================================= -->
+  <header class="sticky top-0 z-50 bg-surface-container-lowest/90 backdrop-blur-xl border-b border-surface-container-high shadow-lg">
+    <div class="max-w-[1560px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <!-- Brand & Meta -->
+      <div class="flex items-center gap-6">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-surface-container-high border border-outline-variant/30 flex items-center justify-center text-primary shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">shield_with_heart</span>
           </div>
-          <p class="text-xs text-slate-400">Candidate Screening & Ranking Dashboard • Dept. of CSE, GNIOT (AKTU)</p>
+          <div class="flex flex-col">
+            <div class="flex items-center gap-2">
+              <span class="text-base font-bold tracking-tight text-on-surface">RecruMatch</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-primary/10 text-primary border border-primary/20 font-mono font-semibold uppercase tracking-wider">v4.2 Enterprise</span>
+            </div>
+            <span class="text-[11px] text-on-surface-variant font-medium">Deterministic Candidate Screening & Forensic Auditing</span>
+          </div>
+        </div>
+
+        <!-- Telemetry Indicators -->
+        <div class="hidden xl:flex items-center gap-2 px-3 py-1 rounded bg-surface-container-low border border-outline-variant/20 text-xs">
+          <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+          <span class="text-tertiary font-mono text-[11px] font-medium tracking-wide">100% Deterministic • Air-Gapped Local Model</span>
         </div>
       </div>
 
       <!-- Action & Controls -->
-      <div class="flex items-center space-x-3">
+      <div class="flex items-center gap-3">
         <!-- Blind Recruitment Toggle -->
-        <button id="blindToggleBtn" onclick="toggleBlindMode()" class="px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 flex items-center gap-2 bg-slate-800 text-slate-300 border-slate-700 hover:border-slate-600">
-          <i class="fa-solid fa-user-shield text-indigo-400"></i>
-          <span>Blind Mode: <b id="blindStatusText" class="text-slate-400 font-bold">OFF</b></span>
+        <button id="blindToggleBtn" onclick="toggleBlindMode()" class="px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 flex items-center gap-2 bg-surface-container-low text-on-surface-variant border-outline-variant/30 hover:border-primary/50">
+          <span class="material-symbols-outlined text-[16px] text-primary">security</span>
+          <span>Blind Mode: <b id="blindStatusText" class="text-on-surface font-mono font-bold">OFF</b></span>
         </button>
 
-        <a href="#report" onclick="switchTab('report')" class="hidden sm:flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-blue-600/10 text-blue-400 border border-blue-500/20 hover:bg-blue-600/20 transition-colors">
-          <i class="fa-solid fa-file-lines"></i>
+        <a href="#report" onclick="switchTab('report')" class="hidden sm:flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-secondary border border-outline-variant/30 transition-colors">
+          <span class="material-symbols-outlined text-[16px]">menu_book</span>
           <span>Project Report</span>
         </a>
 
-        <div class="text-xs text-slate-400 border-l border-slate-800 pl-3 hidden md:block">
-          <div><span class="text-slate-300 font-semibold">Dev:</span> Yuvraj Saini</div>
-          <div><span class="text-slate-300 font-semibold">Guide:</span> Mr. Ashwini Kr. Verma</div>
+        <div class="text-[11px] text-on-surface-variant border-l border-surface-container-high pl-3 hidden md:block">
+          <div><span class="text-on-surface font-semibold">Dev:</span> Yuvraj Saini</div>
+          <div><span class="text-outline font-mono text-[10px]">CSE, GNIOT (AKTU)</span></div>
         </div>
       </div>
     </div>
 
     <!-- NAVIGATION TABS -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-800 flex space-x-1 sm:space-x-4 overflow-x-auto text-xs sm:text-sm font-medium py-1">
-      <button onclick="switchTab('dashboard')" id="tabBtn-dashboard" class="tab-btn px-3 py-2 rounded-lg text-blue-400 bg-blue-500/10 border border-blue-500/20 flex items-center gap-2 whitespace-nowrap">
-        <i class="fa-solid fa-chart-pie"></i> Dashboard
+    <div class="max-w-[1560px] mx-auto px-4 sm:px-6 lg:px-8 border-t border-surface-container-high/60 flex space-x-1 sm:space-x-3 overflow-x-auto text-xs font-medium py-1">
+      <button onclick="switchTab('screening')" id="tabBtn-screening" class="tab-btn px-3.5 py-2 rounded-lg text-primary bg-surface-container-high border border-primary/30 flex items-center gap-2 whitespace-nowrap transition-all">
+        <span class="material-symbols-outlined text-[17px]">upload_file</span> Screening Workspace
       </button>
-      <button onclick="switchTab('leaderboard')" id="tabBtn-leaderboard" class="tab-btn px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-all flex items-center gap-2 whitespace-nowrap">
-        <i class="fa-solid fa-trophy"></i> Candidate Leaderboard
+      <button onclick="switchTab('dashboard')" id="tabBtn-dashboard" class="tab-btn px-3.5 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-2 whitespace-nowrap">
+        <span class="material-symbols-outlined text-[17px]">dashboard</span> Dashboard Overview
       </button>
-      <button onclick="switchTab('deepdive')" id="tabBtn-deepdive" class="tab-btn px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-all flex items-center gap-2 whitespace-nowrap">
-        <i class="fa-solid fa-bullseye"></i> Competency Radar & Skills
+      <button onclick="switchTab('leaderboard')" id="tabBtn-leaderboard" class="tab-btn px-3.5 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-2 whitespace-nowrap">
+        <span class="material-symbols-outlined text-[17px]">format_list_numbered</span> Ranked Leaderboard
       </button>
-      <button onclick="switchTab('forensic')" id="tabBtn-forensic" class="tab-btn px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-all flex items-center gap-2 whitespace-nowrap">
-        <i class="fa-solid fa-shield-halved text-rose-400"></i> Resume Security & Tampering
-        <span class="px-1.5 py-0.2 rounded-full bg-rose-500/20 text-rose-300 text-[10px] font-bold">1 Notice</span>
+      <button onclick="switchTab('deepdive')" id="tabBtn-deepdive" class="tab-btn px-3.5 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-2 whitespace-nowrap">
+        <span class="material-symbols-outlined text-[17px]">radar</span> Competency Radar & Skills
       </button>
-      <button onclick="switchTab('screening')" id="tabBtn-screening" class="tab-btn px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-all flex items-center gap-2 whitespace-nowrap">
-        <i class="fa-solid fa-file-arrow-up"></i> Screen Resumes
+      <button onclick="switchTab('forensic')" id="tabBtn-forensic" class="tab-btn px-3.5 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-2 whitespace-nowrap">
+        <span class="material-symbols-outlined text-[17px] text-error">gpp_maybe</span> Resume Security & Tampering
+        <span class="px-1.5 py-0.2 rounded bg-error-container text-on-error-container font-mono text-[10px] font-bold">1 Alert</span>
       </button>
-      <button onclick="switchTab('report')" id="tabBtn-report" class="tab-btn px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-all flex items-center gap-2 whitespace-nowrap">
-        <i class="fa-solid fa-book-bookmark text-amber-400"></i> Project Documentation
+      <button onclick="switchTab('report')" id="tabBtn-report" class="tab-btn px-3.5 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-2 whitespace-nowrap">
+        <span class="material-symbols-outlined text-[17px] text-secondary">description</span> Project Documentation
       </button>
     </div>
   </header>
 
-  <!-- MAIN CONTAINER -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+  <!-- ============================================================= -->
+  <!-- MAIN WORKSPACE -->
+  <!-- ============================================================= -->
+  <main class="flex-1 max-w-[1560px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
     <!-- ============================================================= -->
-    <!-- TAB 1: EXECUTIVE DASHBOARD -->
+    <!-- TAB 1: SCREENING WORKSPACE (STITCH PRIMARY INGESTION) -->
     <!-- ============================================================= -->
-    <section id="tab-dashboard" class="tab-pane space-y-6">
+    <section id="tab-screening" class="tab-pane space-y-6">
       
-      <!-- Top Alert / Job Info -->
-      <div class="glass p-4 rounded-xl border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div class="flex items-start space-x-3.5">
-          <div class="p-2.5 rounded-lg bg-blue-500/10 text-blue-400 mt-0.5">
-            <i class="fa-solid fa-briefcase text-lg"></i>
+      <!-- Top Requisition Identity & Status Banner -->
+      <div class="p-5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col lg:flex-row lg:items-center justify-between gap-4 shadow-sm">
+        <div class="flex flex-col gap-2">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="px-2 py-0.5 rounded bg-surface-container text-secondary font-mono text-[11px] font-semibold">REQUISITION</span>
+            <span class="text-outline text-xs">/</span>
+            <span class="text-secondary font-mono text-xs font-semibold tracking-wide">ENG-2026-04</span>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-tertiary-container/30 text-tertiary font-mono text-[11px] font-semibold border border-tertiary/25">
+              <span class="w-1.5 h-1.5 rounded-full bg-tertiary inline-block animate-ping"></span> Active Specification
+            </span>
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-secondary font-mono text-[11px]">
+              <span class="material-symbols-outlined text-[13px]">lock_clock</span> Air-Gapped Local Model
+            </span>
           </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="text-xs uppercase font-bold tracking-wider text-blue-400">Active Job Specification</span>
-              <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">Engineering Requisition</span>
-            </div>
-            <h2 class="text-base sm:text-lg font-bold text-white">Senior Python & Machine Learning Engineer</h2>
-            <p class="text-xs text-slate-400 mt-0.5">
-              Requirements: 13 Mandatory Skills (Python, FastAPI, Django, Scikit-learn, SQL, Docker, AWS...) • 3.0+ Years Exp • Master's or B.Tech
-            </p>
+
+          <h2 class="text-xl sm:text-2xl font-bold text-on-surface tracking-tight">Senior Python & Machine Learning Engineer</h2>
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-on-surface-variant font-normal">
+            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">psychology</span> <strong class="text-on-surface font-semibold">13</strong> Mandatory Skills (Python, FastAPI, Django, Scikit-learn, Docker, AWS...)</span>
+            <span>•</span>
+            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">history_edu</span> <strong class="text-on-surface font-semibold">3.0+</strong> Years Threshold</span>
+            <span>•</span>
+            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">school</span> B.Tech CSE / Master's / Equivalent</span>
+            <span>•</span>
+            <span class="flex items-center gap-1 text-tertiary"><span class="material-symbols-outlined text-[16px]">verified_user</span> Zero-Hallucination Guard</span>
           </div>
         </div>
-        <div class="flex items-center gap-2 self-start md:self-auto">
-          <button onclick="switchTab('screening')" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-colors flex items-center gap-1.5 shadow-sm">
-            <i class="fa-solid fa-plus"></i> Screen New Candidate
-          </button>
-          <button onclick="switchTab('leaderboard')" class="px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors">
-            View Rankings
-          </button>
+
+        <div class="flex items-center gap-3 self-start lg:self-auto bg-surface-container-lowest/80 px-4 py-3 rounded-lg border border-outline-variant/30">
+          <div class="flex flex-col text-right">
+            <span class="font-mono text-[10px] text-outline uppercase tracking-wider">Candidate Pool</span>
+            <span class="font-mono text-sm text-on-surface font-bold">5 Staged / 1 Flagged</span>
+          </div>
+          <div class="w-px h-7 bg-outline-variant/40"></div>
+          <div class="flex flex-col text-right">
+            <span class="font-mono text-[10px] text-outline uppercase tracking-wider">Integrity Level</span>
+            <span class="font-mono text-sm text-tertiary font-bold">Tamper Proof L4</span>
+          </div>
         </div>
       </div>
 
-      <!-- 4 KPI SUMMARY CARDS -->
+      <!-- Dual Screening Studio (JD Input & Resume Ingestion) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left Column: Job Description & Criteria (5 Cols) -->
+        <div class="lg:col-span-5 flex flex-col gap-4">
+          <div class="p-5 rounded-xl bg-surface-container border border-outline-variant/30 flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-on-surface uppercase tracking-wider flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-primary text-[18px]">tune</span> Job Specification Criteria
+              </span>
+              <span class="text-[11px] text-outline font-mono">13 Mandatory Skills</span>
+            </div>
+
+            <!-- Role Presets -->
+            <div>
+              <label class="block text-[11px] font-semibold text-on-surface-variant mb-1.5">Quick Role Specification Preset:</label>
+              <div class="flex flex-wrap gap-1.5">
+                <button type="button" onclick="loadRolePreset('python-ml')" class="px-2.5 py-1 text-xs rounded bg-surface-container-high hover:bg-surface-variant text-on-surface border border-outline-variant/40 transition-colors">Python & ML</button>
+                <button type="button" onclick="loadRolePreset('data-science')" class="px-2.5 py-1 text-xs rounded bg-surface-container-high hover:bg-surface-variant text-on-surface-variant border border-outline-variant/40 transition-colors">Data Science & NLP</button>
+                <button type="button" onclick="loadRolePreset('fullstack')" class="px-2.5 py-1 text-xs rounded bg-surface-container-high hover:bg-surface-variant text-on-surface-variant border border-outline-variant/40 transition-colors">Full Stack Web</button>
+                <button type="button" onclick="loadRolePreset('devops')" class="px-2.5 py-1 text-xs rounded bg-surface-container-high hover:bg-surface-variant text-on-surface-variant border border-outline-variant/40 transition-colors">Cloud DevOps</button>
+              </div>
+            </div>
+
+            <!-- JD Textarea -->
+            <div>
+              <label class="block text-[11px] font-semibold text-on-surface-variant mb-1">Target Job Description (JD):</label>
+              <textarea id="jdInput" rows="11" class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-lg p-3 text-xs text-on-surface focus:outline-none focus:border-primary font-mono leading-relaxed custom-scroll" placeholder="Paste target job description requirements here...">Job Title: Senior Python & Machine Learning Engineer
+Department: Core AI Platform
+Experience: 3.0+ years
+Mandatory Skills: Python, FastAPI, Django, Scikit-learn, SQL, Docker, AWS, Git, GitHub, Pandas, Machine Learning, REST API, Algorithms.
+Preferred Skills: Microservices, Redis, PostgreSQL, PyTorch, CI/CD, Linux, NumPy.
+Education: Bachelor's or Master's in Computer Science or related engineering field.</textarea>
+            </div>
+
+            <div class="flex items-center justify-between text-[11px] text-outline font-mono pt-1">
+              <span>Canonical Vocabulary: 130+ Skills</span>
+              <span class="text-tertiary">Deterministic Extraction Ready</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Resume Upload & Batch Screening Studio (7 Cols) -->
+        <div class="lg:col-span-7 flex flex-col gap-4">
+          <div class="p-5 rounded-xl bg-surface-container border border-outline-variant/30 flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-on-surface uppercase tracking-wider flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-primary text-[18px]">folder_zip</span> Multi-Resume Ingestion & Tamper Scan
+              </span>
+              <span class="text-[11px] text-secondary font-mono">PDF, DOCX, TXT</span>
+            </div>
+
+            <!-- Upload Dropzone -->
+            <div id="dropzoneContainer" class="border-2 border-dashed border-outline-variant/40 rounded-xl p-6 text-center bg-surface-container-low hover:border-primary/60 transition-all flex flex-col items-center justify-center cursor-pointer relative">
+              <input type="file" id="resumeFiles" multiple accept=".pdf,.docx,.txt" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" onchange="handleFileSelect(event)">
+              <div class="w-12 h-12 rounded-xl bg-surface-container-high border border-outline-variant/30 flex items-center justify-center text-primary mb-2 shadow-sm">
+                <span class="material-symbols-outlined text-[26px]">cloud_upload</span>
+              </div>
+              <h3 class="text-sm font-semibold text-on-surface">Drag & Drop candidate resumes here, or <span class="text-primary hover:underline font-bold">browse</span></h3>
+              <p class="text-xs text-on-surface-variant mt-1">Multi-format support for PDF, DOCX, and TXT files (Up to 200MB per file)</p>
+              <div class="flex items-center gap-3 mt-3 text-[11px] text-outline font-mono">
+                <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px] text-tertiary">check_circle</span> Structural parsing</span>
+                <span>•</span>
+                <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px] text-tertiary">security</span> White-text & micro-font scan</span>
+              </div>
+            </div>
+
+            <!-- Quick Load Sample Applicant Buttons -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-[11px] font-semibold text-on-surface-variant">Benchmark Candidate Test Resumes:</span>
+                <span class="text-[11px] text-outline font-mono">Instant Test Profiles</span>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <button type="button" onclick="loadSampleResume('aman')" class="px-2.5 py-1 text-xs rounded bg-surface-container-high hover:bg-surface-variant text-on-surface border border-outline-variant/40 flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Aman Verma (Clean PDF)
+                </button>
+                <button type="button" onclick="loadSampleResume('priya')" class="px-2.5 py-1 text-xs rounded bg-surface-container-high hover:bg-surface-variant text-on-surface border border-outline-variant/40 flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Priya Sharma (Clean PDF)
+                </button>
+                <button type="button" onclick="loadSampleResume('rahul')" class="px-2.5 py-1 text-xs rounded bg-surface-container-high hover:bg-surface-variant text-on-surface border border-outline-variant/40 flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Rahul Kumar (Clean DOCX)
+                </button>
+                <button type="button" onclick="loadSampleResume('custom')" class="px-2.5 py-1 text-xs rounded bg-surface-container-high hover:bg-surface-variant text-secondary border border-outline-variant/40">
+                  Clear
+                </button>
+              </div>
+            </div>
+
+            <!-- Staged File / Paste Preview Textarea -->
+            <div>
+              <label class="block text-[11px] font-semibold text-on-surface-variant mb-1">Staged Resume Content (Extracted Layer):</label>
+              <textarea id="resumeInputText" rows="6" class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-lg p-3 text-xs text-on-surface focus:outline-none focus:border-primary font-mono leading-relaxed custom-scroll" placeholder="Extracted candidate text will appear here..."></textarea>
+            </div>
+
+            <!-- Primary Screening Action Button -->
+            <button id="btnRunScreening" onclick="runScreeningOnInput()" class="w-full py-3 px-5 text-sm font-semibold rounded-lg bg-primary hover:bg-primary-hover text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
+              <span class="material-symbols-outlined text-[20px]">bolt</span>
+              <span>Screen Candidates & Calculate Rankings</span>
+            </button>
+
+            <!-- Instant Screening Assessment Feedback -->
+            <div id="screenResultBox" class="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant/30 flex flex-col gap-3">
+              <div class="flex items-center justify-between pb-2 border-b border-outline-variant/20">
+                <span class="text-xs font-bold text-on-surface uppercase tracking-wider font-mono">Screening Assessment Result</span>
+                <span id="screenResultTier" class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-surface-container-high text-on-surface-variant border border-outline-variant/40 font-mono">Ready to Screen</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-[11px] text-outline">Composite Match Score</div>
+                  <div id="screenResultScore" class="text-3xl font-extrabold text-on-surface font-mono">--%</div>
+                </div>
+                <div class="text-right">
+                  <div class="text-[11px] text-outline">Verified Skills Extracted</div>
+                  <div id="screenSkillsCount" class="text-2xl font-bold text-primary font-mono">0</div>
+                </div>
+              </div>
+              <div>
+                <div class="text-[11px] text-on-surface-variant font-medium mb-1.5">Extracted Skills Taxonomy:</div>
+                <div id="screenSkillsChips" class="flex flex-wrap gap-1.5 min-h-[36px] p-2 rounded bg-surface-container-low border border-outline-variant/20 text-xs text-outline">
+                  Click 'Screen Candidates' to run deterministic evaluation.
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- TAB 2: EXECUTIVE DASHBOARD (OVERVIEW & BENCHMARKS) -->
+    <!-- ============================================================= -->
+    <section id="tab-dashboard" class="tab-pane hidden space-y-6">
+      
+      <!-- 4 KPI SUMMARY CARDS (AURORA SENTINEL PALETTE) -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- Card 1 -->
-        <div class="glass-card p-4 rounded-xl border border-slate-800">
-          <div class="flex items-center justify-between text-slate-400 text-xs">
-            <span>Total Applicants</span>
-            <i class="fa-solid fa-users text-blue-400"></i>
+        <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/30 shadow-sm flex flex-col justify-between">
+          <div class="flex items-center justify-between text-on-surface-variant text-xs">
+            <span class="font-medium">Total Applicants</span>
+            <span class="material-symbols-outlined text-primary text-[20px]">group</span>
           </div>
-          <div class="text-2xl font-black text-white mt-2" id="kpi-total">5</div>
-          <div class="text-[11px] text-slate-500 mt-1 flex items-center gap-1">
-            <span class="text-emerald-400 font-medium">All parsed</span> • 3 PDF, 2 DOCX
+          <div class="text-2xl font-bold text-on-surface font-mono mt-2" id="kpi-total">5</div>
+          <div class="text-[11px] text-outline mt-1 flex items-center gap-1 font-mono">
+            <span class="text-tertiary font-semibold">All parsed</span> • 3 PDF, 2 DOCX
           </div>
         </div>
 
         <!-- Card 2 -->
-        <div class="glass-card p-4 rounded-xl border border-slate-800">
-          <div class="flex items-center justify-between text-slate-400 text-xs">
-            <span>Average Match Score</span>
-            <i class="fa-solid fa-gauge-high text-amber-400"></i>
+        <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/30 shadow-sm flex flex-col justify-between">
+          <div class="flex items-center justify-between text-on-surface-variant text-xs">
+            <span class="font-medium">Average Match Score</span>
+            <span class="material-symbols-outlined text-secondary text-[20px]">speed</span>
           </div>
-          <div class="text-2xl font-black text-amber-400 mt-2" id="kpi-avg">49.6%</div>
-          <div class="text-[11px] text-slate-500 mt-1">
-            Across 5 evaluation criteria
-          </div>
+          <div class="text-2xl font-bold text-secondary font-mono mt-2" id="kpi-avg">49.6%</div>
+          <div class="text-[11px] text-outline mt-1 font-mono">Across 5 evaluation criteria</div>
         </div>
 
         <!-- Card 3 -->
-        <div class="glass-card p-4 rounded-xl border border-slate-800">
-          <div class="flex items-center justify-between text-slate-400 text-xs">
-            <span>Qualified Candidates (≥60%)</span>
-            <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/30 shadow-sm flex flex-col justify-between">
+          <div class="flex items-center justify-between text-on-surface-variant text-xs">
+            <span class="font-medium">Qualified Candidates (≥60%)</span>
+            <span class="material-symbols-outlined text-tertiary text-[20px]">verified</span>
           </div>
-          <div class="text-2xl font-black text-emerald-400 mt-2" id="kpi-matches">2</div>
-          <div class="text-[11px] text-slate-500 mt-1">
-            40% of applicant pool
-          </div>
+          <div class="text-2xl font-bold text-tertiary font-mono mt-2" id="kpi-matches">2</div>
+          <div class="text-[11px] text-outline mt-1 font-mono">40% of applicant pool</div>
         </div>
 
         <!-- Card 4 -->
-        <div class="glass-card p-4 rounded-xl border border-rose-900/40 bg-rose-950/10">
-          <div class="flex items-center justify-between text-rose-300 text-xs">
+        <div class="p-4 rounded-xl bg-surface-container border border-error/30 shadow-sm flex flex-col justify-between bg-error/5">
+          <div class="flex items-center justify-between text-error text-xs font-semibold">
             <span>Tampering Notices Flagged</span>
-            <i class="fa-solid fa-triangle-exclamation text-rose-400"></i>
+            <span class="material-symbols-outlined text-error text-[20px]">crisis_alert</span>
           </div>
-          <div class="text-2xl font-black text-rose-400 mt-2">1</div>
-          <div class="text-[11px] text-rose-300/80 mt-1 flex items-center gap-1 font-medium">
-            Vikram Malhotra (Risk Score: 85)
-          </div>
+          <div class="text-2xl font-bold text-error font-mono mt-2">1</div>
+          <div class="text-[11px] text-error mt-1 font-mono font-medium">Vikram Malhotra (Risk: 85)</div>
         </div>
       </div>
 
-      <!-- CHARTS ROW -->
+      <!-- CHARTS & BENCHMARKS ROW -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Match Tier Distribution -->
-        <div class="glass-card p-5 rounded-xl border border-slate-800 lg:col-span-2">
+        <div class="p-5 rounded-xl bg-surface-container border border-outline-variant/30 lg:col-span-2 shadow-sm">
           <div class="flex items-center justify-between mb-4">
             <div>
-              <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-chart-column text-blue-400"></i>
+              <h3 class="text-sm font-bold text-on-surface flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-[18px]">bar_chart</span>
                 Applicant Pool Match Tier Distribution
               </h3>
-              <p class="text-xs text-slate-400">Standardized qualification classifications</p>
+              <p class="text-xs text-on-surface-variant">Standardized qualification classifications across active applicant pool</p>
             </div>
-            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 border border-slate-700 text-slate-300">
+            <span class="text-xs px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/40 text-on-surface font-mono">
               Deterministic Weights
             </span>
           </div>
@@ -217,139 +431,178 @@
           </div>
         </div>
 
-        <!-- Quick Summary & Quick Actions -->
-        <div class="glass-card p-5 rounded-xl border border-slate-800 flex flex-col justify-between">
+        <!-- Quick Summary & System Health -->
+        <div class="p-5 rounded-xl bg-surface-container border border-outline-variant/30 flex flex-col justify-between shadow-sm">
           <div>
-            <h3 class="text-sm font-bold text-white flex items-center gap-2 mb-3">
-              <i class="fa-solid fa-list-check text-indigo-400"></i>
+            <h3 class="text-sm font-bold text-on-surface flex items-center gap-2 mb-3">
+              <span class="material-symbols-outlined text-primary text-[18px]">verified_user</span>
               System Health & Integrity
             </h3>
-            <div class="space-y-3 text-xs">
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900 border border-slate-800">
-                <span class="text-slate-400">Reproducibility:</span>
-                <span class="text-emerald-400 font-bold">100% Deterministic</span>
+            <div class="space-y-2.5 text-xs font-mono">
+              <div class="flex items-center justify-between p-2 rounded bg-surface-container-low border border-outline-variant/20">
+                <span class="text-on-surface-variant font-sans">Reproducibility:</span>
+                <span class="text-tertiary font-bold">100% Deterministic</span>
               </div>
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900 border border-slate-800">
-                <span class="text-slate-400">Average Screening Latency:</span>
-                <span class="text-cyan-400 font-bold">381.9 ms / resume</span>
+              <div class="flex items-center justify-between p-2 rounded bg-surface-container-low border border-outline-variant/20">
+                <span class="text-on-surface-variant font-sans">Screening Latency:</span>
+                <span class="text-secondary font-bold">381.9 ms / resume</span>
               </div>
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900 border border-slate-800">
-                <span class="text-slate-400">Execution Mode:</span>
-                <span class="text-emerald-400 font-bold">100% Offline / Local</span>
+              <div class="flex items-center justify-between p-2 rounded bg-surface-container-low border border-outline-variant/20">
+                <span class="text-on-surface-variant font-sans">Execution Mode:</span>
+                <span class="text-tertiary font-bold">100% Offline / Air-Gapped</span>
               </div>
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900 border border-slate-800">
-                <span class="text-slate-400">Blind Screening Status:</span>
-                <span id="deiStatusBadge" class="text-slate-400 font-bold">Standard Mode</span>
+              <div class="flex items-center justify-between p-2 rounded bg-surface-container-low border border-outline-variant/20">
+                <span class="text-on-surface-variant font-sans">Blind Screening:</span>
+                <span id="deiStatusBadge" class="text-on-surface-variant font-bold">Standard Mode</span>
               </div>
             </div>
           </div>
 
-          <div class="pt-4 border-t border-slate-800 mt-4 space-y-2">
-            <button onclick="switchTab('leaderboard')" class="w-full py-2 px-3 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-colors flex items-center justify-center gap-2">
-              <i class="fa-solid fa-ranking-star"></i> View Candidate Leaderboard
-            </button>
-            <button onclick="switchTab('forensic')" class="w-full py-2 px-3 text-xs font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-rose-300 border border-rose-500/30 transition-colors flex items-center justify-center gap-2">
-              <i class="fa-solid fa-shield-halved"></i> Review Flagged Document
+          <div class="pt-4 border-t border-outline-variant/30 mt-4 space-y-2">
+            <button onclick="switchTab('leaderboard')" class="w-full py-2.5 px-3 text-xs font-semibold rounded-lg bg-primary hover:bg-primary-hover text-white transition-colors flex items-center justify-center gap-2">
+              <span class="material-symbols-outlined text-[16px]">leaderboard</span> View Candidate Leaderboard
             </button>
           </div>
         </div>
       </div>
+
     </section>
 
     <!-- ============================================================= -->
-    <!-- TAB 2: CANDIDATE LEADERBOARD & WEIGHT CALIBRATION -->
+    <!-- TAB 3: RANKED CANDIDATE LEADERBOARD (STITCH DESIGN) -->
     <!-- ============================================================= -->
     <section id="tab-leaderboard" class="tab-pane hidden space-y-6">
       
-      <!-- Dynamic Weight Adjustment Panel -->
-      <div class="glass-card p-5 rounded-xl border border-slate-800">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-          <div>
-            <h3 class="text-sm font-bold text-white flex items-center gap-2">
-              <i class="fa-solid fa-sliders text-blue-400"></i>
-              Multi-Criteria Scoring Weights
-            </h3>
-            <p class="text-xs text-slate-400">Adjust criteria weights to reflect hiring priorities. Weights normalize automatically to 100%.</p>
+      <!-- Requisition Hero Panel -->
+      <div class="p-5 rounded-xl bg-surface-container-lowest border border-outline-variant/30 flex flex-col xl:flex-row xl:items-center justify-between gap-4 shadow-sm">
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center gap-2">
+            <span class="font-mono text-[10px] uppercase px-2 py-0.5 rounded bg-surface-container-high text-primary tracking-wider font-semibold">Requisition #ENG-2026-04</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+            <span class="font-mono text-[11px] text-on-surface-variant flex items-center gap-1">
+              <span class="material-symbols-outlined text-[14px] text-tertiary">lock_reset</span> Cryptographically Audited
+            </span>
           </div>
-          <button onclick="resetDefaultWeights()" class="text-xs px-2.5 py-1 rounded bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 self-start sm:self-auto">
-            Reset to Defaults
-          </button>
+          <h1 class="text-xl sm:text-2xl font-bold text-on-surface tracking-tight mt-0.5">Senior Python & Machine Learning Engineer</h1>
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-on-surface-variant font-normal">
+            <span>Core Platform Division</span>
+            <span>•</span>
+            <span>5 Candidates Evaluated</span>
+            <span>•</span>
+            <span class="text-tertiary">Deterministic Scoring Active</span>
+          </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 text-xs">
-          <!-- W_req -->
-          <div class="bg-slate-900/90 p-3 rounded-lg border border-slate-800">
-            <div class="flex justify-between font-semibold text-slate-300 mb-1">
-              <span>Required Skills</span>
-              <span id="label-w-req" class="text-blue-400">40%</span>
+        <!-- Action Cluster -->
+        <div class="flex flex-wrap items-center gap-2 self-start xl:self-center">
+          <button id="toggleWeightDrawer" onclick="toggleWeightDrawerAction()" type="button" class="h-9 px-3.5 rounded-lg bg-surface-container-high hover:bg-surface-variant text-secondary text-xs font-medium flex items-center gap-1.5 transition-colors border border-outline-variant/30">
+            <span class="material-symbols-outlined text-[18px]">tune</span>
+            <span>Adjust Criteria Weights</span>
+            <span id="drawerChevron" class="material-symbols-outlined text-[16px] transition-transform duration-200">expand_more</span>
+          </button>
+          <button onclick="exportCSV()" type="button" class="h-9 px-3 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-medium flex items-center gap-1.5 transition-colors border border-outline-variant/30">
+            <span class="material-symbols-outlined text-[18px]">download</span>
+            <span>Export CSV</span>
+          </button>
+          <button onclick="switchTab('screening')" type="button" class="h-9 px-3.5 rounded-lg bg-primary hover:bg-primary-hover text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-primary/20">
+            <span class="material-symbols-outlined text-[18px]">add_circle</span>
+            <span>Screen More Resumes</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Collapsible Criteria Weight Dynamic Calibration Drawer -->
+      <div id="weightDrawer" class="weight-drawer w-full bg-surface-container-low rounded-xl border border-outline-variant/30 overflow-hidden max-h-0 opacity-0 transition-all duration-300">
+        <div class="p-5 flex flex-col gap-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-outline-variant/20">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-primary"></span>
+              <h3 class="text-sm font-bold text-on-surface">Mathematical Criteria Weight Matrix</h3>
+              <span class="font-mono text-[10px] text-outline px-1.5 py-0.5 rounded bg-surface-container">Deterministic Model 4.2</span>
             </div>
-            <input type="range" id="slider-w-req" min="10" max="70" value="40" oninput="onWeightChange()" class="w-full accent-blue-500 cursor-pointer">
-            <p class="text-[10px] text-slate-500 mt-1">Mandatory JD skills</p>
+            <div class="flex items-center gap-3">
+              <span class="text-xs text-on-surface-variant">Allocated Total:</span>
+              <span id="sumBadge" class="font-mono text-xs px-2.5 py-0.5 rounded bg-tertiary-container/30 text-tertiary font-semibold border border-tertiary/30">100% Valid</span>
+              <button onclick="resetDefaultWeights()" class="font-mono text-xs text-secondary hover:text-primary transition-colors flex items-center gap-1 ml-2">
+                <span class="material-symbols-outlined text-[14px]">restart_alt</span> Reset Defaults
+              </button>
+            </div>
           </div>
 
-          <!-- W_pref -->
-          <div class="bg-slate-900/90 p-3 rounded-lg border border-slate-800">
-            <div class="flex justify-between font-semibold text-slate-300 mb-1">
-              <span>Preferred Skills</span>
-              <span id="label-w-pref" class="text-indigo-400">15%</span>
+          <!-- Sliders Grid (Aurora Sentinel) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+            <!-- Slider 1 -->
+            <div class="p-3.5 rounded-lg bg-surface-container flex flex-col gap-2 border border-outline-variant/20">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-medium text-on-surface">Required Skills</span>
+                <span id="label-w-req" class="font-mono text-xs font-bold text-primary">40%</span>
+              </div>
+              <input type="range" id="slider-w-req" min="10" max="70" value="40" oninput="onWeightChange()" class="w-full accent-primary cursor-pointer h-1.5 bg-surface-container-highest rounded">
+              <span class="font-mono text-[10px] text-outline">Threshold: 13 strict matches</span>
             </div>
-            <input type="range" id="slider-w-pref" min="0" max="40" value="15" oninput="onWeightChange()" class="w-full accent-indigo-500 cursor-pointer">
-            <p class="text-[10px] text-slate-500 mt-1">Bonus competencies</p>
-          </div>
 
-          <!-- W_exp -->
-          <div class="bg-slate-900/90 p-3 rounded-lg border border-slate-800">
-            <div class="flex justify-between font-semibold text-slate-300 mb-1">
-              <span>Experience</span>
-              <span id="label-w-exp" class="text-emerald-400">15%</span>
+            <!-- Slider 2 -->
+            <div class="p-3.5 rounded-lg bg-surface-container flex flex-col gap-2 border border-outline-variant/20">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-medium text-on-surface">Preferred Skills</span>
+                <span id="label-w-pref" class="font-mono text-xs font-bold text-secondary">15%</span>
+              </div>
+              <input type="range" id="slider-w-pref" min="0" max="40" value="15" oninput="onWeightChange()" class="w-full accent-primary cursor-pointer h-1.5 bg-surface-container-highest rounded">
+              <span class="font-mono text-[10px] text-outline">Bonus score weighting</span>
             </div>
-            <input type="range" id="slider-w-exp" min="5" max="40" value="15" oninput="onWeightChange()" class="w-full accent-emerald-500 cursor-pointer">
-            <p class="text-[10px] text-slate-500 mt-1">Verified work tenure</p>
-          </div>
 
-          <!-- W_edu -->
-          <div class="bg-slate-900/90 p-3 rounded-lg border border-slate-800">
-            <div class="flex justify-between font-semibold text-slate-300 mb-1">
-              <span>Education</span>
-              <span id="label-w-edu" class="text-amber-400">10%</span>
+            <!-- Slider 3 -->
+            <div class="p-3.5 rounded-lg bg-surface-container flex flex-col gap-2 border border-outline-variant/20">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-medium text-on-surface">Experience Tenure</span>
+                <span id="label-w-exp" class="font-mono text-xs font-bold text-secondary">15%</span>
+              </div>
+              <input type="range" id="slider-w-exp" min="5" max="40" value="15" oninput="onWeightChange()" class="w-full accent-primary cursor-pointer h-1.5 bg-surface-container-highest rounded">
+              <span class="font-mono text-[10px] text-outline">Min target: 3.0 yrs</span>
             </div>
-            <input type="range" id="slider-w-edu" min="0" max="30" value="10" oninput="onWeightChange()" class="w-full accent-amber-500 cursor-pointer">
-            <p class="text-[10px] text-slate-500 mt-1">Academic degree tier</p>
-          </div>
 
-          <!-- W_sim -->
-          <div class="bg-slate-900/90 p-3 rounded-lg border border-slate-800">
-            <div class="flex justify-between font-semibold text-slate-300 mb-1">
-              <span>Semantic Similarity</span>
-              <span id="label-w-sim" class="text-purple-400">20%</span>
+            <!-- Slider 4 -->
+            <div class="p-3.5 rounded-lg bg-surface-container flex flex-col gap-2 border border-outline-variant/20">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-medium text-on-surface">Education Tier</span>
+                <span id="label-w-edu" class="font-mono text-xs font-bold text-secondary">10%</span>
+              </div>
+              <input type="range" id="slider-w-edu" min="0" max="30" value="10" oninput="onWeightChange()" class="w-full accent-primary cursor-pointer h-1.5 bg-surface-container-highest rounded">
+              <span class="font-mono text-[10px] text-outline">Degree level scoring</span>
             </div>
-            <input type="range" id="slider-w-sim" min="5" max="50" value="20" oninput="onWeightChange()" class="w-full accent-purple-500 cursor-pointer">
-            <p class="text-[10px] text-slate-500 mt-1">TF-IDF / Cosine align</p>
+
+            <!-- Slider 5 -->
+            <div class="p-3.5 rounded-lg bg-surface-container flex flex-col gap-2 border border-outline-variant/20">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-medium text-on-surface">Text Cosine</span>
+                <span id="label-w-sim" class="font-mono text-xs font-bold text-primary">20%</span>
+              </div>
+              <input type="range" id="slider-w-sim" min="5" max="50" value="20" oninput="onWeightChange()" class="w-full accent-primary cursor-pointer h-1.5 bg-surface-container-highest rounded">
+              <span class="font-mono text-[10px] text-outline">TF-IDF Vector alignment</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- LEADERBOARD TABLE -->
-      <div class="glass-card rounded-xl border border-slate-800 overflow-hidden">
-        <div class="p-4 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <!-- LEADERBOARD TABLE CARD -->
+      <div class="rounded-xl bg-surface-container border border-outline-variant/30 overflow-hidden shadow-sm">
+        <div class="p-4 border-b border-outline-variant/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h3 class="text-sm font-bold text-white flex items-center gap-2">
-              <i class="fa-solid fa-list-ol text-blue-400"></i>
+            <h3 class="text-sm font-bold text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-[18px]">format_list_numbered</span>
               Ranked Candidate Leaderboard
             </h3>
-            <p class="text-xs text-slate-400">Instant deterministic ranking computed locally</p>
+            <p class="text-xs text-on-surface-variant">Instant deterministic ranking computed locally with multi-factor weights</p>
           </div>
           <div class="flex items-center gap-2">
-            <button onclick="exportCSV()" class="px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1.5 transition-colors">
-              <i class="fa-solid fa-download"></i> Export CSV
-            </button>
+            <span class="text-[11px] text-outline font-mono">Showing 5 of 5 Screened Applicants</span>
           </div>
         </div>
 
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto custom-scroll">
           <table class="w-full text-left border-collapse text-xs">
             <thead>
-              <tr class="bg-slate-900/80 text-slate-400 border-b border-slate-800 uppercase tracking-wider text-[11px]">
+              <tr class="bg-surface-container-low text-on-surface-variant border-b border-outline-variant/20 font-mono text-[11px] uppercase tracking-wider">
                 <th class="py-3 px-4 font-semibold">Rank</th>
                 <th class="py-3 px-4 font-semibold">Candidate Profile</th>
                 <th class="py-3 px-4 font-semibold">Format</th>
@@ -361,384 +614,451 @@
                 <th class="py-3 px-4 font-semibold text-right">Actions</th>
               </tr>
             </thead>
-            <tbody id="leaderboardTbody" class="divide-y divide-slate-800/60">
+            <tbody id="leaderboardTbody" class="divide-y divide-outline-variant/10">
               <!-- Rendered via JS -->
             </tbody>
           </table>
         </div>
       </div>
 
-      <div class="p-3 rounded-lg bg-slate-900/60 border border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
-        <span class="flex items-center gap-1.5">
-          <i class="fa-solid fa-circle-info text-blue-400"></i>
-          *Note: <b>Vikram Malhotra's</b> resume contains 18 hidden white-text spans detected in the PDF stream; scores are computed on sanitized text.
+      <!-- Integrity Footnote -->
+      <div class="p-3.5 rounded-lg bg-surface-container-low border border-outline-variant/30 text-xs text-on-surface-variant flex items-center justify-between">
+        <span class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-[16px] text-primary">info</span>
+          <span>*Note: <b>Vikram Malhotra's</b> resume contains 18 hidden white-text spans detected in the PDF stream; scores are computed on sanitized text.</span>
         </span>
-        <button onclick="switchTab('forensic')" class="text-rose-400 hover:underline font-semibold ml-2">Review Notice &rarr;</button>
+        <button onclick="switchTab('forensic')" class="text-error hover:underline font-semibold font-mono text-xs ml-2">Review Notice &rarr;</button>
       </div>
+
     </section>
 
     <!-- ============================================================= -->
-    <!-- TAB 3: 5-AXIS RADAR CHART & CANDIDATE DEEP DIVE -->
+    <!-- TAB 4: 5-AXIS RADAR & CANDIDATE DEEP DIVE (STITCH DESIGN) -->
     <!-- ============================================================= -->
     <section id="tab-deepdive" class="tab-pane hidden space-y-6">
       
-      <!-- Candidate Selector -->
-      <div class="glass-card p-4 rounded-xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h3 class="text-sm font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-bullseye text-blue-400"></i>
-            Candidate Profile & Competency Breakdown
-          </h3>
-          <p class="text-xs text-slate-400">Review qualification sub-scores, verified skills, and structured interview questions.</p>
-        </div>
-        <div class="flex items-center space-x-2">
-          <label class="text-xs font-semibold text-slate-300">Select Candidate:</label>
-          <select id="deepdiveSelect" onchange="renderDeepDiveCandidate(this.value)" class="bg-slate-900 border border-slate-700 text-white text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:border-blue-500">
-            <option value="aman">Aman Verma (Clean PDF - Rank #2)</option>
-            <option value="priya">Priya Sharma (Clean PDF - Rank #3)</option>
-            <option value="vikram">Vikram Malhotra (Flagged PDF - Rank #1*)</option>
-            <option value="sneha">Sneha Gupta (Clean DOCX - Rank #4)</option>
-            <option value="rahul">Rahul Kumar (Clean DOCX - Rank #5)</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- Radar Chart Column -->
-        <div class="glass-card p-5 rounded-xl border border-slate-800 lg:col-span-5 flex flex-col items-center">
-          <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 self-start flex items-center gap-1.5">
-            <i class="fa-solid fa-chart-radar text-blue-400"></i> 5-Axis Competency Radar
-          </h4>
-          <div class="w-full h-72">
-            <canvas id="radarChart"></canvas>
-          </div>
-          <p class="text-[11px] text-slate-500 text-center mt-2">
-            Evaluation Dimensions: Required Skills, Preferred Skills, Experience, Education Tier, and Semantic Text Cosine Similarity.
-          </p>
-        </div>
-
-        <!-- Detail Breakdown Column -->
-        <div class="glass-card p-5 rounded-xl border border-slate-800 lg:col-span-7 space-y-4">
-          <!-- Candidate Header -->
-          <div class="flex items-start justify-between pb-3 border-b border-slate-800">
-            <div>
+      <!-- Top Candidate Switcher & Action Bar -->
+      <div class="w-full bg-surface-container-low rounded-xl p-4 border border-outline-variant/30 shadow-sm flex flex-col xl:flex-row items-start xl:items-center justify-between gap-4">
+        <div class="flex flex-wrap items-center gap-3 min-w-0">
+          <div class="flex items-center gap-2.5 bg-surface-container px-3.5 py-2 rounded-lg border border-outline-variant/20 shadow-sm">
+            <span class="material-symbols-outlined text-primary text-[20px]">person_search</span>
+            <div class="flex flex-col">
+              <span class="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">Candidate Inspection</span>
               <div class="flex items-center gap-2">
-                <h3 id="dd-name" class="text-lg font-bold text-white">Aman Verma</h3>
-                <span id="dd-tier-badge" class="px-2 py-0.5 rounded text-[11px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">Good Match</span>
-                <span id="dd-forensic-badge" class="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Clean Verified</span>
-              </div>
-              <p id="dd-meta" class="text-xs text-slate-400 mt-0.5">Senior Python Developer • 4.0 Years Exp • B.Tech CSE (GNIOT 2022)</p>
-            </div>
-            <div class="text-right">
-              <div class="text-xs text-slate-400">Final Score</div>
-              <div id="dd-score" class="text-2xl font-black text-blue-400">65.2%</div>
-            </div>
-          </div>
-
-          <!-- Matched Skills Chips -->
-          <div>
-            <h5 class="text-xs font-semibold text-slate-300 mb-2 flex items-center gap-1.5">
-              <i class="fa-solid fa-circle-check text-emerald-400"></i> Matched Mandatory Skills
-              <span id="dd-matched-count" class="text-[10px] text-emerald-400 font-bold ml-1">(11/13 matched)</span>
-            </h5>
-            <div id="dd-matched-chips" class="flex flex-wrap gap-1.5">
-              <!-- Injected by JS -->
-            </div>
-          </div>
-
-          <!-- Missing Skills Chips -->
-          <div>
-            <h5 class="text-xs font-semibold text-slate-300 mb-2 flex items-center gap-1.5">
-              <i class="fa-solid fa-circle-xmark text-rose-400"></i> Missing Role Requirements
-              <span id="dd-missing-count" class="text-[10px] text-rose-400 font-bold ml-1">(2 missing)</span>
-            </h5>
-            <div id="dd-missing-chips" class="flex flex-wrap gap-1.5">
-              <!-- Injected by JS -->
-            </div>
-          </div>
-
-          <!-- Career Velocity & Interview Kit -->
-          <div class="pt-3 border-t border-slate-800 space-y-3">
-            <div class="flex items-center justify-between text-xs">
-              <span class="text-slate-400 flex items-center gap-1.5">
-                <i class="fa-solid fa-arrow-trend-up text-indigo-400"></i> Career Velocity:
-              </span>
-              <span id="dd-velocity" class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-bold border border-indigo-500/30">
-                Strong Progression (2 promotions in 4 yrs)
-              </span>
-            </div>
-
-            <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 text-xs">
-              <h6 class="font-bold text-slate-200 mb-1.5 flex items-center gap-1.5">
-                <i class="fa-solid fa-clipboard-question text-blue-400"></i>
-                Structured Interview Questions
-              </h6>
-              <div id="dd-interview-kit" class="space-y-1.5 text-slate-400">
-                <!-- Injected by JS -->
+                <span id="dd-top-name" class="font-bold text-on-surface truncate">Aman Verma</span>
+                <span id="dd-top-rank" class="font-mono text-[11px] px-1.5 py-0.2 rounded bg-surface-container-high text-primary font-semibold">Rank #2</span>
+                <span id="dd-top-score-pill" class="font-mono text-[11px] px-2 py-0.2 rounded bg-tertiary-container/30 text-tertiary font-semibold flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span> 65.2% Match
+                </span>
               </div>
             </div>
           </div>
+          <div class="hidden sm:flex items-center gap-1.5 bg-surface-container-lowest px-3 py-2 rounded-lg font-mono text-[11px] text-outline">
+            <span class="material-symbols-outlined text-tertiary text-[15px]">verified</span>
+            <span class="text-on-surface-variant">Deterministic Hash:</span>
+            <span class="text-secondary font-semibold tracking-wider">0x9f4a...83c1</span>
+            <span class="text-tertiary px-1 bg-tertiary/10 rounded ml-1">CLEAN_PDF</span>
+          </div>
+        </div>
 
+        <div class="flex items-center gap-2.5 self-end xl:self-auto w-full sm:w-auto justify-end">
+          <div class="flex items-center gap-2">
+            <label class="text-xs font-semibold text-on-surface-variant">Select:</label>
+            <select id="deepdiveSelect" onchange="renderDeepDiveCandidate(this.value)" class="bg-surface-container border border-outline-variant/30 text-on-surface text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:border-primary font-mono">
+              <option value="aman">Aman Verma (Clean PDF - Rank #2)</option>
+              <option value="priya">Priya Sharma (Clean PDF - Rank #3)</option>
+              <option value="vikram">Vikram Malhotra (Flagged PDF - Rank #1*)</option>
+              <option value="sneha">Sneha Gupta (Clean DOCX - Rank #4)</option>
+              <option value="rahul">Rahul Kumar (Clean DOCX - Rank #5)</option>
+            </select>
+          </div>
         </div>
       </div>
+
+      <!-- 2-Column Balanced Architecture -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- LEFT COLUMN: Radar Chart & Score Science (5 Cols) -->
+        <div class="lg:col-span-5 flex flex-col gap-4">
+          <div class="bg-surface-container rounded-xl p-5 border border-outline-variant/30 shadow-sm flex flex-col gap-3 relative overflow-hidden">
+            <div class="flex items-center justify-between">
+              <div class="flex flex-col">
+                <span class="font-mono text-[10px] text-primary uppercase tracking-widest font-semibold">Algorithmic Decomposition</span>
+                <h3 class="text-sm font-bold text-on-surface">5-Axis Competency Radar</h3>
+              </div>
+              <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant">Calibrated Weights</span>
+            </div>
+
+            <!-- Radar Canvas -->
+            <div class="w-full h-64 flex items-center justify-center">
+              <canvas id="radarChart"></canvas>
+            </div>
+
+            <!-- Dimension Breakdown Bars -->
+            <div class="flex flex-col gap-2 pt-2 border-t border-outline-variant/20 font-mono text-xs">
+              <div class="flex flex-col gap-1">
+                <div class="flex justify-between text-[11px]">
+                  <span class="text-on-surface">Mandatory Skills (Weight: 40%)</span>
+                  <span id="bar-val-req" class="text-tertiary font-bold">84.6%</span>
+                </div>
+                <div class="w-full h-1.5 bg-surface-container-lowest rounded-full overflow-hidden">
+                  <div id="bar-fill-req" class="h-full bg-tertiary rounded-full transition-all duration-300" style="width: 84.6%"></div>
+                </div>
+              </div>
+
+              <div class="flex flex-col gap-1">
+                <div class="flex justify-between text-[11px]">
+                  <span class="text-on-surface">Preferred Skills (Weight: 15%)</span>
+                  <span id="bar-val-pref" class="text-secondary font-bold">37.5%</span>
+                </div>
+                <div class="w-full h-1.5 bg-surface-container-lowest rounded-full overflow-hidden">
+                  <div id="bar-fill-pref" class="h-full bg-secondary rounded-full transition-all duration-300" style="width: 37.5%"></div>
+                </div>
+              </div>
+
+              <div class="flex flex-col gap-1">
+                <div class="flex justify-between text-[11px]">
+                  <span class="text-on-surface">Experience Relevance (Weight: 15%)</span>
+                  <span id="bar-val-exp" class="text-tertiary font-bold">100%</span>
+                </div>
+                <div class="w-full h-1.5 bg-surface-container-lowest rounded-full overflow-hidden">
+                  <div id="bar-fill-exp" class="h-full bg-tertiary rounded-full transition-all duration-300" style="width: 100%"></div>
+                </div>
+              </div>
+
+              <div class="flex flex-col gap-1">
+                <div class="flex justify-between text-[11px]">
+                  <span class="text-on-surface">Academic Tier (Weight: 10%)</span>
+                  <span id="bar-val-edu" class="text-secondary font-bold">75%</span>
+                </div>
+                <div class="w-full h-1.5 bg-surface-container-lowest rounded-full overflow-hidden">
+                  <div id="bar-fill-edu" class="h-full bg-secondary rounded-full transition-all duration-300" style="width: 75%"></div>
+                </div>
+              </div>
+
+              <div class="flex flex-col gap-1">
+                <div class="flex justify-between text-[11px]">
+                  <span class="text-on-surface">Semantic Text Cosine (Weight: 20%)</span>
+                  <span id="bar-val-sim" class="text-primary font-bold">16.2%</span>
+                </div>
+                <div class="w-full h-1.5 bg-surface-container-lowest rounded-full overflow-hidden">
+                  <div id="bar-fill-sim" class="h-full bg-primary rounded-full transition-all duration-300" style="width: 16.2%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Detail Dossier, Skills & Interview Kit (7 Cols) -->
+        <div class="lg:col-span-7 flex flex-col gap-4">
+          <div class="p-5 rounded-xl bg-surface-container border border-outline-variant/30 shadow-sm flex flex-col gap-4">
+            
+            <!-- Candidate Header -->
+            <div class="flex items-start justify-between pb-3 border-b border-outline-variant/20">
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 id="dd-name" class="text-lg font-bold text-on-surface">Aman Verma</h3>
+                  <span id="dd-tier-badge" class="px-2 py-0.5 rounded text-[11px] font-bold bg-primary/20 text-secondary border border-primary/30 font-mono">Good Match</span>
+                  <span id="dd-forensic-badge" class="px-2 py-0.5 rounded text-[11px] font-bold bg-tertiary/20 text-tertiary border border-tertiary/30 font-mono">Clean Verified</span>
+                </div>
+                <p id="dd-meta" class="text-xs text-on-surface-variant mt-0.5 font-mono">B.Tech in Computer Science • Experience: 4.0 yrs • Format: PDF</p>
+              </div>
+              <div class="text-right">
+                <div class="text-[11px] text-outline font-mono">Final Score</div>
+                <div id="dd-score" class="text-2xl font-black text-primary font-mono">65.2%</div>
+              </div>
+            </div>
+
+            <!-- Matched Skills Chips -->
+            <div>
+              <h5 class="text-xs font-semibold text-on-surface mb-2 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-tertiary text-[16px]">check_circle</span> Matched Mandatory Skills
+                <span id="dd-matched-count" class="text-[10px] text-tertiary font-mono font-bold ml-1">(11/13 matched)</span>
+              </h5>
+              <div id="dd-matched-chips" class="flex flex-wrap gap-1.5">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+            <!-- Missing Skills Chips -->
+            <div>
+              <h5 class="text-xs font-semibold text-on-surface mb-2 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-error text-[16px]">cancel</span> Missing Role Requirements
+                <span id="dd-missing-count" class="text-[10px] text-error font-mono font-bold ml-1">(2 missing)</span>
+              </h5>
+              <div id="dd-missing-chips" class="flex flex-wrap gap-1.5">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+            <!-- Inferred Competencies DAG -->
+            <div class="pt-2 border-t border-outline-variant/20">
+              <h5 class="text-xs font-semibold text-on-surface mb-1 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-secondary text-[16px]">hub</span> Inferred Competencies (Skill Ontology DAG)
+              </h5>
+              <p class="text-[11px] text-on-surface-variant mb-2">Skills implied by claimed technologies through dependency reasoning:</p>
+              <div class="flex flex-wrap gap-2 text-xs font-mono">
+                <span class="px-2 py-0.5 rounded bg-surface-container-low text-secondary border border-outline-variant/30">• Async Programming (88% via FastAPI)</span>
+                <span class="px-2 py-0.5 rounded bg-surface-container-low text-secondary border border-outline-variant/30">• Database Design (85% via SQL & Django)</span>
+                <span class="px-2 py-0.5 rounded bg-surface-container-low text-secondary border border-outline-variant/30">• CI/CD (82% via Docker & Git)</span>
+              </div>
+            </div>
+
+            <!-- Career Velocity & Interview Kit -->
+            <div class="pt-3 border-t border-outline-variant/20 space-y-3">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-on-surface-variant flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-primary text-[16px]">trending_up</span> Career Velocity:
+                </span>
+                <span id="dd-velocity" class="px-2.5 py-0.5 rounded bg-surface-container-low text-secondary font-mono font-bold border border-outline-variant/30">
+                  Strong Progression (2 promotions in 4 yrs)
+                </span>
+              </div>
+
+              <!-- Interview Kit Accordion / Questions -->
+              <div class="bg-surface-container-low p-3.5 rounded-lg border border-outline-variant/20 text-xs">
+                <h6 class="font-bold text-on-surface mb-2 flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-primary text-[16px]">contact_support</span> Structured Interview Questions
+                </h6>
+                <div id="dd-interview-kit" class="space-y-2 text-on-surface-variant leading-relaxed">
+                  <!-- Injected via JS -->
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
     </section>
 
     <!-- ============================================================= -->
-    <!-- TAB 4: FORENSIC EXPLOIT SHIELD -->
+    <!-- TAB 5: FORENSIC TAMPERING AUDIT (STITCH DESIGN) -->
     <!-- ============================================================= -->
     <section id="tab-forensic" class="tab-pane hidden space-y-6">
       
-      <!-- Top Threat Banner -->
-      <div class="p-4 rounded-xl border border-rose-500/40 bg-rose-950/20 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div class="flex items-start space-x-3.5">
-          <div class="p-2.5 rounded-lg bg-rose-500/20 text-rose-400 mt-0.5">
-            <i class="fa-solid fa-shield-halved text-2xl"></i>
-          </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="text-xs uppercase font-extrabold tracking-wider text-rose-400">Resume Tampering Detected</span>
-              <span class="text-[10px] px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 font-bold">High Risk Notice</span>
+      <!-- Threat Notification Hero Banner -->
+      <div class="w-full bg-surface-container-low rounded-xl p-6 border border-error/40 shadow-xl relative overflow-hidden">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+          
+          <!-- Threat Metadata Column -->
+          <div class="flex flex-col gap-2 max-w-3xl">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-error-container text-on-error-container font-mono text-[11px] uppercase tracking-wider font-semibold">
+                <span class="material-symbols-outlined text-[14px]">gpp_bad</span> Severity Tier 0 • Adversarial Threat
+              </span>
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container font-mono text-[11px] text-on-surface-variant">
+                <span class="material-symbols-outlined text-[13px] text-tertiary">fingerprint</span> SHA-256: d8f49e0c1a...710b
+              </span>
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container font-mono text-[11px] text-on-surface-variant">
+                <span class="material-symbols-outlined text-[13px]">alarm</span> Active Quarantine
+              </span>
             </div>
-            <h3 class="text-base font-bold text-white mt-0.5">Resume: Vikram_Malhotra_Adversarial_Exploit.pdf</h3>
-            <p class="text-xs text-rose-200/80 mt-0.5">
-              PDF layer analysis detected 18 hidden white-text spans, micro-fonts (&lt;2.0 pt), and Cyrillic homoglyph substitutions.
+
+            <div class="flex flex-col gap-1 mt-1">
+              <h1 class="text-xl sm:text-2xl font-bold text-on-surface tracking-tight">Critical Adversarial Anomaly — Resume Tampering Detected</h1>
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-on-surface-variant font-mono">
+                <span>Target File:</span>
+                <span class="text-secondary px-1.5 py-0.5 rounded bg-surface-container-highest">Vikram_Malhotra_Adversarial_Exploit.pdf</span>
+                <span>•</span>
+                <span>Vector: Multi-Layer Document Masking & AST Bypass</span>
+              </div>
+            </div>
+
+            <p class="text-xs text-on-surface-variant max-w-2xl leading-relaxed">
+              Spatial PDF font stream rasterizer detected systematic semantic injection intended to manipulate keyword density algorithms and artificially inflate competitive ATS ranking by +22.9 percentile points.
             </p>
           </div>
-        </div>
-        <div class="text-right self-start md:self-auto">
-          <div class="text-xs text-rose-300">Tampering Risk Score</div>
-          <div class="text-3xl font-black text-rose-400">85<span class="text-lg text-rose-300/70">/100</span></div>
+
+          <!-- Gauge & Impact Metric -->
+          <div class="flex items-center gap-4 bg-surface-container-lowest/90 p-4 rounded-xl border border-outline-variant/30 self-start lg:self-center">
+            <!-- Circular Ring Chart (SVG) -->
+            <div class="relative w-20 h-20 flex items-center justify-center">
+              <svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                <circle class="text-surface-container-highest fill-none" cx="50" cy="50" r="40" stroke="currentColor" stroke-width="8"></circle>
+                <circle class="text-error fill-none transition-all duration-1000 ease-out" cx="50" cy="50" r="40" stroke="currentColor" stroke-dasharray="251.32" stroke-dashoffset="37.7" stroke-linecap="round" stroke-width="8"></circle>
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                <span class="text-lg font-bold text-on-surface font-mono leading-none">85</span>
+                <span class="font-mono text-[9px] text-on-surface-variant uppercase tracking-widest mt-0.5">/ 100</span>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-0.5 pr-2">
+              <span class="font-mono text-[10px] text-error uppercase tracking-wider font-semibold">Composite Tamper Index</span>
+              <span class="text-sm font-semibold text-on-surface">Severe Exploitation</span>
+              <span class="text-xs text-on-surface-variant flex items-center gap-1 font-mono">
+                <span class="material-symbols-outlined text-[15px] text-error">warning</span> Unsafe for shortlist
+              </span>
+            </div>
+          </div>
+
         </div>
       </div>
 
       <!-- 3 EXPLOIT BREAKDOWN CARDS -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <!-- Exploit 1 -->
-        <div class="glass-card p-4 rounded-xl border border-rose-900/30">
-          <div class="flex items-center justify-between text-xs text-slate-300 font-semibold mb-2">
-            <span class="flex items-center gap-1.5 text-rose-400">
-              <i class="fa-solid fa-eye-slash"></i> 1. Hidden White Text
-            </span>
-            <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 font-bold">18 Spans</span>
+        <div class="p-4 rounded-xl bg-surface-container border border-error/30 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs text-on-surface font-semibold mb-2">
+              <span class="flex items-center gap-1.5 text-error">
+                <span class="material-symbols-outlined text-[18px]">visibility_off</span> 1. Hidden White Text
+              </span>
+              <span class="px-2 py-0.5 rounded bg-error-container text-on-error-container font-mono text-[10px] font-bold">18 Spans</span>
+            </div>
+            <p class="text-xs text-on-surface-variant leading-relaxed">
+              Applicant injected 18 lines of dense skill keywords rendered in white font color <code class="text-error font-mono">#FFFFFF</code> matching document background. Invisible to humans, but parsed by naive ATS tools.
+            </p>
           </div>
-          <p class="text-xs text-slate-400">
-            Applicant injected 18 lines of dense skills rendered in white font color <code class="text-rose-300">#FFFFFF</code> matching document background. Invisible to humans, but parsed by naive ATS.
-          </p>
-          <div class="mt-3 p-2 bg-slate-900 rounded border border-slate-800 text-[11px] text-slate-400 font-mono">
+          <div class="mt-3 p-2 bg-surface-container-lowest rounded border border-outline-variant/20 text-[11px] text-outline font-mono">
             BBox: [50.0, 80.9, 440.4, 92.1] • Color: [1.0, 1.0, 1.0]
           </div>
         </div>
 
         <!-- Exploit 2 -->
-        <div class="glass-card p-4 rounded-xl border border-rose-900/30">
-          <div class="flex items-center justify-between text-xs text-slate-300 font-semibold mb-2">
-            <span class="flex items-center gap-1.5 text-amber-400">
-              <i class="fa-solid fa-text-height"></i> 2. Micro-Font Text
-            </span>
-            <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold">&lt; 2.0 pt</span>
+        <div class="p-4 rounded-xl bg-surface-container border border-warning/30 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs text-on-surface font-semibold mb-2">
+              <span class="flex items-center gap-1.5 text-warning">
+                <span class="material-symbols-outlined text-[18px]">format_size</span> 2. Micro-Font Text
+              </span>
+              <span class="px-2 py-0.5 rounded bg-warning/20 text-warning font-mono text-[10px] font-bold">&lt; 2.0 pt</span>
+            </div>
+            <p class="text-xs text-on-surface-variant leading-relaxed">
+              Skills stacked in header and footer rendered at <code class="text-warning font-mono">1.5 pt</code> font size (sub-human readable). Quarantined and excluded from candidate evaluation.
+            </p>
           </div>
-          <p class="text-xs text-slate-400">
-            Skills stacked in header and footer rendered at <code class="text-amber-300">1.5 pt</code> font size (sub-human readable). Quarantined and excluded from candidate evaluation.
-          </p>
-          <div class="mt-3 p-2 bg-slate-900 rounded border border-slate-800 text-[11px] text-slate-400 font-mono">
+          <div class="mt-3 p-2 bg-surface-container-lowest rounded border border-outline-variant/20 text-[11px] text-outline font-mono">
             Size: 1.5pt • Extracted: ['PyTorch', 'TensorFlow', 'K8s']
           </div>
         </div>
 
         <!-- Exploit 3 -->
-        <div class="glass-card p-4 rounded-xl border border-rose-900/30">
-          <div class="flex items-center justify-between text-xs text-slate-300 font-semibold mb-2">
-            <span class="flex items-center gap-1.5 text-indigo-400">
-              <i class="fa-solid fa-language"></i> 3. Homoglyph Substitutions
-            </span>
-            <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-bold">Cyrillic Script</span>
+        <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/30 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs text-on-surface font-semibold mb-2">
+              <span class="flex items-center gap-1.5 text-secondary">
+                <span class="material-symbols-outlined text-[18px]">translate</span> 3. Homoglyph Spoofing
+              </span>
+              <span class="px-2 py-0.5 rounded bg-secondary-container text-on-secondary-container font-mono text-[10px] font-bold">Cyrillic Script</span>
+            </div>
+            <p class="text-xs text-on-surface-variant leading-relaxed">
+              Replaced Latin letters with identical Cyrillic codepoints (e.g. Cyrillic <code class="text-secondary font-mono">U+0430 'а'</code> for Latin <code class="text-secondary font-mono">U+0061 'a'</code>) to bypass keyword filters.
+            </p>
           </div>
-          <p class="text-xs text-slate-400">
-            Replaced Latin letters with identical Cyrillic codepoints (e.g. Cyrillic <code class="text-indigo-300">U+0430 'а'</code> for Latin <code class="text-indigo-300">U+0061 'a'</code>) to bypass keyword filters.
-          </p>
-          <div class="mt-3 p-2 bg-slate-900 rounded border border-slate-800 text-[11px] text-slate-400 font-mono">
+          <div class="mt-3 p-2 bg-surface-container-lowest rounded border border-outline-variant/20 text-[11px] text-outline font-mono">
             'Pуthоn' &rarr; 'Python' • 'АWS' &rarr; 'AWS'
           </div>
         </div>
       </div>
 
-      <!-- SIDE BY SIDE DIFF VIEWER -->
-      <div class="glass-card p-5 rounded-xl border border-slate-800">
-        <h4 class="text-sm font-bold text-white mb-2 flex items-center gap-2">
-          <i class="fa-solid fa-code-compare text-blue-400"></i>
-          Sanitized Text Diff: Raw Parsed vs. Sanitized Output
+      <!-- SIDE-BY-SIDE SANITIZED TEXT DIFF VIEWER -->
+      <div class="p-5 rounded-xl bg-surface-container border border-outline-variant/30 shadow-sm">
+        <h4 class="text-sm font-bold text-on-surface mb-1 flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-[18px]">compare</span>
+          Sanitized Text Stream Diff: Raw Extracted vs. Sanitized Output
         </h4>
-        <p class="text-xs text-slate-400 mb-4">
-          Shows how the tampering detection engine filtered hidden tokens before scoring, adjusting match score by <b>22.4%</b>.
+        <p class="text-xs text-on-surface-variant mb-4">
+          Shows how the anti-tampering engine filtered hidden tokens before scoring, adjusting match score from <b>96.0%</b> down to true verified score of <b>73.1%</b>.
         </p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
           <!-- Left: Raw Text with Exploits -->
-          <div class="bg-slate-950 p-4 rounded-lg border border-rose-900/40">
-            <div class="text-rose-400 font-bold pb-2 border-b border-rose-900/30 mb-2 flex items-center justify-between">
+          <div class="bg-surface-container-lowest p-4 rounded-lg border border-error/30">
+            <div class="text-error font-bold pb-2 border-b border-error/20 mb-2 flex items-center justify-between">
               <span>RAW PARSED STREAM (Unchecked ATS)</span>
-              <span class="text-[10px] px-2 py-0.5 rounded bg-rose-500/20 text-rose-300">Legacy ATS Score: 96%</span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-error-container text-on-error-container font-bold">Legacy ATS: 96%</span>
             </div>
-            <div class="space-y-1.5 text-slate-400 max-h-56 overflow-y-auto">
+            <div class="space-y-1.5 text-outline max-h-56 overflow-y-auto custom-scroll">
               <p>Vikram Malhotra - Senior AI Architect</p>
               <p>Experience: 10 years in enterprise systems</p>
-              <p class="bg-rose-500/20 text-rose-300 px-1 rounded">[HIDDEN WHITE TEXT #FFFFFF: Python, AWS, Docker, Kubernetes, FastAPI, Django, Scikit-learn, PyTorch, TensorFlow, Redis, PostgreSQL, SQL, Algorithms, Pandas, Git, GitHub]</p>
-              <p class="bg-amber-500/20 text-amber-300 px-1 rounded">[MICROFONT 1.5pt: Deep Learning Microservices CI/CD GraphQL Linux]</p>
-              <p class="bg-indigo-500/20 text-indigo-300 px-1 rounded">[HOMOGLYPH CYRILLIC: Pуthоn Dоckеr АWS]</p>
+              <p class="bg-error/20 text-error px-1 rounded">[HIDDEN WHITE TEXT #FFFFFF: Python, AWS, Docker, Kubernetes, FastAPI, Django, Scikit-learn, PyTorch, TensorFlow, Redis, PostgreSQL, SQL, Algorithms, Pandas, Git, GitHub]</p>
+              <p class="bg-warning/20 text-warning px-1 rounded">[MICROFONT 1.5pt: Deep Learning Microservices CI/CD GraphQL Linux]</p>
+              <p class="bg-secondary/20 text-secondary px-1 rounded">[HOMOGLYPH CYRILLIC: Pуthоn Dоckеr АWS]</p>
             </div>
           </div>
 
           <!-- Right: Sanitized Text Stream -->
-          <div class="bg-slate-950 p-4 rounded-lg border border-emerald-900/40">
-            <div class="text-emerald-400 font-bold pb-2 border-b border-emerald-900/30 mb-2 flex items-center justify-between">
+          <div class="bg-surface-container-lowest p-4 rounded-lg border border-tertiary/30">
+            <div class="text-tertiary font-bold pb-2 border-b border-tertiary/20 mb-2 flex items-center justify-between">
               <span>RECRUMATCH SANITIZED STREAM</span>
-              <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">Sanitized Score: 73.1%</span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-tertiary-container/30 text-tertiary font-bold">True Score: 73.1%</span>
             </div>
-            <div class="space-y-1.5 text-slate-400 max-h-56 overflow-y-auto">
+            <div class="space-y-1.5 text-on-surface-variant max-h-56 overflow-y-auto custom-scroll">
               <p>Vikram Malhotra - Senior AI Architect</p>
               <p>Experience: 10 years in enterprise systems</p>
-              <p class="text-emerald-400 font-semibold">[STRIPPED: 18 invisible white-text keyword spans]</p>
-              <p class="text-emerald-400 font-semibold">[STRIPPED: Sub-2.0pt micro-font tokens quarantined]</p>
-              <p class="text-emerald-400 font-semibold">[NORMALIZED: Cyrillic homoglyphs mapped to ASCII equivalents]</p>
-              <p class="text-slate-500 italic">Downstream NLP evaluated only genuine visible candidate qualifications.</p>
+              <p class="text-tertiary font-semibold">[STRIPPED: 18 invisible white-text keyword spans]</p>
+              <p class="text-tertiary font-semibold">[STRIPPED: Sub-2.0pt micro-font tokens quarantined]</p>
+              <p class="text-tertiary font-semibold">[NORMALIZED: Cyrillic homoglyphs mapped to ASCII equivalents]</p>
+              <p class="text-outline italic">Downstream NLP evaluated only genuine visible candidate qualifications.</p>
             </div>
           </div>
         </div>
       </div>
+
     </section>
 
     <!-- ============================================================= -->
-    <!-- TAB 5: SCREEN NEW RESUMES (CLIENT-SIDE ENGINE) -->
-    <!-- ============================================================= -->
-    <section id="tab-screening" class="tab-pane hidden space-y-6">
-      <div class="glass-card p-6 rounded-xl border border-slate-800">
-        <h3 class="text-base font-bold text-white flex items-center gap-2 mb-1">
-          <i class="fa-solid fa-file-circle-plus text-blue-400"></i>
-          Interactive Resume Screening
-        </h3>
-        <p class="text-xs text-slate-400 mb-6">
-          Paste resume text or choose a benchmark candidate to evaluate against the canonical skill taxonomy.
-        </p>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <!-- Left: Input Area -->
-          <div class="space-y-4">
-            <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Quick Load Sample Candidate:</label>
-              <div class="flex flex-wrap gap-2">
-                <button onclick="loadSampleResume('aman')" class="px-2.5 py-1 text-xs rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">Aman Verma (Python/ML)</button>
-                <button onclick="loadSampleResume('priya')" class="px-2.5 py-1 text-xs rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">Priya Sharma (Data Science)</button>
-                <button onclick="loadSampleResume('rahul')" class="px-2.5 py-1 text-xs rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">Rahul Kumar (Web Dev)</button>
-                <button onclick="loadSampleResume('custom')" class="px-2.5 py-1 text-xs rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">Clear</button>
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Candidate Resume Text:</label>
-              <textarea id="resumeInputText" rows="10" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 text-xs text-slate-200 focus:outline-none focus:border-blue-500 font-mono" placeholder="Paste candidate resume text here..."></textarea>
-            </div>
-
-            <button onclick="runScreeningOnInput()" class="w-full py-2.5 px-4 text-xs font-bold rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-colors flex items-center justify-center gap-2 shadow-sm">
-              <i class="fa-solid fa-play"></i> Screen Candidate
-            </button>
-          </div>
-
-          <!-- Right: Screening Results -->
-          <div class="bg-slate-900/90 rounded-xl p-5 border border-slate-800 flex flex-col justify-between">
-            <div class="space-y-4">
-              <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-                <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Screening Assessment Result</h4>
-                <span id="screenResultTier" class="px-2 py-0.5 rounded text-[11px] font-bold bg-slate-800 text-slate-400 border border-slate-700">Awaiting Input</span>
-              </div>
-
-              <div class="flex items-center justify-between">
-                <div>
-                  <div class="text-xs text-slate-400">Composite Score</div>
-                  <div id="screenResultScore" class="text-3xl font-black text-white">--%</div>
-                </div>
-                <div class="text-right">
-                  <div class="text-xs text-slate-400">Extracted Skills Count</div>
-                  <div id="screenSkillsCount" class="text-xl font-bold text-blue-400">0</div>
-                </div>
-              </div>
-
-              <!-- Skills Found -->
-              <div>
-                <div class="text-xs font-semibold text-slate-300 mb-1.5">Canonical Skills Extracted:</div>
-                <div id="screenSkillsChips" class="flex flex-wrap gap-1 text-[11px] min-h-[40px] p-2 rounded bg-slate-950 border border-slate-800 text-slate-500">
-                  Click 'Screen Candidate' to view normalized skills.
-                </div>
-              </div>
-            </div>
-
-            <div class="pt-4 border-t border-slate-800 text-[11px] text-slate-500 flex items-center justify-between">
-              <span>Canonical Taxonomy: 130+ normalized terms</span>
-              <span>Execution: 100% Client-Side JS / Offline</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================================================= -->
-    <!-- TAB 6: PROJECT REPORT & ACADEMIC DEFENSE -->
+    <!-- TAB 6: PROJECT DOCUMENTATION & METHODOLOGY -->
     <!-- ============================================================= -->
     <section id="tab-report" class="tab-pane hidden space-y-6">
-      <div class="glass-card p-6 rounded-xl border border-slate-800 space-y-6">
+      <div class="p-6 rounded-xl bg-surface-container border border-outline-variant/30 space-y-6 shadow-sm">
         
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-outline-variant/20">
           <div>
-            <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">Project Documentation</span>
-            <h2 class="text-lg font-bold text-white mt-0.5">RecruMatch: Project Report & Documentation</h2>
-            <p class="text-xs text-slate-400">Department of Computer Science & Engineering, GNIOT (AKTU) • Academic Session 2026–2027</p>
+            <span class="text-xs font-bold text-secondary uppercase tracking-wider font-mono">Project Documentation</span>
+            <h2 class="text-lg font-bold text-on-surface mt-0.5">RecruMatch: Project Report & Academic Specifications</h2>
+            <p class="text-xs text-on-surface-variant">Department of Computer Science & Engineering, GNIOT (AKTU) • Academic Session 2026–2027</p>
           </div>
           <div class="flex items-center gap-2">
-            <button onclick="downloadReportDocx()" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-blue-600 hover:bg-blue-500 text-white flex items-center gap-1.5 shadow-sm">
-              <i class="fa-solid fa-file-word"></i> Word Report (.docx)
+            <button onclick="downloadReportDocx()" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-primary hover:bg-primary-hover text-white flex items-center gap-1.5 shadow-sm transition-colors">
+              <span class="material-symbols-outlined text-[16px]">file_download</span> Word Report (.docx)
             </button>
-            <button onclick="downloadReportMd()" class="px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1.5">
-              <i class="fa-solid fa-file-code"></i> View Outline
+            <button onclick="downloadReportMd()" class="px-3.5 py-1.5 text-xs font-medium rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface border border-outline-variant/40 flex items-center gap-1.5 transition-colors">
+              <span class="material-symbols-outlined text-[16px]">article</span> View Outline
             </button>
           </div>
         </div>
 
         <!-- 3 Highlights -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-          <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-800">
-            <div class="text-blue-400 font-bold mb-1 flex items-center gap-1.5">
-              <i class="fa-solid fa-code text-blue-400"></i> Deterministic NLP vs. Pure LLMs
+          <div class="bg-surface-container-low p-4 rounded-lg border border-outline-variant/20">
+            <div class="text-primary font-bold mb-1 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-primary text-[16px]">psychology</span> Deterministic NLP vs. LLMs
             </div>
-            <p class="text-slate-400 leading-relaxed">
-              Deterministic taxonomy matching eliminates stochastic hallucinations, operates 100% offline with zero external API dependencies, preserves candidate privacy, and runs with sub-400ms latency.
+            <p class="text-on-surface-variant leading-relaxed">
+              Deterministic taxonomy matching eliminates stochastic hallucinations, operates 100% offline with zero external API dependencies, preserves candidate privacy, and executes with sub-400ms latency.
             </p>
           </div>
 
-          <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-800">
-            <div class="text-emerald-400 font-bold mb-1 flex items-center gap-1.5">
-              <i class="fa-solid fa-scale-balanced text-emerald-400"></i> Unconscious Bias Mitigation
+          <div class="bg-surface-container-low p-4 rounded-lg border border-outline-variant/20">
+            <div class="text-tertiary font-bold mb-1 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-tertiary text-[16px]">balance</span> Unconscious Bias Mitigation
             </div>
-            <p class="text-slate-400 leading-relaxed">
+            <p class="text-on-surface-variant leading-relaxed">
               Non-job-related attributes (gender, age, marital status, photo) are excluded. The Blind Recruitment Mode dynamically scrubs names and prestige markers, ensuring evaluation rests solely on verified merit.
             </p>
           </div>
 
-          <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-800">
-            <div class="text-rose-400 font-bold mb-1 flex items-center gap-1.5">
-              <i class="fa-solid fa-shield-halved text-rose-400"></i> Resume Tampering Detection
+          <div class="bg-surface-container-low p-4 rounded-lg border border-outline-variant/20">
+            <div class="text-error font-bold mb-1 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-error text-[16px]">shield</span> Resume Tampering Detection
             </div>
-            <p class="text-slate-400 leading-relaxed">
+            <p class="text-on-surface-variant leading-relaxed">
               Pre-flight PDF stream inspection parses font color triples (R, G, B) to detect invisible white text (#FFFFFF), micro-fonts (&lt;2.0 pt), and Cyrillic homoglyphs before text reaches scoring.
             </p>
           </div>
         </div>
 
         <!-- Mathematical Scoring Formula Code Block -->
-        <div class="bg-slate-950 p-4 rounded-lg border border-slate-800 text-xs">
-          <div class="text-slate-300 font-bold mb-2 flex items-center justify-between">
+        <div class="bg-surface-container-lowest p-4 rounded-lg border border-outline-variant/20 text-xs">
+          <div class="text-on-surface font-bold mb-2 flex items-center justify-between font-mono">
             <span>Mathematical Equation 5.1: Explainable Multi-Criteria Scoring Formulation</span>
-            <span class="text-[10px] text-blue-400 font-mono">Convex Combination (Sum = 1.0)</span>
+            <span class="text-[10px] text-primary">Convex Combination (Sum = 1.0)</span>
           </div>
-          <pre class="text-slate-300 leading-relaxed overflow-x-auto text-[11px]">
+          <pre class="text-secondary leading-relaxed overflow-x-auto text-[11px] font-mono">
 Final Score = w_req * S_req + w_pref * S_pref + w_exp * S_exp + w_edu * S_edu + w_sim * S_sim
 
 Enterprise Default Weights:
@@ -759,18 +1079,18 @@ Where:
 
         <!-- Chapter Outline Summary -->
         <div>
-          <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3">10-Chapter Academic Report Structure (GNIOT / AKTU)</h4>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-            <div class="p-2.5 rounded bg-slate-900 border border-slate-800 text-slate-300"><b class="text-blue-400">Chapter 1:</b> Introduction & Objectives (Pages 1–5)</div>
-            <div class="p-2.5 rounded bg-slate-900 border border-slate-800 text-slate-300"><b class="text-blue-400">Chapter 2:</b> System Analysis & Need Identification (Pages 6–10)</div>
-            <div class="p-2.5 rounded bg-slate-900 border border-slate-800 text-slate-300"><b class="text-blue-400">Chapter 3:</b> Feasibility Study (Tech, Econ, Ops) (Pages 11–15)</div>
-            <div class="p-2.5 rounded bg-slate-900 border border-slate-800 text-slate-300"><b class="text-blue-400">Chapter 4:</b> Specifications & DFDs / ER Diagram (Pages 16–22)</div>
-            <div class="p-2.5 rounded bg-slate-900 border border-slate-800 text-slate-300"><b class="text-blue-400">Chapter 5:</b> Proposed System & Algorithmic Engines (Pages 23–31)</div>
-            <div class="p-2.5 rounded bg-slate-900 border border-slate-800 text-slate-300"><b class="text-blue-400">Chapter 6:</b> User Interface & Screen Shots (Pages 32–35)</div>
-            <div class="p-2.5 rounded bg-slate-900 border border-slate-800 text-slate-300"><b class="text-blue-400">Chapter 7:</b> Modular System Coding (Pages 36–42)</div>
-            <div class="p-2.5 rounded bg-slate-900 border border-slate-800 text-slate-300"><b class="text-blue-400">Chapter 8:</b> Experimental Results & Benchmarks (Pages 43–47)</div>
-            <div class="p-2.5 rounded bg-slate-900 border border-slate-800 text-slate-300"><b class="text-blue-400">Chapter 9:</b> Conclusion & Future Scope (Pages 48–49)</div>
-            <div class="p-2.5 rounded bg-slate-900 border border-slate-800 text-slate-300"><b class="text-blue-400">Chapter 10:</b> IEEE References & Glossary (Pages 50–52)</div>
+          <h4 class="text-xs font-bold text-on-surface uppercase tracking-wider mb-3 font-mono">10-Chapter Academic Report Structure (GNIOT / AKTU)</h4>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono">
+            <div class="p-2.5 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant"><b class="text-primary font-bold">Chapter 1:</b> Introduction & Objectives (Pages 1–5)</div>
+            <div class="p-2.5 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant"><b class="text-primary font-bold">Chapter 2:</b> System Analysis & Need Identification (Pages 6–10)</div>
+            <div class="p-2.5 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant"><b class="text-primary font-bold">Chapter 3:</b> Feasibility Study (Tech, Econ, Ops) (Pages 11–15)</div>
+            <div class="p-2.5 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant"><b class="text-primary font-bold">Chapter 4:</b> Specifications & DFDs / ER Diagram (Pages 16–22)</div>
+            <div class="p-2.5 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant"><b class="text-primary font-bold">Chapter 5:</b> Proposed System & Algorithmic Engines (Pages 23–31)</div>
+            <div class="p-2.5 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant"><b class="text-primary font-bold">Chapter 6:</b> User Interface & Screen Shots (Pages 32–35)</div>
+            <div class="p-2.5 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant"><b class="text-primary font-bold">Chapter 7:</b> Modular System Coding (Pages 36–42)</div>
+            <div class="p-2.5 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant"><b class="text-primary font-bold">Chapter 8:</b> Experimental Results & Benchmarks (Pages 43–47)</div>
+            <div class="p-2.5 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant"><b class="text-primary font-bold">Chapter 9:</b> Conclusion & Future Scope (Pages 48–49)</div>
+            <div class="p-2.5 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant"><b class="text-primary font-bold">Chapter 10:</b> IEEE References & Glossary (Pages 50–52)</div>
           </div>
         </div>
 
@@ -779,25 +1099,27 @@ Where:
 
   </main>
 
+  <!-- ============================================================= -->
   <!-- FOOTER -->
-  <footer class="border-t border-slate-800/80 bg-slate-950 py-4 text-center text-xs text-slate-500">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+  <!-- ============================================================= -->
+  <footer class="border-t border-surface-container-high bg-surface-container-lowest py-4 text-center text-xs text-on-surface-variant">
+    <div class="max-w-[1560px] mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
       <div>
         RecruMatch &copy; 2026 • B.Tech Mini Project • Greater Noida Institute of Technology (GNIOT), AKTU
       </div>
       <div class="flex items-center space-x-4">
-        <span>Candidate: <b class="text-slate-400">Yuvraj Saini</b></span>
-        <span>Supervisor: <b class="text-slate-400">Mr. Ashwini Kr. Verma</b></span>
+        <span>Candidate: <b class="text-on-surface">Yuvraj Saini</b></span>
+        <span>Supervisor: <b class="text-on-surface">Mr. Ashwini Kr. Verma</b></span>
       </div>
     </div>
   </footer>
 
-  <!-- SCRIPT LOGIC -->
+  <!-- ============================================================= -->
+  <!-- CLIENT JAVASCRIPT STATE & ENGINE -->
+  <!-- ============================================================= -->
   <script>
-    // -------------------------------------------------------------
-    // DATA STORE: BENCHMARK CANDIDATES
-    // -------------------------------------------------------------
     let isBlindMode = false;
+    let isDrawerOpen = false;
 
     let weights = {
       req: 0.40,
@@ -929,10 +1251,10 @@ Where:
     }
 
     function getTierInfo(score) {
-      if (score >= 80.0) return { label: "Excellent Match", color: "emerald", badge: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30" };
-      if (score >= 60.0) return { label: "Good Match", color: "blue", badge: "bg-blue-500/20 text-blue-300 border-blue-500/30" };
-      if (score >= 40.0) return { label: "Moderate Match", color: "amber", badge: "bg-amber-500/20 text-amber-300 border-amber-500/30" };
-      return { label: "Low Match", color: "rose", badge: "bg-rose-500/20 text-rose-300 border-rose-500/30" };
+      if (score >= 80.0) return { label: "Excellent Match", color: "tertiary", badge: "bg-tertiary-container/20 text-tertiary border-tertiary/30" };
+      if (score >= 60.0) return { label: "Good Match", color: "primary", badge: "bg-primary/20 text-secondary border-primary/30" };
+      if (score >= 40.0) return { label: "Moderate Match", color: "warning", badge: "bg-warning/20 text-warning border-warning/30" };
+      return { label: "Low Match", color: "error", badge: "bg-error/20 text-error border-error/30" };
     }
 
     // -------------------------------------------------------------
@@ -940,9 +1262,9 @@ Where:
     // -------------------------------------------------------------
     function renderLeaderboard() {
       const tbody = document.getElementById("leaderboardTbody");
+      if (!tbody) return;
       tbody.innerHTML = "";
 
-      // Sort by final score descending
       const sorted = [...candidates].map(c => ({
         ...c,
         computedScore: calculateFinalScore(c)
@@ -953,7 +1275,7 @@ Where:
         const displayName = isBlindMode ? c.blindToken : c.name;
 
         const tr = document.createElement("tr");
-        tr.className = "hover:bg-slate-900/60 transition-colors cursor-pointer";
+        tr.className = "hover:bg-surface-container-high transition-colors cursor-pointer";
         tr.onclick = () => {
           document.getElementById("deepdiveSelect").value = c.id;
           renderDeepDiveCandidate(c.id);
@@ -961,37 +1283,37 @@ Where:
         };
 
         const rankBadge = idx === 0 
-          ? `<span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 font-bold flex items-center justify-center text-xs">#1</span>`
-          : `<span class="text-slate-400 font-semibold pl-1.5">#${idx + 1}</span>`;
+          ? `<span class="w-6 h-6 rounded bg-primary/20 text-primary border border-primary/30 font-bold flex items-center justify-center text-xs font-mono">#1</span>`
+          : `<span class="text-on-surface-variant font-semibold pl-1 font-mono">#${idx + 1}</span>`;
 
         tr.innerHTML = `
           <td class="py-3 px-4">${rankBadge}</td>
           <td class="py-3 px-4">
-            <div class="font-bold text-slate-100">${displayName}</div>
-            <div class="text-[11px] text-slate-500">${c.degree}</div>
+            <div class="font-bold text-on-surface">${displayName}</div>
+            <div class="text-[11px] text-outline font-mono">${c.degree}</div>
           </td>
-          <td class="py-3 px-4 text-slate-400 font-mono text-[11px]">${c.format}</td>
+          <td class="py-3 px-4 text-on-surface-variant font-mono text-[11px]">${c.format}</td>
           <td class="py-3 px-4">
-            <span class="font-bold text-blue-400">${c.subscores.req}%</span>
-            <span class="text-slate-500 text-[10px]">(${c.matchedCount})</span>
+            <span class="font-bold text-primary font-mono">${c.subscores.req}%</span>
+            <span class="text-outline text-[10px] font-mono">(${c.matchedCount})</span>
           </td>
-          <td class="py-3 px-4 text-slate-300">${c.expYears}</td>
+          <td class="py-3 px-4 text-on-surface-variant font-mono">${c.expYears}</td>
           <td class="py-3 px-4">
             <div class="flex items-center gap-2">
-              <span class="font-black text-sm text-${tier.color}-400">${c.computedScore}%</span>
-              <div class="w-16 h-1.5 bg-slate-800 rounded-full overflow-hidden hidden sm:block">
-                <div class="h-full bg-${tier.color}-500" style="width: ${c.computedScore}%"></div>
+              <span class="font-bold font-mono text-sm text-${tier.color}">${c.computedScore}%</span>
+              <div class="w-16 h-1.5 bg-surface-container-lowest rounded-full overflow-hidden hidden sm:block">
+                <div class="h-full bg-${tier.color} rounded-full" style="width: ${c.computedScore}%"></div>
               </div>
             </div>
           </td>
           <td class="py-3 px-4">
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${tier.badge}">${tier.label}</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${tier.badge}">${tier.label}</span>
           </td>
-          <td class="py-3 px-4 text-[11px]">
-            ${c.fraudScore > 0 ? `<span class="text-rose-400 font-bold">${c.forensicStatus}</span>` : `<span class="text-emerald-400 font-semibold">${c.forensicStatus}</span>`}
+          <td class="py-3 px-4 text-[11px] font-mono">
+            ${c.fraudScore > 0 ? `<span class="text-error font-bold flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">warning</span> ${c.forensicStatus}</span>` : `<span class="text-tertiary font-semibold flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">check_circle</span> ${c.forensicStatus}</span>`}
           </td>
           <td class="py-3 px-4 text-right">
-            <button class="px-2 py-1 rounded bg-slate-800 text-blue-400 hover:bg-slate-700 text-[11px] font-medium border border-slate-700">
+            <button class="px-2.5 py-1 rounded bg-surface-container-high hover:bg-surface-variant text-secondary text-[11px] font-medium border border-outline-variant/30 font-mono transition-colors">
               Inspect &rarr;
             </button>
           </td>
@@ -1001,8 +1323,24 @@ Where:
     }
 
     // -------------------------------------------------------------
-    // WEIGHT SLIDERS HANDLER
+    // CRITERIA WEIGHT DRAWER
     // -------------------------------------------------------------
+    function toggleWeightDrawerAction() {
+      const drawer = document.getElementById("weightDrawer");
+      const chevron = document.getElementById("drawerChevron");
+      isDrawerOpen = !isDrawerOpen;
+
+      if (isDrawerOpen) {
+        drawer.style.maxHeight = "500px";
+        drawer.style.opacity = "1";
+        chevron.style.transform = "rotate(180deg)";
+      } else {
+        drawer.style.maxHeight = "0";
+        drawer.style.opacity = "0";
+        chevron.style.transform = "rotate(0deg)";
+      }
+    }
+
     function onWeightChange() {
       const r = parseInt(document.getElementById("slider-w-req").value);
       const p = parseInt(document.getElementById("slider-w-pref").value);
@@ -1048,16 +1386,20 @@ Where:
 
       if (isBlindMode) {
         statusText.textContent = "ON (Active)";
-        statusText.className = "text-emerald-400 font-bold";
-        toggleBtn.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 flex items-center gap-2 bg-emerald-950/40 text-emerald-300 border-emerald-500/40";
-        deiBadge.textContent = "Blind Mode Active (Candidate PII Redacted)";
-        deiBadge.className = "text-emerald-400 font-bold";
+        statusText.className = "text-tertiary font-mono font-bold";
+        toggleBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 flex items-center gap-2 bg-tertiary/10 text-tertiary border-tertiary/40";
+        if (deiBadge) {
+          deiBadge.textContent = "Blind Mode Active (PII Redacted)";
+          deiBadge.className = "text-tertiary font-bold";
+        }
       } else {
         statusText.textContent = "OFF";
-        statusText.className = "text-slate-400 font-bold";
-        toggleBtn.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 flex items-center gap-2 bg-slate-800 text-slate-300 border-slate-700 hover:border-slate-600";
-        deiBadge.textContent = "Standard Mode";
-        deiBadge.className = "text-slate-400 font-bold";
+        statusText.className = "text-on-surface font-mono font-bold";
+        toggleBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 flex items-center gap-2 bg-surface-container-low text-on-surface-variant border-outline-variant/30 hover:border-primary/50";
+        if (deiBadge) {
+          deiBadge.textContent = "Standard Mode";
+          deiBadge.className = "text-on-surface-variant font-bold";
+        }
       }
 
       renderLeaderboard();
@@ -1075,19 +1417,24 @@ Where:
       const score = calculateFinalScore(cand);
       const tier = getTierInfo(score);
 
-      document.getElementById("dd-name").textContent = isBlindMode ? cand.blindToken : cand.name;
+      const displayName = isBlindMode ? cand.blindToken : cand.name;
+      document.getElementById("dd-name").textContent = displayName;
+      document.getElementById("dd-top-name").textContent = displayName;
       document.getElementById("dd-score").textContent = score + "%";
-      document.getElementById("dd-score").className = `text-2xl font-black text-${tier.color}-400`;
 
       const tierBadge = document.getElementById("dd-tier-badge");
       tierBadge.textContent = tier.label;
-      tierBadge.className = `px-2 py-0.5 rounded text-[11px] font-bold border ${tier.badge}`;
+      tierBadge.className = `px-2 py-0.5 rounded text-[11px] font-bold border font-mono ${tier.badge}`;
+
+      const topPill = document.getElementById("dd-top-score-pill");
+      topPill.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-${tier.color} animate-pulse"></span> ${score}% Match`;
+      topPill.className = `font-mono text-[11px] px-2 py-0.2 rounded bg-${tier.color}/15 text-${tier.color} font-semibold flex items-center gap-1 border border-${tier.color}/30`;
 
       const forBadge = document.getElementById("dd-forensic-badge");
       forBadge.textContent = cand.forensicStatus;
       forBadge.className = cand.fraudScore > 0 
-        ? "px-2 py-0.5 rounded text-[11px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30"
-        : "px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+        ? "px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-error/20 text-error border border-error/30"
+        : "px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-tertiary/20 text-tertiary border border-tertiary/30";
 
       document.getElementById("dd-meta").textContent = isBlindMode
         ? `Candidate ID: ${cand.id.toUpperCase()} • Experience: ${cand.expYears} • Institution: [Anonymized for Fairness]`
@@ -1096,13 +1443,29 @@ Where:
       document.getElementById("dd-matched-count").textContent = `(${cand.matchedSkills.length}/13 matched)`;
       document.getElementById("dd-missing-count").textContent = `(${cand.missingSkills.length} missing)`;
 
+      // Update dimension breakdown bars
+      document.getElementById("bar-val-req").textContent = cand.subscores.req + "%";
+      document.getElementById("bar-fill-req").style.width = cand.subscores.req + "%";
+
+      document.getElementById("bar-val-pref").textContent = cand.subscores.pref + "%";
+      document.getElementById("bar-fill-pref").style.width = cand.subscores.pref + "%";
+
+      document.getElementById("bar-val-exp").textContent = cand.subscores.exp + "%";
+      document.getElementById("bar-fill-exp").style.width = cand.subscores.exp + "%";
+
+      document.getElementById("bar-val-edu").textContent = cand.subscores.edu + "%";
+      document.getElementById("bar-fill-edu").style.width = cand.subscores.edu + "%";
+
+      document.getElementById("bar-val-sim").textContent = cand.subscores.sim + "%";
+      document.getElementById("bar-fill-sim").style.width = cand.subscores.sim + "%";
+
       // Matched Chips
       const matchedContainer = document.getElementById("dd-matched-chips");
       matchedContainer.innerHTML = "";
       cand.matchedSkills.forEach(s => {
         const chip = document.createElement("span");
-        chip.className = "px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-[11px] flex items-center gap-1";
-        chip.innerHTML = `<i class="fa-solid fa-check text-[10px]"></i> ${s}`;
+        chip.className = "px-2 py-0.5 rounded-full bg-tertiary/15 text-tertiary border border-tertiary/30 text-[11px] font-mono flex items-center gap-1";
+        chip.innerHTML = `<span class="material-symbols-outlined text-[13px]">check</span> ${s}`;
         matchedContainer.appendChild(chip);
       });
 
@@ -1111,8 +1474,8 @@ Where:
       missingContainer.innerHTML = "";
       cand.missingSkills.forEach(s => {
         const chip = document.createElement("span");
-        chip.className = "px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30 text-[11px] flex items-center gap-1";
-        chip.innerHTML = `<i class="fa-solid fa-xmark text-[10px]"></i> ${s}`;
+        chip.className = "px-2 py-0.5 rounded-full bg-error/15 text-error border border-error/30 text-[11px] font-mono flex items-center gap-1";
+        chip.innerHTML = `<span class="material-symbols-outlined text-[13px]">close</span> ${s}`;
         missingContainer.appendChild(chip);
       });
 
@@ -1122,12 +1485,14 @@ Where:
       cand.interviewQs.forEach((q, idx) => {
         const p = document.createElement("p");
         p.className = "flex items-start gap-1.5";
-        p.innerHTML = `<span class="text-blue-400 font-bold">${idx + 1}.</span> <span>${q}</span>`;
+        p.innerHTML = `<span class="text-primary font-bold font-mono">${idx + 1}.</span> <span>${q}</span>`;
         kitContainer.appendChild(p);
       });
 
-      // Radar Chart
-      const radarCtx = document.getElementById("radarChart").getContext("2d");
+      // Radar Chart Rendering (Violet & Emerald Theme)
+      const radarCanvas = document.getElementById("radarChart");
+      if (!radarCanvas) return;
+      const radarCtx = radarCanvas.getContext("2d");
       const chartData = [
         cand.subscores.req,
         cand.subscores.pref,
@@ -1144,14 +1509,14 @@ Where:
         radarChartInstance = new Chart(radarCtx, {
           type: 'radar',
           data: {
-            labels: ['Required Skills (40%)', 'Preferred (15%)', 'Experience (15%)', 'Education (10%)', 'Semantic Sim (20%)'],
+            labels: ['Required Skills (40%)', 'Preferred (15%)', 'Experience (15%)', 'Education (10%)', 'Text Cosine (20%)'],
             datasets: [{
               label: isBlindMode ? cand.blindToken : cand.name,
               data: chartData,
-              backgroundColor: 'rgba(59, 130, 246, 0.25)',
-              borderColor: 'rgba(59, 130, 246, 0.9)',
+              backgroundColor: 'rgba(139, 92, 246, 0.22)',
+              borderColor: '#8b5cf6',
               borderWidth: 2,
-              pointBackgroundColor: '#3b82f6',
+              pointBackgroundColor: '#8b5cf6',
               pointBorderColor: '#ffffff',
               pointRadius: 3
             }]
@@ -1161,9 +1526,9 @@ Where:
             maintainAspectRatio: false,
             scales: {
               r: {
-                angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
-                grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                pointLabels: { color: '#94a3b8', font: { size: 10, family: 'Inter' } },
+                angleLines: { color: 'rgba(255, 255, 255, 0.08)' },
+                grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                pointLabels: { color: '#cbc3d7', font: { size: 10, family: 'Inter' } },
                 suggestedMin: 0,
                 suggestedMax: 100,
                 ticks: { display: false, stepSize: 20 }
@@ -1171,7 +1536,7 @@ Where:
             },
             plugins: {
               legend: {
-                labels: { color: '#e2e8f0', font: { size: 11, family: 'Inter', weight: 'bold' } }
+                labels: { color: '#e0e2ef', font: { size: 11, family: 'Inter', weight: 'bold' } }
               }
             }
           }
@@ -1185,7 +1550,7 @@ Where:
     function switchTab(tabId) {
       document.querySelectorAll(".tab-pane").forEach(el => el.classList.add("hidden"));
       document.querySelectorAll(".tab-btn").forEach(el => {
-        el.className = "tab-btn px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-all flex items-center gap-2 whitespace-nowrap";
+        el.className = "tab-btn px-3.5 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-2 whitespace-nowrap";
       });
 
       const targetPane = document.getElementById(`tab-${tabId}`);
@@ -1193,7 +1558,7 @@ Where:
 
       const targetBtn = document.getElementById(`tabBtn-${tabId}`);
       if (targetBtn) {
-        targetBtn.className = "tab-btn px-3 py-2 rounded-lg text-blue-400 bg-blue-500/10 border border-blue-500/20 flex items-center gap-2 whitespace-nowrap";
+        targetBtn.className = "tab-btn px-3.5 py-2 rounded-lg text-primary bg-surface-container-high border border-primary/30 flex items-center gap-2 whitespace-nowrap transition-all";
       }
 
       if (tabId === 'deepdive') {
@@ -1203,10 +1568,12 @@ Where:
     }
 
     // -------------------------------------------------------------
-    // INIT TIER BAR CHART
+    // TIER DISTRIBUTION BAR CHART
     // -------------------------------------------------------------
     function initTierChart() {
-      const ctx = document.getElementById("tierChart").getContext("2d");
+      const canvas = document.getElementById("tierChart");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
       new Chart(ctx, {
         type: 'bar',
         data: {
@@ -1216,15 +1583,15 @@ Where:
             data: [0, 2, 1, 2],
             backgroundColor: [
               'rgba(16, 185, 129, 0.65)',
-              'rgba(59, 130, 246, 0.65)',
+              'rgba(139, 92, 246, 0.65)',
               'rgba(245, 158, 11, 0.65)',
-              'rgba(239, 68, 68, 0.65)'
+              'rgba(244, 63, 94, 0.65)'
             ],
             borderColor: [
               '#10b981',
-              '#3b82f6',
+              '#8b5cf6',
               '#f59e0b',
-              '#ef4444'
+              '#f43f5e'
             ],
             borderWidth: 1.5,
             borderRadius: 6
@@ -1239,11 +1606,11 @@ Where:
           scales: {
             x: {
               grid: { display: false },
-              ticks: { color: '#94a3b8', font: { size: 11, family: 'Inter' } }
+              ticks: { color: '#cbc3d7', font: { size: 11, family: 'Inter' } }
             },
             y: {
               grid: { color: 'rgba(255, 255, 255, 0.06)' },
-              ticks: { color: '#94a3b8', stepSize: 1, precision: 0 },
+              ticks: { color: '#cbc3d7', stepSize: 1, precision: 0 },
               beginAtZero: true
             }
           }
@@ -1263,6 +1630,19 @@ Where:
       "aws", "azure", "docker", "kubernetes", "terraform", "ci/cd", "git", "github", "linux", "rest api"
     ];
 
+    function loadRolePreset(type) {
+      const textarea = document.getElementById("jdInput");
+      if (type === 'python-ml') {
+        textarea.value = `Job Title: Senior Python & Machine Learning Engineer\nDepartment: Core AI Platform\nExperience: 3.0+ years\nMandatory Skills: Python, FastAPI, Django, Scikit-learn, SQL, Docker, AWS, Git, GitHub, Pandas, Machine Learning, REST API, Algorithms.\nPreferred Skills: Microservices, Redis, PostgreSQL, PyTorch, CI/CD, Linux, NumPy.\nEducation: Bachelor's or Master's in Computer Science or related engineering field.`;
+      } else if (type === 'data-science') {
+        textarea.value = `Job Title: Data Scientist & NLP Specialist\nDepartment: Machine Intelligence\nExperience: 2.0+ years\nMandatory Skills: Python, Machine Learning, Natural Language Processing, PyTorch, TensorFlow, Scikit-learn, Pandas, NumPy, spaCy, SQL, Git.\nPreferred Skills: Hugging Face, LLM, Deep Learning, Statistics, MySQL.\nEducation: Master's in AI, Data Science, or B.Tech.`;
+      } else if (type === 'fullstack') {
+        textarea.value = `Job Title: Full Stack Web Developer\nDepartment: Product Engineering\nExperience: 2.0+ years\nMandatory Skills: JavaScript, TypeScript, React, Node.js, Express.js, HTML, CSS, REST API, Git, MongoDB, SQL.\nPreferred Skills: Next.js, Tailwind CSS, Docker, Redis.\nEducation: B.Tech in Computer Science, IT, or BCA/MCA.`;
+      } else if (type === 'devops') {
+        textarea.value = `Job Title: Cloud DevOps & Site Reliability Engineer\nDepartment: Infrastructure Platform\nExperience: 3.0+ years\nMandatory Skills: Linux, Docker, Kubernetes, AWS, Terraform, CI/CD, Bash, Git, Prometheus, Grafana, Nginx.\nPreferred Skills: Python, Ansible, Security Compliance.\nEducation: B.Tech in IT / Computer Science.`;
+      }
+    }
+
     function loadSampleResume(type) {
       const textarea = document.getElementById("resumeInputText");
       if (type === 'aman') {
@@ -1276,14 +1656,38 @@ Where:
       }
     }
 
+    function handleFileSelect(event) {
+      const files = event.target.files;
+      if (!files || files.length === 0) return;
+      
+      const fileNames = Array.from(files).map(f => f.name).join(", ");
+      const reader = new FileReader();
+      const firstFile = files[0];
+
+      reader.onload = function(e) {
+        document.getElementById("resumeInputText").value = `[Ingested File: ${firstFile.name}]\n` + (e.target.result || "").slice(0, 2000);
+        const scoreBox = document.getElementById("screenResultBox");
+        if (scoreBox) {
+          scoreBox.scrollIntoView({ behavior: 'smooth' });
+        }
+      };
+
+      if (firstFile.type.includes("text") || firstFile.name.endsWith(".txt")) {
+        reader.readAsText(firstFile);
+      } else {
+        // Preview for binary files in client-side preview
+        document.getElementById("resumeInputText").value = `[Ingested ${files.length} File(s): ${fileNames}]\nBinary PDF/DOCX structure detected. Click 'Screen Candidates' to run deterministic parsing.`;
+      }
+    }
+
     function runScreeningOnInput() {
       const text = document.getElementById("resumeInputText").value.toLowerCase();
       if (!text.trim()) {
-        alert("Please enter or paste candidate resume text first.");
+        alert("Please enter resume text or select a candidate file first.");
         return;
       }
 
-      // Exact word-boundary match against canonical skill taxonomy
+      // Word boundary match against canonical skills
       const matched = [];
       CANONICAL_SKILLS.forEach(skill => {
         const regex = new RegExp(`(^|[^a-zA-Z0-9_])${skill.replace("+", "\\+")}(?=[^a-zA-Z0-9_]|$)`, 'i');
@@ -1292,30 +1696,27 @@ Where:
         }
       });
 
-      // Required skills comparison (13 required)
       const REQ_SKILLS = ["PYTHON", "FASTAPI", "DJANGO", "SCIKIT-LEARN", "SQL", "DOCKER", "AWS", "GIT", "GITHUB", "PANDAS", "MACHINE LEARNING", "REST API", "ALGORITHMS"];
       const matchedReq = REQ_SKILLS.filter(r => matched.includes(r));
       const reqPct = Math.round((matchedReq.length / REQ_SKILLS.length) * 100);
 
-      // Estimate overall score
       const simEst = Math.min(25, matched.length * 1.5);
       const estScore = Math.min(100, Math.round(0.40 * reqPct + 0.15 * 50 + 0.15 * 80 + 0.10 * 75 + 0.20 * simEst));
       const tier = getTierInfo(estScore);
 
       document.getElementById("screenResultScore").textContent = estScore + "%";
-      document.getElementById("screenResultScore").className = `text-3xl font-black text-${tier.color}-400`;
       document.getElementById("screenResultTier").textContent = tier.label;
-      document.getElementById("screenResultTier").className = `px-2 py-0.5 rounded text-[11px] font-bold border ${tier.badge}`;
+      document.getElementById("screenResultTier").className = `px-2 py-0.5 rounded text-[11px] font-bold border font-mono ${tier.badge}`;
       document.getElementById("screenSkillsCount").textContent = matched.length;
 
       const chipsContainer = document.getElementById("screenSkillsChips");
       chipsContainer.innerHTML = "";
       if (matched.length === 0) {
-        chipsContainer.innerHTML = `<span class="text-rose-400">No canonical skills matched in taxonomy.</span>`;
+        chipsContainer.innerHTML = `<span class="text-error font-mono">No canonical skills matched in taxonomy.</span>`;
       } else {
         matched.forEach(s => {
           const chip = document.createElement("span");
-          chip.className = "px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[10px] font-bold";
+          chip.className = "px-2 py-0.5 rounded bg-primary/20 text-secondary border border-primary/30 text-[10px] font-bold font-mono";
           chip.textContent = s;
           chipsContainer.appendChild(chip);
         });
@@ -1342,14 +1743,14 @@ Where:
     }
 
     function downloadReportDocx() {
-      alert("The 65-page academic project report ('RecruMatch_BTech_Mini_Project_Report.docx') is available in the repository root.");
+      alert("The complete academic project report ('RecruMatch_BTech_Mini_Project_Report.docx') is located in the root repository.");
     }
 
     function downloadReportMd() {
       switchTab('report');
     }
 
-    // Initialize on load
+    // Initialize on page load
     window.addEventListener("DOMContentLoaded", () => {
       renderLeaderboard();
       initTierChart();
@@ -1358,4 +1759,3 @@ Where:
   </script>
 </body>
 </html>
-

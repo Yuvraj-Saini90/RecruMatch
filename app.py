@@ -691,9 +691,9 @@ elif menu_selection == "👤 Candidate Inspector":
                         r=[req_score, pref_score, exp_score, edu_score, sim_score],
                         theta=["Required Skills", "Preferred Skills", "Experience", "Education", "Text Similarity"],
                         fill='toself',
-                        fillcolor='rgba(37, 99, 235, 0.2)',
-                        line=dict(color='#3b82f6', width=2),
-                        marker=dict(color='#3b82f6', size=5)
+                        fillcolor='rgba(139, 92, 246, 0.2)',
+                        line=dict(color='#8b5cf6', width=2),
+                        marker=dict(color='#8b5cf6', size=5)
                     ))
                     radar_fig.update_layout(
                         polar=dict(
