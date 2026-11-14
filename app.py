@@ -39,10 +39,10 @@ from src.career_velocity import analyze_career_velocity
 
 # Page configuration
 st.set_page_config(
-    page_title="RecruMatch | Candidate Screening & Ranking",
-    page_icon="🎯",
+    page_title="RecruMatch • AI Candidate Screening & Forensic Platform",
+    page_icon="🛡️",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 
@@ -165,8 +165,10 @@ if "ranked_candidates" not in st.session_state:
     st.session_state.ranked_candidates = []
 if "selected_candidate_id" not in st.session_state:
     st.session_state.selected_candidate_id = None
-if "nav_page" not in st.session_state:
-    st.session_state.nav_page = "🎯 Candidate Pipeline"
+if "nav_page" not in st.session_state or st.session_state.nav_page == "🎯 Candidate Pipeline":
+    st.session_state.nav_page = "✨ Stitch Enterprise Workspace (index.html)"
+if "sidebar_nav" in st.session_state and st.session_state.sidebar_nav == "🎯 Candidate Pipeline":
+    st.session_state.sidebar_nav = "✨ Stitch Enterprise Workspace (index.html)"
 if "weights" not in st.session_state:
     st.session_state.weights = DEFAULT_WEIGHTS.copy()
 if "thresholds" not in st.session_state:
@@ -293,7 +295,8 @@ with st.sidebar:
 
     # Clean Navigation Menu
     nav_options = [
-        "🎯 Candidate Pipeline",
+        "✨ Stitch Enterprise Workspace (index.html)",
+        "🎯 Candidate Pipeline (Native)",
         "👤 Candidate Inspector",
         "📄 Job Requisitions",
         "📥 Resume Ingestion",
@@ -317,13 +320,11 @@ with st.sidebar:
     st.caption("Active Target Role:")
     st.markdown(f"**{curr_role}**")
 
-
-
     # Quick Workspace Actions
     st.markdown("<hr style='margin: 10px 0 14px 0; border: none; border-top: 1px solid #1e293b;'>", unsafe_allow_html=True)
     if st.button("Load Sample Data", use_container_width=True, key="btn_load_demo"):
         load_demo_data()
-        st.session_state.nav_page = "🎯 Candidate Pipeline"
+        st.session_state.nav_page = "🎯 Candidate Pipeline (Native)"
         st.rerun()
 
     if st.session_state.ranked_candidates:
@@ -349,9 +350,48 @@ with st.sidebar:
 
 
 # =============================================================
+# VIEW 0: STITCH ENTERPRISE WORKSPACE (INDEX.HTML)
+# =============================================================
+if menu_selection == "✨ Stitch Enterprise Workspace (index.html)":
+    import streamlit.components.v1 as components
+    st.markdown("""
+        <style>
+        .block-container {
+            padding-top: 0rem !important;
+            padding-bottom: 0rem !important;
+            padding-left: 0rem !important;
+            padding-right: 0rem !important;
+            max-width: 100vw !important;
+            width: 100vw !important;
+        }
+        [data-testid="stCustomComponentV1"] {
+            width: 100% !important;
+            height: calc(100vh - 55px) !important;
+            min-height: 850px !important;
+        }
+        iframe {
+            border: none !important;
+            border-radius: 0px !important;
+            width: 100% !important;
+            height: 100% !important;
+            min-height: 850px !important;
+            display: block !important;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    index_path = os.path.join(os.path.dirname(__file__), "index.html")
+    if os.path.exists(index_path):
+        with open(index_path, "r", encoding="utf-8") as f:
+            html_code = f.read()
+        components.html(html_code, height=1200, scrolling=True)
+    else:
+        st.error("index.html not found.")
+
+# =============================================================
 # VIEW 1: CANDIDATE PIPELINE (LEADERBOARD & OVERVIEW)
 # =============================================================
-if menu_selection == "🎯 Candidate Pipeline":
+elif menu_selection == "🎯 Candidate Pipeline (Native)":
     # Top Context Bar
     role_name = st.session_state.get("current_role_title", "Senior Python & ML Engineer")
     analysis = st.session_state.get("jd_analysis")
