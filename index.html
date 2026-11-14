@@ -159,8 +159,8 @@
         <span class="material-symbols-outlined text-[17px]">radar</span> Competency Radar & Skills
       </button>
       <button onclick="switchTab('forensic')" id="tabBtn-forensic" class="tab-btn px-3.5 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-2 whitespace-nowrap">
-        <span class="material-symbols-outlined text-[17px] text-error">gpp_maybe</span> Resume Security & Tampering
-        <span class="px-1.5 py-0.2 rounded bg-error-container text-on-error-container font-mono text-[10px] font-bold">1 Alert</span>
+        <span class="material-symbols-outlined text-[17px] text-tertiary" id="navSecurityIcon">shield</span> Resume Security &amp; Tampering
+        <span id="navSecurityBadge" class="px-1.5 py-0.2 rounded bg-tertiary-container/30 text-tertiary font-mono text-[10px] font-bold">0 Alerts</span>
       </button>
       <button onclick="switchTab('settings')" id="tabBtn-settings" class="tab-btn px-3.5 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-2 whitespace-nowrap">
         <span class="material-symbols-outlined text-[17px] text-primary">tune</span> Scoring Preferences &amp; Weights
@@ -188,7 +188,7 @@
               <span class="text-xs font-bold text-on-surface uppercase tracking-wider flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-primary text-[18px]">tune</span> Job Specification Criteria
               </span>
-              <span class="text-[11px] text-outline font-mono">13 Mandatory Skills</span>
+              <span id="jdCriteriaHeaderCount" class="text-[11px] text-outline font-mono">0 Skills Defined</span>
             </div>
 
             <!-- Role Presets -->
@@ -208,18 +208,11 @@
                 <label class="block text-[11px] font-semibold text-on-surface-variant">Target Job Description (JD):</label>
                 <span class="text-[10px] font-mono text-tertiary">Real-Time Extraction Active</span>
               </div>
-              <textarea id="jdInput" rows="9" oninput="onJDInputChanged()" class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-lg p-3 text-xs text-on-surface focus:outline-none focus:border-primary font-mono leading-relaxed custom-scroll" placeholder="Paste any custom job description requirements here...">Job Title: Senior Python &amp; Machine Learning Engineer
-Department: Core AI Platform
-Experience: 3.0+ years
-Mandatory Skills: Python, FastAPI, Django, Scikit-learn, SQL, Docker, AWS, Git, GitHub, Pandas, Machine Learning, REST API, Algorithms.
-Preferred Skills: Microservices, Redis, PostgreSQL, PyTorch, CI/CD, Linux, NumPy.
-Education: Bachelor's or Master's in Computer Science or related engineering field.</textarea>
+              <textarea id="jdInput" rows="9" oninput="onJDInputChanged()" class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-lg p-3 text-xs text-on-surface focus:outline-none focus:border-primary font-mono leading-relaxed custom-scroll" placeholder="Paste job description requirements here (or select a Quick Role Preset above)..."></textarea>
             </div>
 
-
-
             <!-- Extracted Requisition Intelligence Card -->
-            <div id="extractedJDCard" class="p-3.5 rounded-lg bg-surface-container-low border border-outline-variant/30 flex flex-col gap-2.5">
+            <div id="extractedJDCard" class="p-3.5 rounded-lg bg-surface-container-low border border-outline-variant/30 flex flex-col gap-2.5 hidden">
               <div class="flex items-center justify-between pb-2 border-b border-outline-variant/20">
                 <div class="flex items-center gap-1.5">
                   <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
@@ -367,9 +360,9 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
             <span class="font-medium">Total Applicants</span>
             <span class="material-symbols-outlined text-primary text-[20px]">group</span>
           </div>
-          <div class="text-2xl font-bold text-on-surface font-mono mt-2" id="kpi-total">5</div>
-          <div class="text-[11px] text-outline mt-1 flex items-center gap-1 font-mono">
-            <span class="text-tertiary font-semibold">All parsed</span> • 3 PDF, 2 DOCX
+          <div class="text-2xl font-bold text-on-surface font-mono mt-2" id="kpi-total">0</div>
+          <div id="kpi-total-sub" class="text-[11px] text-outline mt-1 flex items-center gap-1 font-mono">
+            No resumes staged
           </div>
         </div>
 
@@ -379,7 +372,7 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
             <span class="font-medium">Average Match Score</span>
             <span class="material-symbols-outlined text-secondary text-[20px]">speed</span>
           </div>
-          <div class="text-2xl font-bold text-secondary font-mono mt-2" id="kpi-avg">49.6%</div>
+          <div class="text-2xl font-bold text-secondary font-mono mt-2" id="kpi-avg">0.0%</div>
           <div class="text-[11px] text-outline mt-1 font-mono">Across 5 evaluation criteria</div>
         </div>
 
@@ -389,8 +382,8 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
             <span class="font-medium">Qualified Candidates (≥60%)</span>
             <span class="material-symbols-outlined text-tertiary text-[20px]">verified</span>
           </div>
-          <div class="text-2xl font-bold text-tertiary font-mono mt-2" id="kpi-matches">2</div>
-          <div class="text-[11px] text-outline mt-1 font-mono">40% of applicant pool</div>
+          <div class="text-2xl font-bold text-tertiary font-mono mt-2" id="kpi-matches">0</div>
+          <div class="text-[11px] text-outline mt-1 font-mono">0% of applicant pool</div>
         </div>
 
         <!-- Card 4 -->
@@ -399,8 +392,8 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
             <span>Tampering Notices Flagged</span>
             <span class="material-symbols-outlined text-error text-[20px]">crisis_alert</span>
           </div>
-          <div class="text-2xl font-bold text-error font-mono mt-2">1</div>
-          <div class="text-[11px] text-error mt-1 font-mono font-medium">Vikram Malhotra (Risk: 85)</div>
+          <div class="text-2xl font-bold text-error font-mono mt-2" id="kpi-tamper">0</div>
+          <div id="kpi-tamper-sub" class="text-[11px] text-on-surface-variant mt-1 font-mono font-medium">No tampering alerts</div>
         </div>
       </div>
 
@@ -471,19 +464,19 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
       <div class="p-5 rounded-xl bg-surface-container-lowest border border-outline-variant/30 flex flex-col xl:flex-row xl:items-center justify-between gap-4 shadow-sm">
         <div class="flex flex-col gap-1">
           <div class="flex items-center gap-2">
-            <span class="font-mono text-[10px] uppercase px-2 py-0.5 rounded bg-surface-container-high text-primary tracking-wider font-semibold">Requisition #ENG-2026-04</span>
+            <span id="leaderboardRequisitionBadge" class="font-mono text-[10px] uppercase px-2 py-0.5 rounded bg-surface-container-high text-primary tracking-wider font-semibold">Active Requisition</span>
             <span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
             <span class="font-mono text-[11px] text-on-surface-variant flex items-center gap-1">
-              <span class="material-symbols-outlined text-[14px] text-tertiary">lock_reset</span> Cryptographically Audited
+              <span class="material-symbols-outlined text-[14px] text-tertiary">lock_reset</span> Deterministic Scoring Engine
             </span>
           </div>
-          <h1 class="text-xl sm:text-2xl font-bold text-on-surface tracking-tight mt-0.5">Senior Python & Machine Learning Engineer</h1>
+          <h1 id="leaderboardRoleTitle" class="text-xl sm:text-2xl font-bold text-on-surface tracking-tight mt-0.5">Job Specification Not Set</h1>
           <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-on-surface-variant font-normal">
-            <span>Core Platform Division</span>
+            <span>Evaluation Pool</span>
             <span>•</span>
-            <span>5 Candidates Evaluated</span>
+            <span id="leaderboardPoolCount">0 Candidates Evaluated</span>
             <span>•</span>
-            <span class="text-tertiary">Deterministic Scoring Active</span>
+            <span class="text-tertiary">Deterministic Multi-Criteria Active</span>
           </div>
         </div>
 
@@ -589,7 +582,7 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
             <p class="text-xs text-on-surface-variant">Instant deterministic ranking computed locally with multi-factor weights</p>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-[11px] text-outline font-mono">Showing 5 of 5 Screened Applicants</span>
+            <span id="leaderboardShowingCount" class="text-[11px] text-outline font-mono">Showing 0 of 0 Screened Applicants</span>
           </div>
         </div>
 
@@ -616,7 +609,7 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
       </div>
 
       <!-- Integrity Footnote -->
-      <div class="p-3.5 rounded-lg bg-surface-container-low border border-outline-variant/30 text-xs text-on-surface-variant flex items-center justify-between">
+      <div id="integrityFootnote" class="p-3.5 rounded-lg bg-surface-container-low border border-outline-variant/30 text-xs text-on-surface-variant flex items-center justify-between hidden">
         <span class="flex items-center gap-2">
           <span class="material-symbols-outlined text-[16px] text-primary">info</span>
           <span>*Note: <b>Vikram Malhotra's</b> resume contains 18 hidden white-text spans detected in the PDF stream; scores are computed on sanitized text.</span>
@@ -639,19 +632,18 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
             <div class="flex flex-col">
               <span class="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">Candidate Inspection</span>
               <div class="flex items-center gap-2">
-                <span id="dd-top-name" class="font-bold text-on-surface truncate">Aman Verma</span>
-                <span id="dd-top-rank" class="font-mono text-[11px] px-1.5 py-0.2 rounded bg-surface-container-high text-primary font-semibold">Rank #2</span>
-                <span id="dd-top-score-pill" class="font-mono text-[11px] px-2 py-0.2 rounded bg-tertiary-container/30 text-tertiary font-semibold flex items-center gap-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span> 65.2% Match
+                <span id="dd-top-name" class="font-bold text-on-surface truncate">No Candidate</span>
+                <span id="dd-top-rank" class="font-mono text-[11px] px-1.5 py-0.2 rounded bg-surface-container-high text-outline font-semibold">--</span>
+                <span id="dd-top-score-pill" class="font-mono text-[11px] px-2 py-0.2 rounded bg-surface-container-high text-outline font-semibold flex items-center gap-1">
+                  --%
                 </span>
               </div>
             </div>
           </div>
           <div class="hidden sm:flex items-center gap-1.5 bg-surface-container-lowest px-3 py-2 rounded-lg font-mono text-[11px] text-outline">
             <span class="material-symbols-outlined text-tertiary text-[15px]">verified</span>
-            <span class="text-on-surface-variant">Deterministic Hash:</span>
-            <span class="text-secondary font-semibold tracking-wider">0x9f4a...83c1</span>
-            <span class="text-tertiary px-1 bg-tertiary/10 rounded ml-1">CLEAN_PDF</span>
+            <span class="text-on-surface-variant">Security Status:</span>
+            <span class="text-secondary font-semibold tracking-wider">Awaiting Resumes</span>
           </div>
         </div>
 
@@ -659,11 +651,7 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
           <div class="flex items-center gap-2">
             <label class="text-xs font-semibold text-on-surface-variant">Select:</label>
             <select id="deepdiveSelect" onchange="renderDeepDiveCandidate(this.value)" class="bg-surface-container border border-outline-variant/30 text-on-surface text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:border-primary font-mono">
-              <option value="aman">Aman Verma (Clean PDF - Rank #2)</option>
-              <option value="priya">Priya Sharma (Clean PDF - Rank #3)</option>
-              <option value="vikram">Vikram Malhotra (Flagged PDF - Rank #1*)</option>
-              <option value="sneha">Sneha Gupta (Clean DOCX - Rank #4)</option>
-              <option value="rahul">Rahul Kumar (Clean DOCX - Rank #5)</option>
+              <option value="">-- No Candidates Evaluated --</option>
             </select>
           </div>
         </div>
@@ -693,50 +681,50 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
               <div class="flex flex-col gap-1">
                 <div class="flex justify-between text-[11px]">
                   <span class="text-on-surface">Mandatory Skills (Weight: 40%)</span>
-                  <span id="bar-val-req" class="text-tertiary font-bold">84.6%</span>
+                  <span id="bar-val-req" class="text-tertiary font-bold">0.0%</span>
                 </div>
                 <div class="w-full h-1.5 bg-surface-container-lowest rounded-full overflow-hidden">
-                  <div id="bar-fill-req" class="h-full bg-tertiary rounded-full transition-all duration-300" style="width: 84.6%"></div>
+                  <div id="bar-fill-req" class="h-full bg-tertiary rounded-full transition-all duration-300" style="width: 0%"></div>
                 </div>
               </div>
 
               <div class="flex flex-col gap-1">
                 <div class="flex justify-between text-[11px]">
                   <span class="text-on-surface">Preferred Skills (Weight: 15%)</span>
-                  <span id="bar-val-pref" class="text-secondary font-bold">37.5%</span>
+                  <span id="bar-val-pref" class="text-secondary font-bold">0.0%</span>
                 </div>
                 <div class="w-full h-1.5 bg-surface-container-lowest rounded-full overflow-hidden">
-                  <div id="bar-fill-pref" class="h-full bg-secondary rounded-full transition-all duration-300" style="width: 37.5%"></div>
+                  <div id="bar-fill-pref" class="h-full bg-secondary rounded-full transition-all duration-300" style="width: 0%"></div>
                 </div>
               </div>
 
               <div class="flex flex-col gap-1">
                 <div class="flex justify-between text-[11px]">
                   <span class="text-on-surface">Experience Relevance (Weight: 15%)</span>
-                  <span id="bar-val-exp" class="text-tertiary font-bold">100%</span>
+                  <span id="bar-val-exp" class="text-tertiary font-bold">0.0%</span>
                 </div>
                 <div class="w-full h-1.5 bg-surface-container-lowest rounded-full overflow-hidden">
-                  <div id="bar-fill-exp" class="h-full bg-tertiary rounded-full transition-all duration-300" style="width: 100%"></div>
+                  <div id="bar-fill-exp" class="h-full bg-tertiary rounded-full transition-all duration-300" style="width: 0%"></div>
                 </div>
               </div>
 
               <div class="flex flex-col gap-1">
                 <div class="flex justify-between text-[11px]">
                   <span class="text-on-surface">Academic Tier (Weight: 10%)</span>
-                  <span id="bar-val-edu" class="text-secondary font-bold">75%</span>
+                  <span id="bar-val-edu" class="text-secondary font-bold">0.0%</span>
                 </div>
                 <div class="w-full h-1.5 bg-surface-container-lowest rounded-full overflow-hidden">
-                  <div id="bar-fill-edu" class="h-full bg-secondary rounded-full transition-all duration-300" style="width: 75%"></div>
+                  <div id="bar-fill-edu" class="h-full bg-secondary rounded-full transition-all duration-300" style="width: 0%"></div>
                 </div>
               </div>
 
               <div class="flex flex-col gap-1">
                 <div class="flex justify-between text-[11px]">
                   <span class="text-on-surface">Semantic Text Cosine (Weight: 20%)</span>
-                  <span id="bar-val-sim" class="text-primary font-bold">16.2%</span>
+                  <span id="bar-val-sim" class="text-primary font-bold">0.0%</span>
                 </div>
                 <div class="w-full h-1.5 bg-surface-container-lowest rounded-full overflow-hidden">
-                  <div id="bar-fill-sim" class="h-full bg-primary rounded-full transition-all duration-300" style="width: 16.2%"></div>
+                  <div id="bar-fill-sim" class="h-full bg-primary rounded-full transition-all duration-300" style="width: 0%"></div>
                 </div>
               </div>
             </div>
@@ -751,15 +739,15 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
             <div class="flex items-start justify-between pb-3 border-b border-outline-variant/20">
               <div>
                 <div class="flex items-center gap-2">
-                  <h3 id="dd-name" class="text-lg font-bold text-on-surface">Aman Verma</h3>
-                  <span id="dd-tier-badge" class="px-2 py-0.5 rounded text-[11px] font-bold bg-primary/20 text-secondary border border-primary/30 font-mono">Good Match</span>
-                  <span id="dd-forensic-badge" class="px-2 py-0.5 rounded text-[11px] font-bold bg-tertiary/20 text-tertiary border border-tertiary/30 font-mono">Clean Verified</span>
+                  <h3 id="dd-name" class="text-lg font-bold text-on-surface">No Candidate Evaluated</h3>
+                  <span id="dd-tier-badge" class="px-2 py-0.5 rounded text-[11px] font-bold bg-surface-container-high text-outline border border-outline-variant/30 font-mono">Awaiting Evaluation</span>
+                  <span id="dd-forensic-badge" class="px-2 py-0.5 rounded text-[11px] font-bold bg-surface-container-high text-outline border border-outline-variant/30 font-mono">Pending Ingestion</span>
                 </div>
-                <p id="dd-meta" class="text-xs text-on-surface-variant mt-0.5 font-mono">B.Tech in Computer Science • Experience: 4.0 yrs • Format: PDF</p>
+                <p id="dd-meta" class="text-xs text-on-surface-variant mt-0.5 font-mono">Evaluation criteria and candidate dossier will render upon screening.</p>
               </div>
               <div class="text-right">
                 <div class="text-[11px] text-outline font-mono">Final Score</div>
-                <div id="dd-score" class="text-2xl font-black text-primary font-mono">65.2%</div>
+                <div id="dd-score" class="text-2xl font-black text-outline font-mono">0.0%</div>
               </div>
             </div>
 
@@ -767,10 +755,10 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
             <div>
               <h5 class="text-xs font-semibold text-on-surface mb-2 flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-tertiary text-[16px]">check_circle</span> Matched Mandatory Skills
-                <span id="dd-matched-count" class="text-[10px] text-tertiary font-mono font-bold ml-1">(11/13 matched)</span>
+                <span id="dd-matched-count" class="text-[10px] text-outline font-mono font-bold ml-1">(0/0 matched)</span>
               </h5>
               <div id="dd-matched-chips" class="flex flex-wrap gap-1.5">
-                <!-- Injected via JS -->
+                <span class="text-outline text-xs">No candidate skills evaluated yet.</span>
               </div>
             </div>
 
@@ -778,10 +766,10 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
             <div>
               <h5 class="text-xs font-semibold text-on-surface mb-2 flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-error text-[16px]">cancel</span> Missing Role Requirements
-                <span id="dd-missing-count" class="text-[10px] text-error font-mono font-bold ml-1">(2 missing)</span>
+                <span id="dd-missing-count" class="text-[10px] text-outline font-mono font-bold ml-1">(0 missing)</span>
               </h5>
               <div id="dd-missing-chips" class="flex flex-wrap gap-1.5">
-                <!-- Injected via JS -->
+                <span class="text-outline text-xs">No missing skills.</span>
               </div>
             </div>
 
@@ -791,10 +779,8 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
                 <span class="material-symbols-outlined text-secondary text-[16px]">hub</span> Inferred Competencies (Skill Ontology DAG)
               </h5>
               <p class="text-[11px] text-on-surface-variant mb-2">Skills implied by claimed technologies through dependency reasoning:</p>
-              <div class="flex flex-wrap gap-2 text-xs font-mono">
-                <span class="px-2 py-0.5 rounded bg-surface-container-low text-secondary border border-outline-variant/30">• Async Programming (88% via FastAPI)</span>
-                <span class="px-2 py-0.5 rounded bg-surface-container-low text-secondary border border-outline-variant/30">• Database Design (85% via SQL & Django)</span>
-                <span class="px-2 py-0.5 rounded bg-surface-container-low text-secondary border border-outline-variant/30">• CI/CD (82% via Docker & Git)</span>
+              <div id="dd-inferred-container" class="flex flex-wrap gap-2 text-xs font-mono">
+                <span class="text-outline text-xs italic">Awaiting candidate technology profile ingestion.</span>
               </div>
             </div>
 
@@ -804,8 +790,8 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
                 <span class="text-on-surface-variant flex items-center gap-1.5">
                   <span class="material-symbols-outlined text-primary text-[16px]">trending_up</span> Career Velocity:
                 </span>
-                <span id="dd-velocity" class="px-2.5 py-0.5 rounded bg-surface-container-low text-secondary font-mono font-bold border border-outline-variant/30">
-                  Strong Progression (2 promotions in 4 yrs)
+                <span id="dd-velocity" class="px-2.5 py-0.5 rounded bg-surface-container-low text-outline font-mono font-semibold border border-outline-variant/30">
+                  Awaiting Profile
                 </span>
               </div>
 
@@ -815,7 +801,7 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
                   <span class="material-symbols-outlined text-primary text-[16px]">contact_support</span> Structured Interview Questions
                 </h6>
                 <div id="dd-interview-kit" class="space-y-2 text-on-surface-variant leading-relaxed">
-                  <!-- Injected via JS -->
+                  <p class="text-outline text-xs italic">Ingest resumes to generate tailored technical verification questions.</p>
                 </div>
               </div>
             </div>
@@ -832,8 +818,25 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
     <!-- ============================================================= -->
     <section id="tab-forensic" class="tab-pane hidden space-y-6">
       
-      <!-- Threat Notification Hero Banner -->
-      <div class="w-full bg-surface-container-low rounded-xl p-6 border border-error/40 shadow-xl relative overflow-hidden">
+      <!-- Forensic Clean / Empty State Banner -->
+      <div id="forensicEmptyCard" class="w-full bg-surface-container-low rounded-xl p-10 border border-outline-variant/30 text-center flex flex-col items-center justify-center">
+        <div class="w-14 h-14 rounded-2xl bg-tertiary-container/30 border border-tertiary/40 text-tertiary flex items-center justify-center mb-3">
+          <span class="material-symbols-outlined text-[30px]">verified_user</span>
+        </div>
+        <h3 class="text-base font-bold text-on-surface">Zero Adversarial Document Exploits Detected</h3>
+        <p class="text-xs text-on-surface-variant max-w-lg mx-auto mt-1 leading-relaxed">
+          No security anomalies or adversarial prompt injections identified in the candidate pool. Ingest resumes in the Screening Workspace to execute automated font stream rasterization and invisible text analysis.
+        </p>
+        <div class="flex items-center gap-3 mt-4 text-[11px] font-mono text-outline">
+          <span class="flex items-center gap-1 text-tertiary font-semibold"><span class="material-symbols-outlined text-[14px]">check_circle</span> 100% Verified Clean</span>
+          <span>•</span>
+          <span>Air-Gapped Forensic Pipeline Active</span>
+        </div>
+      </div>
+
+      <!-- Threat Notification Container -->
+      <div id="forensicThreatCard" class="space-y-6 hidden">
+        <div class="w-full bg-surface-container-low rounded-xl p-6 border border-error/40 shadow-xl relative overflow-hidden">
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
           
           <!-- Threat Metadata Column -->
@@ -991,6 +994,7 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
           </div>
         </div>
       </div>
+      </div> <!-- /#forensicThreatCard -->
 
     </section>
 
@@ -1361,7 +1365,7 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
       sim: 0.20
     };
 
-    const candidates = [
+    const BENCHMARK_CANDIDATES = [
       {
         id: "vikram",
         name: "Vikram Malhotra*",
@@ -1484,6 +1488,8 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
       }
     ];
 
+    let candidates = [];
+
     // Compute composite score dynamically
     function calculateFinalScore(cand) {
       const s = cand.subscores;
@@ -1511,6 +1517,38 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
       const tbody = document.getElementById("leaderboardTbody");
       if (!tbody) return;
       tbody.innerHTML = "";
+
+      const showingEl = document.getElementById("leaderboardShowingCount");
+      const poolCountEl = document.getElementById("leaderboardPoolCount");
+      const footnote = document.getElementById("integrityFootnote");
+
+      if (candidates.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="9" class="py-16 text-center text-on-surface-variant">
+              <span class="material-symbols-outlined text-4xl text-outline mb-2">folder_off</span>
+              <div class="text-sm font-semibold text-on-surface">No Candidates Evaluated Yet</div>
+              <p class="text-xs text-outline mt-1 max-w-md mx-auto">Upload resumes or paste text in the Screening Workspace to calculate deterministic multi-criteria rankings.</p>
+              <button onclick="switchTab('screening')" class="mt-4 px-4 py-2 text-xs font-semibold rounded-lg bg-primary hover:bg-primary-hover text-white transition-colors">
+                Go to Screening Workspace
+              </button>
+            </td>
+          </tr>
+        `;
+        if (showingEl) showingEl.textContent = "Showing 0 of 0 Screened Applicants";
+        if (poolCountEl) poolCountEl.textContent = "0 Candidates Evaluated";
+        if (footnote) footnote.classList.add("hidden");
+        return;
+      }
+
+      if (showingEl) showingEl.textContent = `Showing ${candidates.length} of ${candidates.length} Screened Applicants`;
+      if (poolCountEl) poolCountEl.textContent = `${candidates.length} Candidate(s) Evaluated`;
+
+      const hasTampered = candidates.some(c => (c.fraudScore || 0) > 0);
+      if (footnote) {
+        if (hasTampered) footnote.classList.remove("hidden");
+        else footnote.classList.add("hidden");
+      }
 
       const sorted = [...candidates].map(c => ({
         ...c,
@@ -1723,6 +1761,17 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
       if (!tbody) return;
       tbody.innerHTML = "";
 
+      if (candidates.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="9" class="py-8 text-center text-xs text-outline font-mono">
+              No candidates in simulation pool. Ingest resumes to preview live scoring calculations.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
       const sorted = [...candidates].map(c => {
         return {
           ...c,
@@ -1755,7 +1804,50 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
     let radarChartInstance = null;
 
     function renderDeepDiveCandidate(candId) {
-      const cand = candidates.find(c => c.id === candId) || candidates[0];
+      const cand = candidates.find(c => c.id === candId) || (candidates.length > 0 ? candidates[0] : null);
+      if (!cand) {
+        document.getElementById("dd-name").textContent = "No Candidate Selected";
+        document.getElementById("dd-top-name").textContent = "No Candidate";
+        const topRank = document.getElementById("dd-top-rank");
+        if (topRank) topRank.textContent = "--";
+        document.getElementById("dd-score").textContent = "--%";
+        const tierBadge = document.getElementById("dd-tier-badge");
+        if (tierBadge) {
+          tierBadge.textContent = "Awaiting Screen";
+          tierBadge.className = "px-2 py-0.5 rounded text-[11px] font-bold border font-mono bg-surface-container-high text-outline border-outline-variant/30";
+        }
+        const topPill = document.getElementById("dd-top-score-pill");
+        if (topPill) topPill.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-outline"></span> --%`;
+        const forBadge = document.getElementById("dd-forensic-badge");
+        if (forBadge) {
+          forBadge.textContent = "No Data";
+          forBadge.className = "px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-surface-container-high text-outline border border-outline-variant/30";
+        }
+        const metaEl = document.getElementById("dd-meta");
+        if (metaEl) metaEl.textContent = "Screen candidates in the Screening Workspace to populate deep-dive profile.";
+        const mCount = document.getElementById("dd-matched-count");
+        if (mCount) mCount.textContent = "(0/0 matched)";
+        const missCount = document.getElementById("dd-missing-count");
+        if (missCount) missCount.textContent = "(0 missing)";
+        ['req', 'pref', 'exp', 'edu', 'sim'].forEach(k => {
+          const valEl = document.getElementById(`bar-val-${k}`);
+          const fillEl = document.getElementById(`bar-fill-${k}`);
+          if (valEl) valEl.textContent = "0%";
+          if (fillEl) fillEl.style.width = "0%";
+        });
+        const matchedContainer = document.getElementById("dd-matched-chips");
+        if (matchedContainer) matchedContainer.innerHTML = `<span class="text-outline text-xs">No candidate skills evaluated yet.</span>`;
+        const missingContainer = document.getElementById("dd-missing-chips");
+        if (missingContainer) missingContainer.innerHTML = `<span class="text-outline text-xs">No missing skills.</span>`;
+        const kitContainer = document.getElementById("dd-interview-kit");
+        if (kitContainer) kitContainer.innerHTML = `<p class="text-outline text-xs italic">Ingest resumes to generate tailored technical verification questions.</p>`;
+        if (radarChartInstance) {
+          radarChartInstance.data.datasets[0].data = [0, 0, 0, 0, 0];
+          radarChartInstance.data.datasets[0].label = "No Candidate";
+          radarChartInstance.update();
+        }
+        return;
+      }
       const score = calculateFinalScore(cand);
       const tier = getTierInfo(score);
 
@@ -1888,6 +1980,30 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
     }
 
     // -------------------------------------------------------------
+    // SYNC DEEP DIVE SELECTOR
+    // -------------------------------------------------------------
+    function syncDeepDiveSelect() {
+      const select = document.getElementById("deepdiveSelect");
+      if (!select) return;
+      select.innerHTML = "";
+      if (candidates.length === 0) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "-- No Candidates Evaluated --";
+        select.appendChild(opt);
+        renderDeepDiveCandidate(null);
+        return;
+      }
+      candidates.forEach(c => {
+        const opt = document.createElement("option");
+        opt.value = c.id;
+        opt.textContent = `${c.name} (${c.format} - ${calculateFinalScore(c)}%)`;
+        select.appendChild(opt);
+      });
+      renderDeepDiveCandidate(select.value || candidates[0].id);
+    }
+
+    // -------------------------------------------------------------
     // TAB SWITCHER
     // -------------------------------------------------------------
     function switchTab(tabId) {
@@ -1917,17 +2033,19 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
     // -------------------------------------------------------------
     // TIER DISTRIBUTION BAR CHART
     // -------------------------------------------------------------
+    let tierChartInstance = null;
+
     function initTierChart() {
       const canvas = document.getElementById("tierChart");
       if (!canvas) return;
       const ctx = canvas.getContext("2d");
-      new Chart(ctx, {
+      tierChartInstance = new Chart(ctx, {
         type: 'bar',
         data: {
           labels: ['Excellent (≥80%)', 'Good (60-79%)', 'Moderate (40-59%)', 'Low (<40%)'],
           datasets: [{
             label: 'Candidates in Pool',
-            data: [0, 2, 1, 2],
+            data: [0, 0, 0, 0],
             backgroundColor: [
               'rgba(16, 185, 129, 0.65)',
               'rgba(139, 92, 246, 0.65)',
@@ -1963,6 +2081,92 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
           }
         }
       });
+    }
+
+    function updateTierChart(tierCounts) {
+      if (tierChartInstance) {
+        tierChartInstance.data.datasets[0].data = tierCounts;
+        tierChartInstance.update();
+      }
+    }
+
+    function updateDashboardMetrics() {
+      const total = candidates.length;
+      const kpiTotal = document.getElementById("kpi-total");
+      const kpiAvg = document.getElementById("kpi-avg");
+      const kpiMatches = document.getElementById("kpi-matches");
+      const kpiTamper = document.getElementById("kpi-tamper");
+      const kpiTotalSub = document.getElementById("kpi-total-sub");
+      const kpiTamperSub = document.getElementById("kpi-tamper-sub");
+      const navBadge = document.getElementById("navSecurityBadge");
+      const navIcon = document.getElementById("navSecurityIcon");
+      const forensicEmpty = document.getElementById("forensicEmptyCard");
+      const forensicThreat = document.getElementById("forensicThreatCard");
+
+      if (total === 0) {
+        if (kpiTotal) kpiTotal.textContent = "0";
+        if (kpiTotalSub) kpiTotalSub.textContent = "No resumes staged";
+        if (kpiAvg) kpiAvg.textContent = "0.0%";
+        if (kpiMatches) kpiMatches.textContent = "0";
+        if (kpiTamper) kpiTamper.textContent = "0";
+        if (kpiTamperSub) kpiTamperSub.textContent = "No tampering alerts";
+        if (navBadge) {
+          navBadge.textContent = "0 Alerts";
+          navBadge.className = "px-1.5 py-0.2 rounded bg-tertiary-container/30 text-tertiary font-mono text-[10px] font-bold";
+        }
+        if (navIcon) {
+          navIcon.className = "material-symbols-outlined text-[17px] text-tertiary";
+          navIcon.textContent = "shield";
+        }
+        if (forensicEmpty) forensicEmpty.classList.remove("hidden");
+        if (forensicThreat) forensicThreat.classList.add("hidden");
+        updateTierChart([0, 0, 0, 0]);
+        return;
+      }
+
+      const scores = candidates.map(c => calculateFinalScore(c));
+      const avg = Math.round((scores.reduce((a, b) => a + b, 0) / total) * 10) / 10;
+      const qualified = scores.filter(s => s >= 60).length;
+      const flagged = candidates.filter(c => (c.fraudScore || 0) > 30).length;
+
+      if (kpiTotal) kpiTotal.textContent = total;
+      if (kpiTotalSub) kpiTotalSub.textContent = `All parsed • ${total} evaluated`;
+      if (kpiAvg) kpiAvg.textContent = `${avg}%`;
+      if (kpiMatches) kpiMatches.textContent = qualified;
+      if (kpiTamper) kpiTamper.textContent = flagged;
+      if (kpiTamperSub) kpiTamperSub.textContent = flagged > 0 ? `${flagged} risk alerts flagged` : "All documents clean";
+
+      if (navBadge) {
+        if (flagged > 0) {
+          navBadge.textContent = `${flagged} Alert${flagged > 1 ? 's' : ''}`;
+          navBadge.className = "px-1.5 py-0.2 rounded bg-error-container text-on-error-container font-mono text-[10px] font-bold animate-pulse";
+        } else {
+          navBadge.textContent = "0 Alerts";
+          navBadge.className = "px-1.5 py-0.2 rounded bg-tertiary-container/30 text-tertiary font-mono text-[10px] font-bold";
+        }
+      }
+      if (navIcon) {
+        navIcon.className = flagged > 0 ? "material-symbols-outlined text-[17px] text-error" : "material-symbols-outlined text-[17px] text-tertiary";
+        navIcon.textContent = flagged > 0 ? "gpp_maybe" : "shield";
+      }
+
+      if (forensicEmpty) {
+        if (flagged > 0) forensicEmpty.classList.add("hidden");
+        else forensicEmpty.classList.remove("hidden");
+      }
+      if (forensicThreat) {
+        if (flagged > 0) forensicThreat.classList.remove("hidden");
+        else forensicThreat.classList.add("hidden");
+      }
+
+      const tiers = [0, 0, 0, 0];
+      scores.forEach(s => {
+        if (s >= 80) tiers[0]++;
+        else if (s >= 60) tiers[1]++;
+        else if (s >= 40) tiers[2]++;
+        else tiers[3]++;
+      });
+      updateTierChart(tiers);
     }
 
     // -------------------------------------------------------------
@@ -2182,7 +2386,16 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
 
     function renderExtractedJDCriteriaCard(analysis) {
       const card = document.getElementById("extractedJDCard");
+      const headerCount = document.getElementById("jdCriteriaHeaderCount");
       if (!card) return;
+
+      if (!analysis || analysis.allExtractedSkills.length === 0) {
+        card.classList.add("hidden");
+        if (headerCount) headerCount.textContent = "0 Skills Defined";
+        return;
+      }
+      card.classList.remove("hidden");
+      if (headerCount) headerCount.textContent = `${analysis.requiredSkills.length} Mandatory Skills`;
 
       const titleEl = document.getElementById("cardRoleTitle");
       if (titleEl) titleEl.textContent = analysis.title;
@@ -2298,10 +2511,13 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
       // Update Extracted Criteria Badge Card
       renderExtractedJDCriteriaCard(analysis);
 
-      // Re-render Leaderboard, Deep Dive, and Simulation
+      const lbRoleTitle = document.getElementById("leaderboardRoleTitle");
+      if (lbRoleTitle) lbRoleTitle.textContent = analysis.title || "General Requisition";
+
+      // Re-render Leaderboard, Deep Dive, Metrics and Simulation
       renderLeaderboard();
-      const currentSelected = document.getElementById("deepdiveSelect")?.value || "aman";
-      renderDeepDiveCandidate(currentSelected);
+      updateDashboardMetrics();
+      syncDeepDiveSelect();
       renderSettingsSimulation();
     }
 
@@ -2341,7 +2557,9 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
       } else if (type === 'priya') {
         textarea.value = `Priya Sharma\nEmail: priya.sharma.ml@example.com | Phone: +91 98123 45678\nEducation: M.Tech in Artificial Intelligence - Delhi University (2023)\n\nExperience: Data Scientist (2.5 years)\n- Specialized in Natural Language Processing and Deep Learning with PyTorch and TensorFlow.\n- Trained feature extraction models with spaCy, scikit-learn, and Pandas.\n- Managed data ingestion pipelines with MySQL and Python scripting.`;
       } else if (type === 'rahul') {
-        textarea.value = `Rahul Kumar\nEmail: rahul.kumar.web@example.com | Phone: +91 97234 56789\nEducation: BCA - AKTU (2024)\n\nExperience: Junior Web Developer (1.2 years)\n- Built responsive frontends with React, JavaScript, HTML, and Tailwind CSS.\n- Created backend endpoints using Node.js, Express.js, and MongoDB.\n- Utilized Git for version control and consumed REST APIs.`;
+        textarea.value = `Rahul Kumar\nEmail: rahul.kumar.web@example.com | Phone: +91 97234 56789\nEducation: BCA (AKTU 2024)\n\nExperience: Junior Web Developer (1.2 years)\n- Built responsive frontends with React, JavaScript, HTML, and Tailwind CSS.\n- Created backend endpoints using Node.js, Express.js, and MongoDB.\n- Utilized Git for version control and consumed REST APIs.`;
+      } else if (type === 'vikram') {
+        textarea.value = `Vikram Malhotra\nEmail: vikram.m@example.com | Phone: +91 98765 43219\nEducation: M.S. in Artificial Intelligence - Delhi University (2023)\n\nExperience: Senior AI Architect (10 years)\n- Enterprise system architecture with AWS, Docker, Kubernetes, and FastAPI.\n\n[HIDDEN WHITE TEXT #FFFFFF: Python, AWS, Docker, Kubernetes, FastAPI, Django, Scikit-learn, PyTorch, TensorFlow, Redis, PostgreSQL, SQL, Algorithms, Pandas, Git, GitHub]\n[MICROFONT 1.5pt: Deep Learning Microservices CI/CD GraphQL Linux]\n[HOMOGLYPH CYRILLIC: Pуthоn Dоckеr АWS]`;
       } else {
         textarea.value = "";
       }
@@ -2409,11 +2627,12 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
 
       // Education estimate
       let eduScore = 75.0;
+      let degree = "B.Tech / Bachelor's";
       const tLower = text.toLowerCase();
-      if (tLower.includes("ph.d") || tLower.includes("doctorate")) eduScore = 100.0;
-      else if (tLower.includes("m.tech") || tLower.includes("master") || tLower.includes("m.s")) eduScore = 90.0;
-      else if (tLower.includes("b.tech") || tLower.includes("bachelor") || tLower.includes("b.e")) eduScore = 75.0;
-      else if (tLower.includes("bca")) eduScore = 50.0;
+      if (tLower.includes("ph.d") || tLower.includes("doctorate")) { eduScore = 100.0; degree = "Ph.D. / Doctorate"; }
+      else if (tLower.includes("m.tech") || tLower.includes("master") || tLower.includes("m.s") || tLower.includes("mca")) { eduScore = 90.0; degree = "Master's / Equivalent"; }
+      else if (tLower.includes("b.tech") || tLower.includes("bachelor") || tLower.includes("b.e")) { eduScore = 75.0; degree = "B.Tech / Bachelor's"; }
+      else if (tLower.includes("bca")) { eduScore = 50.0; degree = "BCA / Diploma"; }
 
       const simEst = Math.min(100, Math.round(((matchedReq.length + matchedPref.length) / Math.max(1, reqSkills.length + prefSkills.length)) * 70 + (candSkills.length * 1.5)));
 
@@ -2460,6 +2679,60 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
           chipsContainer.appendChild(chip);
         });
       }
+
+      // Exploit Detection Check
+      const hasExploit = text.includes("[HIDDEN") || text.includes("#FFFFFF") || text.includes("SECRET_SKILLS") || text.includes("MICROFONT") || text.includes("Pуthоn");
+      const fraudScore = hasExploit ? 85 : 0;
+      const forensicStatus = hasExploit ? "Tampering Flagged" : "Clean Verified";
+
+      // Candidate Name extraction
+      const firstLine = text.split("\n")[0].trim().replace(/^(Name|Candidate|Resume):\s*/i, "");
+      const candName = firstLine && firstLine.length < 35 && !firstLine.includes(":") ? firstLine : "Candidate #" + (candidates.length + 1);
+
+      const candId = "cand_" + candName.toLowerCase().replace(/[^a-z0-9]/g, "_");
+      const candObj = {
+        id: candId,
+        name: candName,
+        blindToken: `Candidate #${candidates.length + 1} [Token: ${candId.slice(-6)}]`,
+        format: hasExploit ? "PDF (Exploit Flagged)" : "Verified Document",
+        rawScoreLegacy: estScore,
+        subscores: {
+          req: Math.round(reqPct * 10) / 10,
+          pref: Math.round(prefPct * 10) / 10,
+          exp: Math.round(expScore * 10) / 10,
+          edu: Math.round(eduScore * 10) / 10,
+          sim: Math.round(simEst * 10) / 10
+        },
+        matchedCount: `${matchedReq.length}/${Math.max(1, reqSkills.length)}`,
+        expYears: `${candExp} yrs`,
+        numericExpYears: candExp,
+        eduScore: eduScore / 100,
+        degree: degree,
+        allSkills: candSkills,
+        matchedSkills: matchedReq,
+        missingSkills: missingReq,
+        forensicStatus: forensicStatus,
+        fraudScore: fraudScore,
+        velocity: candExp >= 3 ? "Senior Progression" : "Emerging Professional",
+        interviewQs: [
+          `How do you structure production systems using ${matchedReq.slice(0, 2).join(' and ') || 'your core skills'}?`,
+          missingReq.length > 0 ? `Our role requires ${missingReq[0]}, which was not identified on your profile. How would you quickly ramp up on this?` : `How do you handle automated unit testing and CI/CD pipelines?`,
+          `Describe a challenging debugging or optimization problem you solved recently.`
+        ]
+      };
+
+      const existingIdx = candidates.findIndex(c => c.id === candId);
+      if (existingIdx >= 0) {
+        candidates[existingIdx] = candObj;
+      } else {
+        candidates.push(candObj);
+      }
+
+      // Re-render all views
+      renderLeaderboard();
+      updateDashboardMetrics();
+      syncDeepDiveSelect();
+      renderSettingsSimulation();
     }
 
     // -------------------------------------------------------------
@@ -2481,14 +2754,15 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
       a.click();
     }
 
-
-
-    // Initialize on page load
+    // Initialize on page load (completely fresh and clean)
     window.addEventListener("DOMContentLoaded", () => {
-      extractAndApplyJD();
+      candidates = [];
       syncAllWeightUI();
       initTierChart();
-      loadSampleResume('aman');
+      renderLeaderboard();
+      updateDashboardMetrics();
+      syncDeepDiveSelect();
+      renderSettingsSimulation();
     });
   </script>
 </body>
