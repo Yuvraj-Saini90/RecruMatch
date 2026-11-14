@@ -193,13 +193,13 @@
             </span>
           </div>
 
-          <h2 class="text-xl sm:text-2xl font-bold text-on-surface tracking-tight">Senior Python & Machine Learning Engineer</h2>
+          <h2 class="text-xl sm:text-2xl font-bold text-on-surface tracking-tight" id="activeRoleTitle">Senior Python &amp; Machine Learning Engineer</h2>
           <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-on-surface-variant font-normal">
-            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">psychology</span> <strong class="text-on-surface font-semibold">13</strong> Mandatory Skills (Python, FastAPI, Django, Scikit-learn, Docker, AWS...)</span>
+            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">psychology</span> <strong class="text-on-surface font-semibold" id="activeReqCount">13</strong> Mandatory Skills (<span id="activeReqPreview">Python, FastAPI, Django, Scikit-learn, Docker, AWS...</span>)</span>
             <span>•</span>
-            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">history_edu</span> <strong class="text-on-surface font-semibold">3.0+</strong> Years Threshold</span>
+            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">history_edu</span> <strong class="text-on-surface font-semibold" id="activeExpYears">3.0+</strong> Years Threshold</span>
             <span>•</span>
-            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">school</span> B.Tech CSE / Master's / Equivalent</span>
+            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">school</span> <span id="activeEduText">B.Tech CSE / Master's / Equivalent</span></span>
             <span>•</span>
             <span class="flex items-center gap-1 text-tertiary"><span class="material-symbols-outlined text-[16px]">verified_user</span> Zero-Hallucination Guard</span>
           </div>
@@ -244,13 +244,62 @@
 
             <!-- JD Textarea -->
             <div>
-              <label class="block text-[11px] font-semibold text-on-surface-variant mb-1">Target Job Description (JD):</label>
-              <textarea id="jdInput" rows="11" class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-lg p-3 text-xs text-on-surface focus:outline-none focus:border-primary font-mono leading-relaxed custom-scroll" placeholder="Paste target job description requirements here...">Job Title: Senior Python & Machine Learning Engineer
+              <div class="flex items-center justify-between mb-1">
+                <label class="block text-[11px] font-semibold text-on-surface-variant">Target Job Description (JD):</label>
+                <span class="text-[10px] font-mono text-tertiary">Real-Time Extraction Active</span>
+              </div>
+              <textarea id="jdInput" rows="9" oninput="onJDInputChanged()" class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-lg p-3 text-xs text-on-surface focus:outline-none focus:border-primary font-mono leading-relaxed custom-scroll" placeholder="Paste any custom job description requirements here...">Job Title: Senior Python &amp; Machine Learning Engineer
 Department: Core AI Platform
 Experience: 3.0+ years
 Mandatory Skills: Python, FastAPI, Django, Scikit-learn, SQL, Docker, AWS, Git, GitHub, Pandas, Machine Learning, REST API, Algorithms.
 Preferred Skills: Microservices, Redis, PostgreSQL, PyTorch, CI/CD, Linux, NumPy.
 Education: Bachelor's or Master's in Computer Science or related engineering field.</textarea>
+            </div>
+
+            <!-- Extract Action Button -->
+            <button type="button" onclick="extractAndApplyJD()" class="w-full py-2 px-3 text-xs font-semibold rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-secondary border border-primary/40 hover:border-primary flex items-center justify-center gap-2 transition-all shadow-sm">
+              <span class="material-symbols-outlined text-[17px] text-primary">auto_read_play</span>
+              <span>Extract Criteria &amp; Screen Pool Against Custom JD</span>
+            </button>
+
+            <!-- Extracted Requisition Intelligence Card -->
+            <div id="extractedJDCard" class="p-3.5 rounded-lg bg-surface-container-low border border-outline-variant/30 flex flex-col gap-2.5">
+              <div class="flex items-center justify-between pb-2 border-b border-outline-variant/20">
+                <div class="flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                  <span class="text-xs font-bold text-on-surface">Extracted Criteria Intelligence</span>
+                </div>
+                <span id="jdExtractionBadge" class="font-mono text-[10px] text-tertiary px-2 py-0.5 rounded bg-tertiary/10 border border-tertiary/30 font-bold">13 Skills Active</span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 text-[11px] font-mono">
+                <div class="p-2 rounded bg-surface-container border border-outline-variant/20">
+                  <div class="text-outline text-[10px]">ROLE TITLE</div>
+                  <div id="cardRoleTitle" class="font-bold text-secondary truncate">Senior Python &amp; ML Engineer</div>
+                </div>
+                <div class="p-2 rounded bg-surface-container border border-outline-variant/20">
+                  <div class="text-outline text-[10px]">MIN EXPERIENCE</div>
+                  <div id="cardExpYears" class="font-bold text-tertiary">3.0+ Years</div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex items-center justify-between text-[11px] mb-1 font-semibold text-on-surface-variant">
+                  <span>Mandatory Skills (<b id="cardReqSkillsCount" class="text-primary font-mono">13</b>):</span>
+                </div>
+                <div id="cardReqSkillsChips" class="flex flex-wrap gap-1 max-h-24 overflow-y-auto custom-scroll">
+                  <!-- Mandatory Skill chips -->
+                </div>
+              </div>
+
+              <div>
+                <div class="flex items-center justify-between text-[11px] mb-1 font-semibold text-on-surface-variant">
+                  <span>Preferred / Bonus Skills (<b id="cardPrefSkillsCount" class="text-secondary font-mono">7</b>):</span>
+                </div>
+                <div id="cardPrefSkillsChips" class="flex flex-wrap gap-1 max-h-20 overflow-y-auto custom-scroll">
+                  <!-- Preferred Skill chips -->
+                </div>
+              </div>
             </div>
 
             <div class="flex items-center justify-between text-[11px] text-outline font-mono pt-1">
@@ -1366,7 +1415,10 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
         subscores: { req: 76.9, pref: 100.0, exp: 100.0, edu: 100.0, sim: 11.7 },
         matchedCount: "10/13",
         expYears: "10.0 yrs",
+        numericExpYears: 10.0,
+        eduScore: 0.90,
         degree: "M.S. in Artificial Intelligence",
+        allSkills: ["AWS", "Algorithms", "CI/CD", "CSS", "Deep Learning", "Django", "Docker", "FastAPI", "HTML", "JIRA", "Kubernetes", "Machine Learning", "Microservices", "Pandas", "PostgreSQL", "PyTorch", "Python", "Redis", "SQL", "Scikit-learn", "TensorFlow"],
         matchedSkills: ["AWS", "Algorithms", "Django", "Docker", "FastAPI", "Machine Learning", "Pandas", "Python", "SQL", "Scikit-learn"],
         missingSkills: ["Git", "GitHub", "REST API"],
         forensicStatus: "Tampering Flagged",
@@ -1387,7 +1439,10 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
         subscores: { req: 84.6, pref: 37.5, exp: 100.0, edu: 75.0, sim: 16.2 },
         matchedCount: "11/13",
         expYears: "4.0 yrs",
-        degree: "B.Tech in Computer Science (GNIOT 2022)",
+        numericExpYears: 4.0,
+        eduScore: 0.75,
+        degree: "B.Tech in Computer Science",
+        allSkills: ["AWS", "Django", "Docker", "FastAPI", "Git", "Linux", "Machine Learning", "Microservices", "NumPy", "Pandas", "PostgreSQL", "Python", "REST API", "Redis", "SQL", "Scikit-learn"],
         matchedSkills: ["AWS", "Django", "Docker", "FastAPI", "Git", "Machine Learning", "Pandas", "Python", "REST API", "SQL", "Scikit-learn"],
         missingSkills: ["Algorithms", "GitHub"],
         forensicStatus: "Clean Verified",
@@ -1408,7 +1463,10 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
         subscores: { req: 46.2, pref: 37.5, exp: 83.3, edu: 100.0, sim: 11.8 },
         matchedCount: "6/13",
         expYears: "2.5 yrs",
+        numericExpYears: 2.5,
+        eduScore: 0.90,
         degree: "M.Tech in Artificial Intelligence (DU 2023)",
+        allSkills: ["Deep Learning", "Git", "Machine Learning", "MySQL", "Natural Language Processing", "NumPy", "Pandas", "PyTorch", "Python", "SQL", "Scikit-learn", "TensorFlow", "spaCy"],
         matchedSkills: ["Git", "Machine Learning", "Pandas", "Python", "SQL", "Scikit-learn"],
         missingSkills: ["AWS", "Algorithms", "Django", "Docker", "FastAPI", "GitHub", "REST API"],
         forensicStatus: "Clean Verified",
@@ -1429,7 +1487,10 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
         subscores: { req: 23.1, pref: 25.0, exp: 100.0, edu: 75.0, sim: 7.9 },
         matchedCount: "3/13",
         expYears: "3.5 yrs",
+        numericExpYears: 3.5,
+        eduScore: 0.75,
         degree: "B.Tech in Information Technology (2022)",
+        allSkills: ["AWS", "Ansible", "Bash", "CI/CD", "Docker", "Git", "Grafana", "Jenkins", "Kubernetes", "Linux", "Nginx", "Prometheus", "Terraform"],
         matchedSkills: ["AWS", "Docker", "Git"],
         missingSkills: ["Algorithms", "Django", "FastAPI", "GitHub", "Machine Learning", "Pandas", "Python", "REST API", "SQL", "Scikit-learn"],
         forensicStatus: "Clean Verified",
@@ -1450,7 +1511,10 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
         subscores: { req: 23.1, pref: 0.0, exp: 40.0, edu: 75.0, sim: 5.3 },
         matchedCount: "3/13",
         expYears: "1.2 yrs",
+        numericExpYears: 1.2,
+        eduScore: 0.50,
         degree: "BCA (AKTU 2024)",
+        allSkills: ["CSS", "Express.js", "Git", "HTML", "JavaScript", "MongoDB", "Node.js", "Python", "REST API", "React", "Tailwind CSS"],
         matchedSkills: ["Git", "Python", "REST API"],
         missingSkills: ["AWS", "Algorithms", "Django", "Docker", "FastAPI", "GitHub", "Machine Learning", "Pandas", "SQL", "Scikit-learn"],
         forensicStatus: "Clean Verified",
@@ -1762,7 +1826,8 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
         ? `Candidate ID: ${cand.id.toUpperCase()} • Experience: ${cand.expYears} • Institution: [Anonymized for Fairness]`
         : `${cand.degree} • Experience: ${cand.expYears} • Format: ${cand.format}`;
 
-      document.getElementById("dd-matched-count").textContent = `(${cand.matchedSkills.length}/13 matched)`;
+      const totalReqCount = currentJDAnalysis ? currentJDAnalysis.requiredSkills.length : 13;
+      document.getElementById("dd-matched-count").textContent = `(${cand.matchedSkills.length}/${totalReqCount} matched)`;
       document.getElementById("dd-missing-count").textContent = `(${cand.missingSkills.length} missing)`;
 
       // Update dimension breakdown bars
@@ -1947,14 +2012,357 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
     // -------------------------------------------------------------
     // CLIENT SIDE SCREENING STUDIO
     // -------------------------------------------------------------
-    const CANONICAL_SKILLS = [
-      "python", "java", "c++", "c#", "javascript", "typescript", "go", "rust",
-      "fastapi", "django", "flask", "react", "next.js", "angular", "vue.js", "node.js", "html", "css",
-      "machine learning", "deep learning", "natural language processing", "computer vision", "scikit-learn",
-      "pytorch", "tensorflow", "keras", "pandas", "numpy", "spacy", "hugging face", "llm",
-      "postgresql", "mysql", "mongodb", "redis", "sqlite", "sql", "nosql",
-      "aws", "azure", "docker", "kubernetes", "terraform", "ci/cd", "git", "github", "linux", "rest api"
+    // -------------------------------------------------------------
+    // CLIENT SIDE SCREENING STUDIO & CUSTOM JD PARSER
+    // -------------------------------------------------------------
+    const CANONICAL_SKILLS_MAP = [
+      // Languages
+      { name: "Python", aliases: ["py", "python3"] },
+      { name: "JavaScript", aliases: ["js", "es6"] },
+      { name: "TypeScript", aliases: ["ts"] },
+      { name: "Java", aliases: ["core java"] },
+      { name: "C++", aliases: ["cpp", "c plus plus"] },
+      { name: "C#", aliases: ["csharp"] },
+      { name: "Go", aliases: ["golang"] },
+      { name: "Rust", aliases: [] },
+      { name: "SQL", aliases: ["relational database", "rdbms"] },
+      { name: "Bash", aliases: ["shell", "shell scripting"] },
+      { name: "HTML", aliases: ["html5"] },
+      { name: "CSS", aliases: ["css3"] },
+      
+      // Frameworks & Web
+      { name: "FastAPI", aliases: [] },
+      { name: "Django", aliases: ["django rest framework", "drf"] },
+      { name: "Flask", aliases: [] },
+      { name: "React", aliases: ["react.js", "reactjs"] },
+      { name: "Next.js", aliases: ["nextjs"] },
+      { name: "Node.js", aliases: ["nodejs", "node"] },
+      { name: "Express.js", aliases: ["express", "expressjs"] },
+      { name: "Angular", aliases: [] },
+      { name: "Vue.js", aliases: ["vue", "vuejs"] },
+      { name: "Tailwind CSS", aliases: ["tailwind"] },
+      { name: "Bootstrap", aliases: [] },
+      { name: "Redux", aliases: [] },
+
+      // Data Science & AI/ML
+      { name: "Machine Learning", aliases: ["ml"] },
+      { name: "Deep Learning", aliases: ["dl", "neural networks"] },
+      { name: "Natural Language Processing", aliases: ["nlp"] },
+      { name: "Scikit-learn", aliases: ["sklearn", "scikit learn"] },
+      { name: "PyTorch", aliases: [] },
+      { name: "TensorFlow", aliases: ["tf"] },
+      { name: "Keras", aliases: [] },
+      { name: "Pandas", aliases: [] },
+      { name: "NumPy", aliases: [] },
+      { name: "spaCy", aliases: ["spacy"] },
+      { name: "Hugging Face", aliases: ["huggingface", "transformers"] },
+      { name: "LLM", aliases: ["large language models", "generative ai"] },
+      { name: "Computer Vision", aliases: ["cv", "opencv"] },
+      { name: "Statistics", aliases: [] },
+
+      // Cloud & DevOps
+      { name: "AWS", aliases: ["amazon web services", "ec2", "s3"] },
+      { name: "Azure", aliases: ["microsoft azure"] },
+      { name: "GCP", aliases: ["google cloud", "google cloud platform"] },
+      { name: "Docker", aliases: ["containers", "containerization"] },
+      { name: "Kubernetes", aliases: ["k8s"] },
+      { name: "CI/CD", aliases: ["continuous integration", "github actions"] },
+      { name: "Terraform", aliases: [] },
+      { name: "Ansible", aliases: [] },
+      { name: "Linux", aliases: ["unix", "ubuntu"] },
+      { name: "Jenkins", aliases: [] },
+      { name: "Prometheus", aliases: [] },
+      { name: "Grafana", aliases: [] },
+      { name: "Nginx", aliases: [] },
+
+      // Databases
+      { name: "PostgreSQL", aliases: ["postgres"] },
+      { name: "MySQL", aliases: [] },
+      { name: "MongoDB", aliases: ["mongo"] },
+      { name: "Redis", aliases: [] },
+      { name: "SQLite", aliases: [] },
+
+      // Architecture & Tooling
+      { name: "REST API", aliases: ["restful", "rest api", "apis"] },
+      { name: "Microservices", aliases: ["microservice architecture"] },
+      { name: "Git", aliases: [] },
+      { name: "GitHub", aliases: [] },
+      { name: "Algorithms", aliases: ["data structures", "dsa"] },
+      { name: "JIRA", aliases: ["agile", "scrum"] }
     ];
+
+    let currentJDAnalysis = null;
+    let jdDebounceTimer = null;
+
+    function extractSkillsFromText(text) {
+      if (!text) return [];
+      const lower = text.toLowerCase();
+      const found = [];
+      CANONICAL_SKILLS_MAP.forEach(item => {
+        const checkList = [item.name.toLowerCase(), ...item.aliases];
+        for (let term of checkList) {
+          const esc = term.replace("+", "\\+").replace(".", "\\.");
+          const rx = new RegExp(`(^|[^a-zA-Z0-9_])${esc}(?=[^a-zA-Z0-9_]|$)`, 'i');
+          if (rx.test(lower)) {
+            if (!found.includes(item.name)) found.push(item.name);
+            break;
+          }
+        }
+      });
+      return found;
+    }
+
+    function parseAndExtractJD(jdText) {
+      if (!jdText || !jdText.trim()) {
+        return {
+          title: "Custom Technical Role",
+          expYears: 2.0,
+          expText: "2.0+ years",
+          education: "Bachelor's Degree or Equivalent",
+          requiredSkills: [],
+          preferredSkills: [],
+          allExtractedSkills: []
+        };
+      }
+
+      const lower = jdText.toLowerCase();
+
+      // 1. Role Title Extraction
+      let title = "Custom Role Specification";
+      const titleMatch = jdText.match(/(?:job\s*title|role|position|target\s*role)\s*:\s*([^\n\r]+)/i);
+      if (titleMatch && titleMatch[1].trim()) {
+        title = titleMatch[1].trim();
+      } else {
+        const firstLine = jdText.split("\n")[0].trim();
+        if (firstLine.length > 3 && firstLine.length < 60 && !firstLine.includes(":")) {
+          title = firstLine;
+        }
+      }
+
+      // 2. Experience Extraction
+      let expYears = 2.0;
+      let expText = "2.0+ years threshold";
+      const expMatch = lower.match(/(\d+(?:\.\d+)?)\s*(?:\+|-\s*\d+)?\s*(?:years?|yrs?)/);
+      if (expMatch) {
+        expYears = parseFloat(expMatch[1]) || 2.0;
+        expText = `${expYears}+ years threshold`;
+      }
+
+      // 3. Education Extraction
+      let education = "Bachelor's / Master's / Equivalent";
+      if (lower.includes("ph.d") || lower.includes("doctorate")) {
+        education = "Ph.D. / Doctorate in Computer Science / Engineering";
+      } else if (lower.includes("master") || lower.includes("m.tech") || lower.includes("m.s") || lower.includes("mca")) {
+        education = "Master's (M.Tech / M.S. / MCA) or Equivalent";
+      } else if (lower.includes("bachelor") || lower.includes("b.tech") || lower.includes("b.e") || lower.includes("bca") || lower.includes("b.sc")) {
+        education = "Bachelor's in CS / IT / Engineering or BCA";
+      }
+
+      // 4. Section Parsing for Required vs Preferred
+      const lines = jdText.split("\n");
+      let currentSec = "other";
+      let reqLines = [];
+      let prefLines = [];
+
+      for (let line of lines) {
+        const lClean = line.trim().toLowerCase();
+        if (!lClean) continue;
+
+        if (
+          (lClean.includes("mandatory") || lClean.includes("required") || lClean.includes("must have") || lClean.includes("core requirements") || lClean.includes("minimum qualifications")) &&
+          (lClean.includes("skill") || lClean.includes("qualification") || lClean.includes("requirement") || lClean.includes(":"))
+        ) {
+          currentSec = "req";
+          reqLines.push(line);
+          continue;
+        } else if (
+          (lClean.includes("preferred") || lClean.includes("nice to have") || lClean.includes("good to have") || lClean.includes("bonus") || lClean.includes("plus") || lClean.includes("desired")) &&
+          (lClean.includes("skill") || lClean.includes("qualification") || lClean.includes("requirement") || lClean.includes(":") || lClean.includes("have"))
+        ) {
+          currentSec = "pref";
+          prefLines.push(line);
+          continue;
+        } else if (
+          (lClean.includes("responsibilities") || lClean.includes("about") || lClean.includes("benefits") || lClean.includes("education")) &&
+          lClean.includes(":")
+        ) {
+          currentSec = "other";
+          continue;
+        }
+
+        if (currentSec === "req") reqLines.push(line);
+        else if (currentSec === "pref") prefLines.push(line);
+      }
+
+      let reqSkills = extractSkillsFromText(reqLines.join(" "));
+      let prefSkills = extractSkillsFromText(prefLines.join(" "));
+      const allExtracted = extractSkillsFromText(jdText);
+
+      if (reqSkills.length > 0 || prefSkills.length > 0) {
+        prefSkills = prefSkills.filter(s => !reqSkills.includes(s));
+        const remaining = allExtracted.filter(s => !reqSkills.includes(s) && !prefSkills.includes(s));
+        reqSkills = reqSkills.concat(remaining);
+      } else {
+        if (allExtracted.length <= 5) {
+          reqSkills = [...allExtracted];
+          prefSkills = [];
+        } else {
+          const split = Math.max(3, Math.floor(allExtracted.length * 0.65));
+          reqSkills = allExtracted.slice(0, split);
+          prefSkills = allExtracted.slice(split);
+        }
+      }
+
+      return {
+        title,
+        expYears,
+        expText,
+        education,
+        requiredSkills: reqSkills,
+        preferredSkills: prefSkills,
+        allExtractedSkills: allExtracted
+      };
+    }
+
+    function renderExtractedJDCriteriaCard(analysis) {
+      const card = document.getElementById("extractedJDCard");
+      if (!card) return;
+
+      const titleEl = document.getElementById("cardRoleTitle");
+      if (titleEl) titleEl.textContent = analysis.title;
+
+      const expEl = document.getElementById("cardExpYears");
+      if (expEl) expEl.textContent = analysis.expText;
+
+      const reqCountEl = document.getElementById("cardReqSkillsCount");
+      if (reqCountEl) reqCountEl.textContent = analysis.requiredSkills.length;
+
+      const prefCountEl = document.getElementById("cardPrefSkillsCount");
+      if (prefCountEl) prefCountEl.textContent = analysis.preferredSkills.length;
+
+      const badgeEl = document.getElementById("jdExtractionBadge");
+      if (badgeEl) {
+        badgeEl.textContent = `${analysis.requiredSkills.length} Required • ${analysis.preferredSkills.length} Preferred`;
+      }
+
+      const reqChips = document.getElementById("cardReqSkillsChips");
+      if (reqChips) {
+        reqChips.innerHTML = "";
+        if (analysis.requiredSkills.length === 0) {
+          reqChips.innerHTML = `<span class="text-on-surface-variant font-mono text-[10px]">No strict requirements detected.</span>`;
+        } else {
+          analysis.requiredSkills.forEach(s => {
+            const chip = document.createElement("span");
+            chip.className = "px-2 py-0.5 rounded bg-primary/20 text-secondary border border-primary/30 text-[10px] font-bold font-mono";
+            chip.textContent = s;
+            reqChips.appendChild(chip);
+          });
+        }
+      }
+
+      const prefChips = document.getElementById("cardPrefSkillsChips");
+      if (prefChips) {
+        prefChips.innerHTML = "";
+        if (analysis.preferredSkills.length === 0) {
+          prefChips.innerHTML = `<span class="text-on-surface-variant font-mono text-[10px]">None specified.</span>`;
+        } else {
+          analysis.preferredSkills.forEach(s => {
+            const chip = document.createElement("span");
+            chip.className = "px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant border border-outline-variant/30 text-[10px] font-mono";
+            chip.textContent = s;
+            prefChips.appendChild(chip);
+          });
+        }
+      }
+    }
+
+    function applyJDAnalysisToCandidates(analysis) {
+      currentJDAnalysis = analysis;
+      const reqSkills = analysis.requiredSkills;
+      const prefSkills = analysis.preferredSkills;
+      const targetExp = Math.max(1.0, analysis.expYears || 2.0);
+
+      // Re-evaluate candidate scores
+      candidates.forEach(c => {
+        const matchedReq = reqSkills.filter(r => 
+          c.allSkills.some(s => s.toLowerCase() === r.toLowerCase())
+        );
+        const missingReq = reqSkills.filter(r => 
+          !c.allSkills.some(s => s.toLowerCase() === r.toLowerCase())
+        );
+
+        const matchedPref = prefSkills.filter(p => 
+          c.allSkills.some(s => s.toLowerCase() === p.toLowerCase())
+        );
+
+        const reqScore = reqSkills.length > 0 
+          ? Math.round((matchedReq.length / reqSkills.length) * 1000) / 10 
+          : 100.0;
+        
+        const prefScore = prefSkills.length > 0
+          ? Math.round((matchedPref.length / prefSkills.length) * 1000) / 10
+          : 50.0;
+
+        const expScore = Math.min(100.0, Math.round((c.numericExpYears / targetExp) * 1000) / 10);
+        const eduScore = Math.round(c.eduScore * 100);
+
+        const totalSkillsMatched = matchedReq.length + matchedPref.length;
+        const totalJDSkills = Math.max(1, reqSkills.length + prefSkills.length);
+        const simScore = Math.min(100.0, Math.round((totalSkillsMatched / totalJDSkills) * 70 + (c.allSkills.length * 1.5)));
+
+        c.subscores = {
+          req: reqScore,
+          pref: prefScore,
+          exp: expScore,
+          edu: eduScore,
+          sim: Math.round(simScore * 10) / 10
+        };
+
+        c.matchedSkills = matchedReq;
+        c.missingSkills = missingReq;
+        c.matchedCount = `${matchedReq.length}/${reqSkills.length || 1}`;
+      });
+
+      // Update Top Status Bar
+      const roleTitleEl = document.getElementById("activeRoleTitle");
+      if (roleTitleEl) roleTitleEl.textContent = analysis.title;
+
+      const reqCountEl = document.getElementById("activeReqCount");
+      if (reqCountEl) reqCountEl.textContent = reqSkills.length;
+
+      const reqPreviewEl = document.getElementById("activeReqPreview");
+      if (reqPreviewEl) reqPreviewEl.textContent = reqSkills.slice(0, 6).join(", ") + (reqSkills.length > 6 ? "..." : "");
+
+      const expYearsEl = document.getElementById("activeExpYears");
+      if (expYearsEl) expYearsEl.textContent = analysis.expText;
+
+      const eduTextEl = document.getElementById("activeEduText");
+      if (eduTextEl) eduTextEl.textContent = analysis.education;
+
+      // Update Extracted Criteria Badge Card
+      renderExtractedJDCriteriaCard(analysis);
+
+      // Re-render Leaderboard, Deep Dive, and Simulation
+      renderLeaderboard();
+      const currentSelected = document.getElementById("deepdiveSelect")?.value || "aman";
+      renderDeepDiveCandidate(currentSelected);
+      renderSettingsSimulation();
+    }
+
+    function extractAndApplyJD() {
+      const textarea = document.getElementById("jdInput");
+      if (!textarea) return;
+      const text = textarea.value;
+      const analysis = parseAndExtractJD(text);
+      applyJDAnalysisToCandidates(analysis);
+    }
+
+    function onJDInputChanged() {
+      clearTimeout(jdDebounceTimer);
+      jdDebounceTimer = setTimeout(() => {
+        extractAndApplyJD();
+      }, 350);
+    }
 
     function loadRolePreset(type) {
       const textarea = document.getElementById("jdInput");
@@ -1967,6 +2375,7 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
       } else if (type === 'devops') {
         textarea.value = `Job Title: Cloud DevOps & Site Reliability Engineer\nDepartment: Infrastructure Platform\nExperience: 3.0+ years\nMandatory Skills: Linux, Docker, Kubernetes, AWS, Terraform, CI/CD, Bash, Git, Prometheus, Grafana, Nginx.\nPreferred Skills: Python, Ansible, Security Compliance.\nEducation: B.Tech in IT / Computer Science.`;
       }
+      extractAndApplyJD();
     }
 
     function loadSampleResume(type) {
@@ -2001,49 +2410,97 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
       if (firstFile.type.includes("text") || firstFile.name.endsWith(".txt")) {
         reader.readAsText(firstFile);
       } else {
-        // Preview for binary files in client-side preview
         document.getElementById("resumeInputText").value = `[Ingested ${files.length} File(s): ${fileNames}]\nBinary PDF/DOCX structure detected. Click 'Screen Candidates' to run deterministic parsing.`;
       }
     }
 
     function runScreeningOnInput() {
-      const text = document.getElementById("resumeInputText").value.toLowerCase();
+      // 1. Ensure current JD is freshly parsed
+      extractAndApplyJD();
+
+      const text = document.getElementById("resumeInputText").value;
       if (!text.trim()) {
         alert("Please enter resume text or select a candidate file first.");
         return;
       }
 
-      // Word boundary match against canonical skills
-      const matched = [];
-      CANONICAL_SKILLS.forEach(skill => {
-        const regex = new RegExp(`(^|[^a-zA-Z0-9_])${skill.replace("+", "\\+")}(?=[^a-zA-Z0-9_]|$)`, 'i');
-        if (regex.test(text)) {
-          matched.push(skill.toUpperCase());
-        }
-      });
+      // 2. Extract candidate skills from resume text
+      const candSkills = extractSkillsFromText(text);
 
-      const REQ_SKILLS = ["PYTHON", "FASTAPI", "DJANGO", "SCIKIT-LEARN", "SQL", "DOCKER", "AWS", "GIT", "GITHUB", "PANDAS", "MACHINE LEARNING", "REST API", "ALGORITHMS"];
-      const matchedReq = REQ_SKILLS.filter(r => matched.includes(r));
-      const reqPct = Math.round((matchedReq.length / REQ_SKILLS.length) * 100);
+      // 3. Match against currently active JD requirements
+      const reqSkills = currentJDAnalysis ? currentJDAnalysis.requiredSkills : [];
+      const prefSkills = currentJDAnalysis ? currentJDAnalysis.preferredSkills : [];
 
-      const simEst = Math.min(25, matched.length * 1.5);
-      const estScore = Math.min(100, Math.round(0.40 * reqPct + 0.15 * 50 + 0.15 * 80 + 0.10 * 75 + 0.20 * simEst));
+      const matchedReq = reqSkills.filter(r => 
+        candSkills.some(s => s.toLowerCase() === r.toLowerCase())
+      );
+      const missingReq = reqSkills.filter(r => 
+        !candSkills.some(s => s.toLowerCase() === r.toLowerCase())
+      );
+      const matchedPref = prefSkills.filter(p => 
+        candSkills.some(s => s.toLowerCase() === p.toLowerCase())
+      );
+
+      const reqPct = reqSkills.length > 0 ? (matchedReq.length / reqSkills.length) * 100 : 100;
+      const prefPct = prefSkills.length > 0 ? (matchedPref.length / prefSkills.length) * 100 : 50;
+      
+      // Experience extraction from candidate resume
+      let candExp = 2.0;
+      const expMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:years?|yrs?)/i);
+      if (expMatch) candExp = parseFloat(expMatch[1]) || 2.0;
+      const targetExp = currentJDAnalysis ? currentJDAnalysis.expYears : 2.0;
+      const expScore = Math.min(100, (candExp / Math.max(1, targetExp)) * 100);
+
+      // Education estimate
+      let eduScore = 75.0;
+      const tLower = text.toLowerCase();
+      if (tLower.includes("ph.d") || tLower.includes("doctorate")) eduScore = 100.0;
+      else if (tLower.includes("m.tech") || tLower.includes("master") || tLower.includes("m.s")) eduScore = 90.0;
+      else if (tLower.includes("b.tech") || tLower.includes("bachelor") || tLower.includes("b.e")) eduScore = 75.0;
+      else if (tLower.includes("bca")) eduScore = 50.0;
+
+      const simEst = Math.min(100, Math.round(((matchedReq.length + matchedPref.length) / Math.max(1, reqSkills.length + prefSkills.length)) * 70 + (candSkills.length * 1.5)));
+
+      const estScore = Math.min(100, Math.round(
+        weights.req * reqPct +
+        weights.pref * prefPct +
+        weights.exp * expScore +
+        weights.edu * eduScore +
+        weights.sim * simEst
+      ));
       const tier = getTierInfo(estScore);
 
       document.getElementById("screenResultScore").textContent = estScore + "%";
       document.getElementById("screenResultTier").textContent = tier.label;
       document.getElementById("screenResultTier").className = `px-2 py-0.5 rounded text-[11px] font-bold border font-mono ${tier.badge}`;
-      document.getElementById("screenSkillsCount").textContent = matched.length;
+      document.getElementById("screenSkillsCount").textContent = candSkills.length;
 
       const chipsContainer = document.getElementById("screenSkillsChips");
       chipsContainer.innerHTML = "";
-      if (matched.length === 0) {
+      if (candSkills.length === 0) {
         chipsContainer.innerHTML = `<span class="text-error font-mono">No canonical skills matched in taxonomy.</span>`;
       } else {
-        matched.forEach(s => {
+        // Show matched required skills
+        matchedReq.forEach(s => {
+          const chip = document.createElement("span");
+          chip.className = "px-2 py-0.5 rounded bg-tertiary-container/30 text-tertiary border border-tertiary/40 text-[10px] font-bold font-mono";
+          chip.textContent = `✓ ${s}`;
+          chipsContainer.appendChild(chip);
+        });
+
+        // Show matched preferred skills
+        matchedPref.forEach(s => {
           const chip = document.createElement("span");
           chip.className = "px-2 py-0.5 rounded bg-primary/20 text-secondary border border-primary/30 text-[10px] font-bold font-mono";
-          chip.textContent = s;
+          chip.textContent = `★ ${s}`;
+          chipsContainer.appendChild(chip);
+        });
+
+        // Show missing required skills
+        missingReq.forEach(s => {
+          const chip = document.createElement("span");
+          chip.className = "px-2 py-0.5 rounded bg-error-container/20 text-error border border-error/30 text-[10px] font-mono opacity-80";
+          chip.textContent = `✗ ${s}`;
           chipsContainer.appendChild(chip);
         });
       }
@@ -2078,11 +2535,10 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
 
     // Initialize on page load
     window.addEventListener("DOMContentLoaded", () => {
+      extractAndApplyJD();
       syncAllWeightUI();
-      renderLeaderboard();
       initTierChart();
       loadSampleResume('aman');
-      renderSettingsSimulation();
     });
   </script>
 </body>
