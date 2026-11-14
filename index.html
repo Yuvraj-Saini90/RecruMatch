@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RecruMatch — Intelligent Resume Screening & Candidate Ranking System</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+              950: '#0f172a'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Chart.js for Radar & Bar charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .glass { background: #0f172a; border: 1px solid #1e293b; }
+    .glass-card { background: #111827; border: 1px solid #1e293b; border-radius: 0.75rem; }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0b0f19; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-blue-500 selection:text-white">
+
+  <!-- TOP HEADER -->
+  <header class="border-b border-slate-800 bg-slate-900 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
+          <i class="fa-solid fa-crosshairs"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+              RecruMatch
+              <span class="text-xs px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">
+                Production
+              </span>
+            </h1>
+          </div>
+          <p class="text-xs text-slate-400">Candidate Screening & Ranking Dashboard • Dept. of CSE, GNIOT (AKTU)</p>
+        </div>
+      </div>
+
+      <!-- Action & Controls -->
+      <div class="flex items-center space-x-3">
+        <!-- Blind Recruitment Toggle -->
+        <button id="blindToggleBtn" onclick="toggleBlindMode()" class="px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 flex items-center gap-2 bg-slate-800 text-slate-300 border-slate-700 hover:border-slate-600">
+          <i class="fa-solid fa-user-shield text-indigo-400"></i>
+          <span>Blind Mode: <b id="blindStatusText" class="text-slate-400 font-bold">OFF</b></span>
+        </button>
+
+        <a href="#report" onclick="switchTab('report')" class="hidden sm:flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-blue-600/10 text-blue-400 border border-blue-500/20 hover:bg-blue-600/20 transition-colors">
+          <i class="fa-solid fa-file-lines"></i>
+          <span>Project Report</span>
+        </a>
+
+        <div class="text-xs text-slate-400 border-l border-slate-800 pl-3 hidden md:block">
+          <div><span class="text-slate-300 font-semibold">Dev:</span> Yuvraj Saini</div>
+          <div><span class="text-slate-300 font-semibold">Guide:</span> Mr. Ashwini Kr. Verma</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAVIGATION TABS -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-800 flex space-x-1 sm:space-x-4 overflow-x-auto text-xs sm:text-sm font-medium py-1">
+      <button onclick="switchTab('dashboard')" id="tabBtn-dashboard" class="tab-btn px-3 py-2 rounded-lg text-blue-400 bg-blue-500/10 border border-blue-500/20 flex items-center gap-2 whitespace-nowrap">
+        <i class="fa-solid fa-chart-pie"></i> Dashboard
+      </button>
+      <button onclick="switchTab('leaderboard')" id="tabBtn-leaderboard" class="tab-btn px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-all flex items-center gap-2 whitespace-nowrap">
+        <i class="fa-solid fa-trophy"></i> Candidate Leaderboard
+      </button>
+      <button onclick="switchTab('deepdive')" id="tabBtn-deepdive" class="tab-btn px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-all flex items-center gap-2 whitespace-nowrap">
+        <i class="fa-solid fa-bullseye"></i> Competency Radar & Skills
+      </button>
+      <button onclick="switchTab('forensic')" id="tabBtn-forensic" class="tab-btn px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-all flex items-center gap-2 whitespace-nowrap">
+        <i class="fa-solid fa-shield-halved text-rose-400"></i> Resume Security & Tampering
+        <span class="px-1.5 py-0.2 rounded-full bg-rose-500/20 text-rose-300 text-[10px] font-bold">1 Notice</span>
+      </button>
+      <button onclick="switchTab('screening')" id="tabBtn-screening" class="tab-btn px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-all flex items-center gap-2 whitespace-nowrap">
+        <i class="fa-solid fa-file-arrow-up"></i> Screen Resumes
+      </button>
+      <button onclick="switchTab('report')" id="tabBtn-report" class="tab-btn px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-all flex items-center gap-2 whitespace-nowrap">
+        <i class="fa-solid fa-book-bookmark text-amber-400"></i> Project Documentation
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- ============================================================= -->
+    <!-- TAB 1: EXECUTIVE DASHBOARD -->
+    <!-- ============================================================= -->
+    <section id="tab-dashboard" class="tab-pane space-y-6">
+      
+      <!-- Top Alert / Job Info -->
+      <div class="glass p-4 rounded-xl border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex items-start space-x-3.5">
+          <div class="p-2.5 rounded-lg bg-blue-500/10 text-blue-400 mt-0.5">
+            <i class="fa-solid fa-briefcase text-lg"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs uppercase font-bold tracking-wider text-blue-400">Active Job Specification</span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">Engineering Requisition</span>
+            </div>
+            <h2 class="text-base sm:text-lg font-bold text-white">Senior Python & Machine Learning Engineer</h2>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Requirements: 13 Mandatory Skills (Python, FastAPI, Django, Scikit-learn, SQL, Docker, AWS...) • 3.0+ Years Exp • Master's or B.Tech
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 self-start md:self-auto">
+          <button onclick="switchTab('screening')" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-colors flex items-center gap-1.5 shadow-sm">
+            <i class="fa-solid fa-plus"></i> Screen New Candidate
+          </button>
+          <button onclick="switchTab('leaderboard')" class="px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors">
+            View Rankings
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 KPI SUMMARY CARDS -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Card 1 -->
+        <div class="glass-card p-4 rounded-xl border border-slate-800">
+          <div class="flex items-center justify-between text-slate-400 text-xs">
+            <span>Total Applicants</span>
+            <i class="fa-solid fa-users text-blue-400"></i>
+          </div>
+          <div class="text-2xl font-black text-white mt-2" id="kpi-total">5</div>
+          <div class="text-[11px] text-slate-500 mt-1 flex items-center gap-1">
+            <span class="text-emerald-400 font-medium">All parsed</span> • 3 PDF, 2 DOCX
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="glass-card p-4 rounded-xl border border-slate-800">
+          <div class="flex items-center justify-between text-slate-400 text-xs">
+            <span>Average Match Score</span>
+            <i class="fa-solid fa-gauge-high text-amber-400"></i>
+          </div>
+          <div class="text-2xl font-black text-amber-400 mt-2" id="kpi-avg">49.6%</div>
+          <div class="text-[11px] text-slate-500 mt-1">
+            Across 5 evaluation criteria
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="glass-card p-4 rounded-xl border border-slate-800">
+          <div class="flex items-center justify-between text-slate-400 text-xs">
+            <span>Qualified Candidates (≥60%)</span>
+            <i class="fa-solid fa-circle-check text-emerald-400"></i>
+          </div>
+          <div class="text-2xl font-black text-emerald-400 mt-2" id="kpi-matches">2</div>
+          <div class="text-[11px] text-slate-500 mt-1">
+            40% of applicant pool
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="glass-card p-4 rounded-xl border border-rose-900/40 bg-rose-950/10">
+          <div class="flex items-center justify-between text-rose-300 text-xs">
+            <span>Tampering Notices Flagged</span>
+            <i class="fa-solid fa-triangle-exclamation text-rose-400"></i>
+          </div>
+          <div class="text-2xl font-black text-rose-400 mt-2">1</div>
+          <div class="text-[11px] text-rose-300/80 mt-1 flex items-center gap-1 font-medium">
+            Vikram Malhotra (Risk Score: 85)
+          </div>
+        </div>
+      </div>
+
+      <!-- CHARTS ROW -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Match Tier Distribution -->
+        <div class="glass-card p-5 rounded-xl border border-slate-800 lg:col-span-2">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-chart-column text-blue-400"></i>
+                Applicant Pool Match Tier Distribution
+              </h3>
+              <p class="text-xs text-slate-400">Standardized qualification classifications</p>
+            </div>
+            <span class="text-xs px-2.5 py-1 rounded bg-slate-800 border border-slate-700 text-slate-300">
+              Deterministic Weights
+            </span>
+          </div>
+          <div class="h-64">
+            <canvas id="tierChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Quick Summary & Quick Actions -->
+        <div class="glass-card p-5 rounded-xl border border-slate-800 flex flex-col justify-between">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2 mb-3">
+              <i class="fa-solid fa-list-check text-indigo-400"></i>
+              System Health & Integrity
+            </h3>
+            <div class="space-y-3 text-xs">
+              <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                <span class="text-slate-400">Reproducibility:</span>
+                <span class="text-emerald-400 font-bold">100% Deterministic</span>
+              </div>
+              <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                <span class="text-slate-400">Average Screening Latency:</span>
+                <span class="text-cyan-400 font-bold">381.9 ms / resume</span>
+              </div>
+              <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                <span class="text-slate-400">Execution Mode:</span>
+                <span class="text-emerald-400 font-bold">100% Offline / Local</span>
+              </div>
+              <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                <span class="text-slate-400">Blind Screening Status:</span>
+                <span id="deiStatusBadge" class="text-slate-400 font-bold">Standard Mode</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-800 mt-4 space-y-2">
+            <button onclick="switchTab('leaderboard')" class="w-full py-2 px-3 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-colors flex items-center justify-center gap-2">
+              <i class="fa-solid fa-ranking-star"></i> View Candidate Leaderboard
+            </button>
+            <button onclick="switchTab('forensic')" class="w-full py-2 px-3 text-xs font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-rose-300 border border-rose-500/30 transition-colors flex items-center justify-center gap-2">
+              <i class="fa-solid fa-shield-halved"></i> Review Flagged Document
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- TAB 2: CANDIDATE LEADERBOARD & WEIGHT CALIBRATION -->
+    <!-- ============================================================= -->
+    <section id="tab-leaderboard" class="tab-pane hidden space-y-6">
+      
+      <!-- Dynamic Weight Adjustment Panel -->
+      <div class="glass-card p-5 rounded-xl border border-slate-800">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-sliders text-blue-400"></i>
+              Multi-Criteria Scoring Weights
+            </h3>
+            <p class="text-xs text-slate-400">Adjust criteria weights to reflect hiring priorities. Weights normalize automatically to 100%.</p>
+          </div>
+          <button onclick="resetDefaultWeights()" class="text-xs px-2.5 py-1 rounded bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 self-start sm:self-auto">
+            Reset to Defaults
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 text-xs">
+          <!-- W_req -->
+          <div class="bg-slate-900/90 p-3 rounded-lg border border-slate-800">
+            <div class="flex justify-between font-semibold text-slate-300 mb-1">
+              <span>Required Skills</span>
+              <span id="label-w-req" class="text-blue-400">40%</span>
+            </div>
+            <input type="range" id="slider-w-req" min="10" max="70" value="40" oninput="onWeightChange()" class="w-full accent-blue-500 cursor-pointer">
+            <p class="text-[10px] text-slate-500 mt-1">Mandatory JD skills</p>
+          </div>
+
+          <!-- W_pref -->
+          <div class="bg-slate-900/90 p-3 rounded-lg border border-slate-800">
+            <div class="flex justify-between font-semibold text-slate-300 mb-1">
+              <span>Preferred Skills</span>
+              <span id="label-w-pref" class="text-indigo-400">15%</span>
+            </div>
+            <input type="range" id="slider-w-pref" min="0" max="40" value="15" oninput="onWeightChange()" class="w-full accent-indigo-500 cursor-pointer">
+            <p class="text-[10px] text-slate-500 mt-1">Bonus competencies</p>
+          </div>
+
+          <!-- W_exp -->
+          <div class="bg-slate-900/90 p-3 rounded-lg border border-slate-800">
+            <div class="flex justify-between font-semibold text-slate-300 mb-1">
+              <span>Experience</span>
+              <span id="label-w-exp" class="text-emerald-400">15%</span>
+            </div>
+            <input type="range" id="slider-w-exp" min="5" max="40" value="15" oninput="onWeightChange()" class="w-full accent-emerald-500 cursor-pointer">
+            <p class="text-[10px] text-slate-500 mt-1">Verified work tenure</p>
+          </div>
+
+          <!-- W_edu -->
+          <div class="bg-slate-900/90 p-3 rounded-lg border border-slate-800">
+            <div class="flex justify-between font-semibold text-slate-300 mb-1">
+              <span>Education</span>
+              <span id="label-w-edu" class="text-amber-400">10%</span>
+            </div>
+            <input type="range" id="slider-w-edu" min="0" max="30" value="10" oninput="onWeightChange()" class="w-full accent-amber-500 cursor-pointer">
+            <p class="text-[10px] text-slate-500 mt-1">Academic degree tier</p>
+          </div>
+
+          <!-- W_sim -->
+          <div class="bg-slate-900/90 p-3 rounded-lg border border-slate-800">
+            <div class="flex justify-between font-semibold text-slate-300 mb-1">
+              <span>Semantic Similarity</span>
+              <span id="label-w-sim" class="text-purple-400">20%</span>
+            </div>
+            <input type="range" id="slider-w-sim" min="5" max="50" value="20" oninput="onWeightChange()" class="w-full accent-purple-500 cursor-pointer">
+            <p class="text-[10px] text-slate-500 mt-1">TF-IDF / Cosine align</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEADERBOARD TABLE -->
+      <div class="glass-card rounded-xl border border-slate-800 overflow-hidden">
+        <div class="p-4 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-list-ol text-blue-400"></i>
+              Ranked Candidate Leaderboard
+            </h3>
+            <p class="text-xs text-slate-400">Instant deterministic ranking computed locally</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="exportCSV()" class="px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1.5 transition-colors">
+              <i class="fa-solid fa-download"></i> Export CSV
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-900/80 text-slate-400 border-b border-slate-800 uppercase tracking-wider text-[11px]">
+                <th class="py-3 px-4 font-semibold">Rank</th>
+                <th class="py-3 px-4 font-semibold">Candidate Profile</th>
+                <th class="py-3 px-4 font-semibold">Format</th>
+                <th class="py-3 px-4 font-semibold">Required (40%)</th>
+                <th class="py-3 px-4 font-semibold">Experience</th>
+                <th class="py-3 px-4 font-semibold">Match Score</th>
+                <th class="py-3 px-4 font-semibold">Tier</th>
+                <th class="py-3 px-4 font-semibold">Forensic Status</th>
+                <th class="py-3 px-4 font-semibold text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboardTbody" class="divide-y divide-slate-800/60">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-3 rounded-lg bg-slate-900/60 border border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
+        <span class="flex items-center gap-1.5">
+          <i class="fa-solid fa-circle-info text-blue-400"></i>
+          *Note: <b>Vikram Malhotra's</b> resume contains 18 hidden white-text spans detected in the PDF stream; scores are computed on sanitized text.
+        </span>
+        <button onclick="switchTab('forensic')" class="text-rose-400 hover:underline font-semibold ml-2">Review Notice &rarr;</button>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- TAB 3: 5-AXIS RADAR CHART & CANDIDATE DEEP DIVE -->
+    <!-- ============================================================= -->
+    <section id="tab-deepdive" class="tab-pane hidden space-y-6">
+      
+      <!-- Candidate Selector -->
+      <div class="glass-card p-4 rounded-xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-bullseye text-blue-400"></i>
+            Candidate Profile & Competency Breakdown
+          </h3>
+          <p class="text-xs text-slate-400">Review qualification sub-scores, verified skills, and structured interview questions.</p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <label class="text-xs font-semibold text-slate-300">Select Candidate:</label>
+          <select id="deepdiveSelect" onchange="renderDeepDiveCandidate(this.value)" class="bg-slate-900 border border-slate-700 text-white text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:border-blue-500">
+            <option value="aman">Aman Verma (Clean PDF - Rank #2)</option>
+            <option value="priya">Priya Sharma (Clean PDF - Rank #3)</option>
+            <option value="vikram">Vikram Malhotra (Flagged PDF - Rank #1*)</option>
+            <option value="sneha">Sneha Gupta (Clean DOCX - Rank #4)</option>
+            <option value="rahul">Rahul Kumar (Clean DOCX - Rank #5)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Radar Chart Column -->
+        <div class="glass-card p-5 rounded-xl border border-slate-800 lg:col-span-5 flex flex-col items-center">
+          <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 self-start flex items-center gap-1.5">
+            <i class="fa-solid fa-chart-radar text-blue-400"></i> 5-Axis Competency Radar
+          </h4>
+          <div class="w-full h-72">
+            <canvas id="radarChart"></canvas>
+          </div>
+          <p class="text-[11px] text-slate-500 text-center mt-2">
+            Evaluation Dimensions: Required Skills, Preferred Skills, Experience, Education Tier, and Semantic Text Cosine Similarity.
+          </p>
+        </div>
+
+        <!-- Detail Breakdown Column -->
+        <div class="glass-card p-5 rounded-xl border border-slate-800 lg:col-span-7 space-y-4">
+          <!-- Candidate Header -->
+          <div class="flex items-start justify-between pb-3 border-b border-slate-800">
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 id="dd-name" class="text-lg font-bold text-white">Aman Verma</h3>
+                <span id="dd-tier-badge" class="px-2 py-0.5 rounded text-[11px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">Good Match</span>
+                <span id="dd-forensic-badge" class="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Clean Verified</span>
+              </div>
+              <p id="dd-meta" class="text-xs text-slate-400 mt-0.5">Senior Python Developer • 4.0 Years Exp • B.Tech CSE (GNIOT 2022)</p>
+            </div>
+            <div class="text-right">
+              <div class="text-xs text-slate-400">Final Score</div>
+              <div id="dd-score" class="text-2xl font-black text-blue-400">65.2%</div>
+            </div>
+          </div>
+
+          <!-- Matched Skills Chips -->
+          <div>
+            <h5 class="text-xs font-semibold text-slate-300 mb-2 flex items-center gap-1.5">
+              <i class="fa-solid fa-circle-check text-emerald-400"></i> Matched Mandatory Skills
+              <span id="dd-matched-count" class="text-[10px] text-emerald-400 font-bold ml-1">(11/13 matched)</span>
+            </h5>
+            <div id="dd-matched-chips" class="flex flex-wrap gap-1.5">
+              <!-- Injected by JS -->
+            </div>
+          </div>
+
+          <!-- Missing Skills Chips -->
+          <div>
+            <h5 class="text-xs font-semibold text-slate-300 mb-2 flex items-center gap-1.5">
+              <i class="fa-solid fa-circle-xmark text-rose-400"></i> Missing Role Requirements
+              <span id="dd-missing-count" class="text-[10px] text-rose-400 font-bold ml-1">(2 missing)</span>
+            </h5>
+            <div id="dd-missing-chips" class="flex flex-wrap gap-1.5">
+              <!-- Injected by JS -->
+            </div>
+          </div>
+
+          <!-- Career Velocity & Interview Kit -->
+          <div class="pt-3 border-t border-slate-800 space-y-3">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-400 flex items-center gap-1.5">
+                <i class="fa-solid fa-arrow-trend-up text-indigo-400"></i> Career Velocity:
+              </span>
+              <span id="dd-velocity" class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-bold border border-indigo-500/30">
+                Strong Progression (2 promotions in 4 yrs)
+              </span>
+            </div>
+
+            <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 text-xs">
+              <h6 class="font-bold text-slate-200 mb-1.5 flex items-center gap-1.5">
+                <i class="fa-solid fa-clipboard-question text-blue-400"></i>
+                Structured Interview Questions
+              </h6>
+              <div id="dd-interview-kit" class="space-y-1.5 text-slate-400">
+                <!-- Injected by JS -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- TAB 4: FORENSIC EXPLOIT SHIELD -->
+    <!-- ============================================================= -->
+    <section id="tab-forensic" class="tab-pane hidden space-y-6">
+      
+      <!-- Top Threat Banner -->
+      <div class="p-4 rounded-xl border border-rose-500/40 bg-rose-950/20 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex items-start space-x-3.5">
+          <div class="p-2.5 rounded-lg bg-rose-500/20 text-rose-400 mt-0.5">
+            <i class="fa-solid fa-shield-halved text-2xl"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs uppercase font-extrabold tracking-wider text-rose-400">Resume Tampering Detected</span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 font-bold">High Risk Notice</span>
+            </div>
+            <h3 class="text-base font-bold text-white mt-0.5">Resume: Vikram_Malhotra_Adversarial_Exploit.pdf</h3>
+            <p class="text-xs text-rose-200/80 mt-0.5">
+              PDF layer analysis detected 18 hidden white-text spans, micro-fonts (&lt;2.0 pt), and Cyrillic homoglyph substitutions.
+            </p>
+          </div>
+        </div>
+        <div class="text-right self-start md:self-auto">
+          <div class="text-xs text-rose-300">Tampering Risk Score</div>
+          <div class="text-3xl font-black text-rose-400">85<span class="text-lg text-rose-300/70">/100</span></div>
+        </div>
+      </div>
+
+      <!-- 3 EXPLOIT BREAKDOWN CARDS -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Exploit 1 -->
+        <div class="glass-card p-4 rounded-xl border border-rose-900/30">
+          <div class="flex items-center justify-between text-xs text-slate-300 font-semibold mb-2">
+            <span class="flex items-center gap-1.5 text-rose-400">
+              <i class="fa-solid fa-eye-slash"></i> 1. Hidden White Text
+            </span>
+            <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 font-bold">18 Spans</span>
+          </div>
+          <p class="text-xs text-slate-400">
+            Applicant injected 18 lines of dense skills rendered in white font color <code class="text-rose-300">#FFFFFF</code> matching document background. Invisible to humans, but parsed by naive ATS.
+          </p>
+          <div class="mt-3 p-2 bg-slate-900 rounded border border-slate-800 text-[11px] text-slate-400 font-mono">
+            BBox: [50.0, 80.9, 440.4, 92.1] • Color: [1.0, 1.0, 1.0]
+          </div>
+        </div>
+
+        <!-- Exploit 2 -->
+        <div class="glass-card p-4 rounded-xl border border-rose-900/30">
+          <div class="flex items-center justify-between text-xs text-slate-300 font-semibold mb-2">
+            <span class="flex items-center gap-1.5 text-amber-400">
+              <i class="fa-solid fa-text-height"></i> 2. Micro-Font Text
+            </span>
+            <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold">&lt; 2.0 pt</span>
+          </div>
+          <p class="text-xs text-slate-400">
+            Skills stacked in header and footer rendered at <code class="text-amber-300">1.5 pt</code> font size (sub-human readable). Quarantined and excluded from candidate evaluation.
+          </p>
+          <div class="mt-3 p-2 bg-slate-900 rounded border border-slate-800 text-[11px] text-slate-400 font-mono">
+            Size: 1.5pt • Extracted: ['PyTorch', 'TensorFlow', 'K8s']
+          </div>
+        </div>
+
+        <!-- Exploit 3 -->
+        <div class="glass-card p-4 rounded-xl border border-rose-900/30">
+          <div class="flex items-center justify-between text-xs text-slate-300 font-semibold mb-2">
+            <span class="flex items-center gap-1.5 text-indigo-400">
+              <i class="fa-solid fa-language"></i> 3. Homoglyph Substitutions
+            </span>
+            <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-bold">Cyrillic Script</span>
+          </div>
+          <p class="text-xs text-slate-400">
+            Replaced Latin letters with identical Cyrillic codepoints (e.g. Cyrillic <code class="text-indigo-300">U+0430 'а'</code> for Latin <code class="text-indigo-300">U+0061 'a'</code>) to bypass keyword filters.
+          </p>
+          <div class="mt-3 p-2 bg-slate-900 rounded border border-slate-800 text-[11px] text-slate-400 font-mono">
+            'Pуthоn' &rarr; 'Python' • 'АWS' &rarr; 'AWS'
+          </div>
+        </div>
+      </div>
+
+      <!-- SIDE BY SIDE DIFF VIEWER -->
+      <div class="glass-card p-5 rounded-xl border border-slate-800">
+        <h4 class="text-sm font-bold text-white mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-code-compare text-blue-400"></i>
+          Sanitized Text Diff: Raw Parsed vs. Sanitized Output
+        </h4>
+        <p class="text-xs text-slate-400 mb-4">
+          Shows how the tampering detection engine filtered hidden tokens before scoring, adjusting match score by <b>22.4%</b>.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+          <!-- Left: Raw Text with Exploits -->
+          <div class="bg-slate-950 p-4 rounded-lg border border-rose-900/40">
+            <div class="text-rose-400 font-bold pb-2 border-b border-rose-900/30 mb-2 flex items-center justify-between">
+              <span>RAW PARSED STREAM (Unchecked ATS)</span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-rose-500/20 text-rose-300">Legacy ATS Score: 96%</span>
+            </div>
+            <div class="space-y-1.5 text-slate-400 max-h-56 overflow-y-auto">
+              <p>Vikram Malhotra - Senior AI Architect</p>
+              <p>Experience: 10 years in enterprise systems</p>
+              <p class="bg-rose-500/20 text-rose-300 px-1 rounded">[HIDDEN WHITE TEXT #FFFFFF: Python, AWS, Docker, Kubernetes, FastAPI, Django, Scikit-learn, PyTorch, TensorFlow, Redis, PostgreSQL, SQL, Algorithms, Pandas, Git, GitHub]</p>
+              <p class="bg-amber-500/20 text-amber-300 px-1 rounded">[MICROFONT 1.5pt: Deep Learning Microservices CI/CD GraphQL Linux]</p>
+              <p class="bg-indigo-500/20 text-indigo-300 px-1 rounded">[HOMOGLYPH CYRILLIC: Pуthоn Dоckеr АWS]</p>
+            </div>
+          </div>
+
+          <!-- Right: Sanitized Text Stream -->
+          <div class="bg-slate-950 p-4 rounded-lg border border-emerald-900/40">
+            <div class="text-emerald-400 font-bold pb-2 border-b border-emerald-900/30 mb-2 flex items-center justify-between">
+              <span>RECRUMATCH SANITIZED STREAM</span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">Sanitized Score: 73.1%</span>
+            </div>
+            <div class="space-y-1.5 text-slate-400 max-h-56 overflow-y-auto">
+              <p>Vikram Malhotra - Senior AI Architect</p>
+              <p>Experience: 10 years in enterprise systems</p>
+              <p class="text-emerald-400 font-semibold">[STRIPPED: 18 invisible white-text keyword spans]</p>
+              <p class="text-emerald-400 font-semibold">[STRIPPED: Sub-2.0pt micro-font tokens quarantined]</p>
+              <p class="text-emerald-400 font-semibold">[NORMALIZED: Cyrillic homoglyphs mapped to ASCII equivalents]</p>
+              <p class="text-slate-500 italic">Downstream NLP evaluated only genuine visible candidate qualifications.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- TAB 5: SCREEN NEW RESUMES (CLIENT-SIDE ENGINE) -->
+    <!-- ============================================================= -->
+    <section id="tab-screening" class="tab-pane hidden space-y-6">
+      <div class="glass-card p-6 rounded-xl border border-slate-800">
+        <h3 class="text-base font-bold text-white flex items-center gap-2 mb-1">
+          <i class="fa-solid fa-file-circle-plus text-blue-400"></i>
+          Interactive Resume Screening
+        </h3>
+        <p class="text-xs text-slate-400 mb-6">
+          Paste resume text or choose a benchmark candidate to evaluate against the canonical skill taxonomy.
+        </p>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Left: Input Area -->
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Quick Load Sample Candidate:</label>
+              <div class="flex flex-wrap gap-2">
+                <button onclick="loadSampleResume('aman')" class="px-2.5 py-1 text-xs rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">Aman Verma (Python/ML)</button>
+                <button onclick="loadSampleResume('priya')" class="px-2.5 py-1 text-xs rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">Priya Sharma (Data Science)</button>
+                <button onclick="loadSampleResume('rahul')" class="px-2.5 py-1 text-xs rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">Rahul Kumar (Web Dev)</button>
+                <button onclick="loadSampleResume('custom')" class="px-2.5 py-1 text-xs rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">Clear</button>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Candidate Resume Text:</label>
+              <textarea id="resumeInputText" rows="10" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 text-xs text-slate-200 focus:outline-none focus:border-blue-500 font-mono" placeholder="Paste candidate resume text here..."></textarea>
+            </div>
+
+            <button onclick="runScreeningOnInput()" class="w-full py-2.5 px-4 text-xs font-bold rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-colors flex items-center justify-center gap-2 shadow-sm">
+              <i class="fa-solid fa-play"></i> Screen Candidate
+            </button>
+          </div>
+
+          <!-- Right: Screening Results -->
+          <div class="bg-slate-900/90 rounded-xl p-5 border border-slate-800 flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Screening Assessment Result</h4>
+                <span id="screenResultTier" class="px-2 py-0.5 rounded text-[11px] font-bold bg-slate-800 text-slate-400 border border-slate-700">Awaiting Input</span>
+              </div>
+
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-xs text-slate-400">Composite Score</div>
+                  <div id="screenResultScore" class="text-3xl font-black text-white">--%</div>
+                </div>
+                <div class="text-right">
+                  <div class="text-xs text-slate-400">Extracted Skills Count</div>
+                  <div id="screenSkillsCount" class="text-xl font-bold text-blue-400">0</div>
+                </div>
+              </div>
+
+              <!-- Skills Found -->
+              <div>
+                <div class="text-xs font-semibold text-slate-300 mb-1.5">Canonical Skills Extracted:</div>
+                <div id="screenSkillsChips" class="flex flex-wrap gap-1 text-[11px] min-h-[40px] p-2 rounded bg-slate-950 border border-slate-800 text-slate-500">
+                  Click 'Screen Candidate' to view normalized skills.
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-slate-800 text-[11px] text-slate-500 flex items-center justify-between">
+              <span>Canonical Taxonomy: 130+ normalized terms</span>
+              <span>Execution: 100% Client-Side JS / Offline</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- TAB 6: PROJECT REPORT & ACADEMIC DEFENSE -->
+    <!-- ============================================================= -->
+    <section id="tab-report" class="tab-pane hidden space-y-6">
+      <div class="glass-card p-6 rounded-xl border border-slate-800 space-y-6">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <div>
+            <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">Project Documentation</span>
+            <h2 class="text-lg font-bold text-white mt-0.5">RecruMatch: Project Report & Documentation</h2>
+            <p class="text-xs text-slate-400">Department of Computer Science & Engineering, GNIOT (AKTU) • Academic Session 2026–2027</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="downloadReportDocx()" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-blue-600 hover:bg-blue-500 text-white flex items-center gap-1.5 shadow-sm">
+              <i class="fa-solid fa-file-word"></i> Word Report (.docx)
+            </button>
+            <button onclick="downloadReportMd()" class="px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1.5">
+              <i class="fa-solid fa-file-code"></i> View Outline
+            </button>
+          </div>
+        </div>
+
+        <!-- 3 Highlights -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-800">
+            <div class="text-blue-400 font-bold mb-1 flex items-center gap-1.5">
+              <i class="fa-solid fa-code text-blue-400"></i> Deterministic NLP vs. Pure LLMs
+            </div>
+            <p class="text-slate-400 leading-relaxed">
+              Deterministic taxonomy matching eliminates stochastic hallucinations, operates 100% offline with zero external API dependencies, preserves candidate privacy, and runs with sub-400ms latency.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-800">
+            <div class="text-emerald-400 font-bold mb-1 flex items-center gap-1.5">
+              <i class="fa-solid fa-scale-balanced text-emerald-400"></i> Unconscious Bias Mitigation
+            </div>
+            <p class="text-slate-400 leading-relaxed">
+              Non-job-related attributes (gender, age, marital status, photo) are excluded. The Blind Recruitment Mode dynamically scrubs names and prestige markers, ensuring evaluation rests solely on verified merit.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-800">
+            <div class="text-rose-400 font-bold mb-1 flex items-center gap-1.5">
+              <i class="fa-solid fa-shield-halved text-rose-400"></i> Resume Tampering Detection
+            </div>
+            <p class="text-slate-400 leading-relaxed">
+              Pre-flight PDF stream inspection parses font color triples (R, G, B) to detect invisible white text (#FFFFFF), micro-fonts (&lt;2.0 pt), and Cyrillic homoglyphs before text reaches scoring.
+            </p>
+          </div>
+        </div>
+
+        <!-- Mathematical Scoring Formula Code Block -->
+        <div class="bg-slate-950 p-4 rounded-lg border border-slate-800 text-xs">
+          <div class="text-slate-300 font-bold mb-2 flex items-center justify-between">
+            <span>Mathematical Equation 5.1: Explainable Multi-Criteria Scoring Formulation</span>
+            <span class="text-[10px] text-blue-400 font-mono">Convex Combination (Sum = 1.0)</span>
+          </div>
+          <pre class="text-slate-300 leading-relaxed overflow-x-auto text-[11px]">
+Final Score = w_req * S_req + w_pref * S_pref + w_exp * S_exp + w_edu * S_edu + w_sim * S_sim
+
+Enterprise Default Weights:
+  - w_req  = 0.40  (Required Skills: 40%)
+  - w_pref = 0.15  (Preferred / Bonus Skills: 15%)
+  - w_exp  = 0.15  (Experience Relevance: 15%)
+  - w_edu  = 0.10  (Educational Qualification: 10%)
+  - w_sim  = 0.20  (Contextual Semantic Similarity: 20%)
+
+Where:
+  S_req  = (|Skills_cand ∩ Req_skills|) / |Req_skills|
+  S_pref = (|Skills_cand ∩ Pref_skills|) / |Pref_skills|
+  S_exp  = min(1.0, E_cand / E_min)
+  S_edu  = Academic Tier Assignment (Ph.D. = 1.0, M.Tech = 0.90, B.Tech = 0.75, BCA = 0.50)
+  S_sim  = (v_cand · v_jd) / (||v_cand|| * ||v_jd||)  [Cosine Similarity on TF-IDF sparse vector]
+          </pre>
+        </div>
+
+        <!-- Chapter Outline Summary -->
+        <div>
+          <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3">10-Chapter Academic Report Structure (GNIOT / AKTU)</h4>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <div class="p-2.5 rounded bg-slate-900 border border-slate-800 text-slate-300"><b class="text-blue-400">Chapter 1:</b> Introduction & Objectives (Pages 1–5)</div>
+            <div class="p-2.5 rounded bg-slate-900 border border-slate-800 text-slate-300"><b class="text-blue-400">Chapter 2:</b> System Analysis & Need Identification (Pages 6–10)</div>
+            <div class="p-2.5 rounded bg-slate-900 border border-slate-800 text-slate-300"><b class="text-blue-400">Chapter 3:</b> Feasibility Study (Tech, Econ, Ops) (Pages 11–15)</div>
+            <div class="p-2.5 rounded bg-slate-900 border border-slate-800 text-slate-300"><b class="text-blue-400">Chapter 4:</b> Specifications & DFDs / ER Diagram (Pages 16–22)</div>
+            <div class="p-2.5 rounded bg-slate-900 border border-slate-800 text-slate-300"><b class="text-blue-400">Chapter 5:</b> Proposed System & Algorithmic Engines (Pages 23–31)</div>
+            <div class="p-2.5 rounded bg-slate-900 border border-slate-800 text-slate-300"><b class="text-blue-400">Chapter 6:</b> User Interface & Screen Shots (Pages 32–35)</div>
+            <div class="p-2.5 rounded bg-slate-900 border border-slate-800 text-slate-300"><b class="text-blue-400">Chapter 7:</b> Modular System Coding (Pages 36–42)</div>
+            <div class="p-2.5 rounded bg-slate-900 border border-slate-800 text-slate-300"><b class="text-blue-400">Chapter 8:</b> Experimental Results & Benchmarks (Pages 43–47)</div>
+            <div class="p-2.5 rounded bg-slate-900 border border-slate-800 text-slate-300"><b class="text-blue-400">Chapter 9:</b> Conclusion & Future Scope (Pages 48–49)</div>
+            <div class="p-2.5 rounded bg-slate-900 border border-slate-800 text-slate-300"><b class="text-blue-400">Chapter 10:</b> IEEE References & Glossary (Pages 50–52)</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-800/80 bg-slate-950 py-4 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>
+        RecruMatch &copy; 2026 • B.Tech Mini Project • Greater Noida Institute of Technology (GNIOT), AKTU
+      </div>
+      <div class="flex items-center space-x-4">
+        <span>Candidate: <b class="text-slate-400">Yuvraj Saini</b></span>
+        <span>Supervisor: <b class="text-slate-400">Mr. Ashwini Kr. Verma</b></span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    // -------------------------------------------------------------
+    // DATA STORE: BENCHMARK CANDIDATES
+    // -------------------------------------------------------------
+    let isBlindMode = false;
+
+    let weights = {
+      req: 0.40,
+      pref: 0.15,
+      exp: 0.15,
+      edu: 0.10,
+      sim: 0.20
+    };
+
+    const candidates = [
+      {
+        id: "vikram",
+        name: "Vikram Malhotra*",
+        blindToken: "Candidate #1 [Token: vk73a1]",
+        format: "PDF (Exploit)",
+        rawScoreLegacy: 96.0,
+        subscores: { req: 76.9, pref: 100.0, exp: 100.0, edu: 100.0, sim: 11.7 },
+        matchedCount: "10/13",
+        expYears: "10.0 yrs",
+        degree: "M.S. in Artificial Intelligence",
+        matchedSkills: ["AWS", "Algorithms", "Django", "Docker", "FastAPI", "Machine Learning", "Pandas", "Python", "SQL", "Scikit-learn"],
+        missingSkills: ["Git", "GitHub", "REST API"],
+        forensicStatus: "Tampering Flagged",
+        fraudScore: 85,
+        velocity: "Senior Tenure",
+        interviewQs: [
+          "Explain your experience architecting high-throughput distributed systems in AWS and Docker.",
+          "Our role relies heavily on GitHub Actions and CI/CD pipelines which were absent from your verified visible qualifications. How do you manage automated testing?",
+          "How do you approach latency optimization when scaling FastAPI endpoints with PostgreSQL connection pooling?"
+        ]
+      },
+      {
+        id: "aman",
+        name: "Aman Verma",
+        blindToken: "Candidate #2 [Token: am49b2]",
+        format: "PDF (Clean)",
+        rawScoreLegacy: 65.2,
+        subscores: { req: 84.6, pref: 37.5, exp: 100.0, edu: 75.0, sim: 16.2 },
+        matchedCount: "11/13",
+        expYears: "4.0 yrs",
+        degree: "B.Tech in Computer Science (GNIOT 2022)",
+        matchedSkills: ["AWS", "Django", "Docker", "FastAPI", "Git", "Machine Learning", "Pandas", "Python", "REST API", "SQL", "Scikit-learn"],
+        missingSkills: ["Algorithms", "GitHub"],
+        forensicStatus: "Clean Verified",
+        fraudScore: 0,
+        velocity: "Strong Progression (2 promotions in 4 yrs)",
+        interviewQs: [
+          "How do you structure dependency injection and async sessions in FastAPI to prevent connection exhaustion?",
+          "Our tech stack mandates formal data structure design. Could you walk through a time complexity optimization you implemented?",
+          "How do you manage container networking and environment isolation between Docker and AWS EC2/ECS?"
+        ]
+      },
+      {
+        id: "priya",
+        name: "Priya Sharma",
+        blindToken: "Candidate #3 [Token: pr88c4]",
+        format: "PDF (Clean)",
+        rawScoreLegacy: 48.9,
+        subscores: { req: 46.2, pref: 37.5, exp: 83.3, edu: 100.0, sim: 11.8 },
+        matchedCount: "6/13",
+        expYears: "2.5 yrs",
+        degree: "M.Tech in Artificial Intelligence (DU 2023)",
+        matchedSkills: ["Git", "Machine Learning", "Pandas", "Python", "SQL", "Scikit-learn"],
+        missingSkills: ["AWS", "Algorithms", "Django", "Docker", "FastAPI", "GitHub", "REST API"],
+        forensicStatus: "Clean Verified",
+        fraudScore: 0,
+        velocity: "Steady Progression",
+        interviewQs: [
+          "Describe your experience building NLP pipelines with spaCy and scikit-learn transformers.",
+          "Our backend services are built in FastAPI and Docker. What is your transition roadmap to ramping up on microservice containerization?",
+          "How do you address class imbalance and data drift in production ML models?"
+        ]
+      },
+      {
+        id: "sneha",
+        name: "Sneha Gupta",
+        blindToken: "Candidate #4 [Token: sn19d9]",
+        format: "DOCX (Clean)",
+        rawScoreLegacy: 37.1,
+        subscores: { req: 23.1, pref: 25.0, exp: 100.0, edu: 75.0, sim: 7.9 },
+        matchedCount: "3/13",
+        expYears: "3.5 yrs",
+        degree: "B.Tech in Information Technology (2022)",
+        matchedSkills: ["AWS", "Docker", "Git"],
+        missingSkills: ["Algorithms", "Django", "FastAPI", "GitHub", "Machine Learning", "Pandas", "Python", "REST API", "SQL", "Scikit-learn"],
+        forensicStatus: "Clean Verified",
+        fraudScore: 0,
+        velocity: "Steady Progression",
+        interviewQs: [
+          "How do you implement CI/CD pipeline security and automated rollbacks with Docker and AWS?",
+          "This engineering position requires active Python and ML engineering. How extensive is your scripting experience in Python versus Bash?",
+          "Describe your experience with Prometheus and Grafana alerting thresholds."
+        ]
+      },
+      {
+        id: "rahul",
+        name: "Rahul Kumar",
+        blindToken: "Candidate #5 [Token: rk55e3]",
+        format: "DOCX (Clean)",
+        rawScoreLegacy: 23.8,
+        subscores: { req: 23.1, pref: 0.0, exp: 40.0, edu: 75.0, sim: 5.3 },
+        matchedCount: "3/13",
+        expYears: "1.2 yrs",
+        degree: "BCA (AKTU 2024)",
+        matchedSkills: ["Git", "Python", "REST API"],
+        missingSkills: ["AWS", "Algorithms", "Django", "Docker", "FastAPI", "GitHub", "Machine Learning", "Pandas", "SQL", "Scikit-learn"],
+        forensicStatus: "Clean Verified",
+        fraudScore: 0,
+        velocity: "Emerging Professional",
+        interviewQs: [
+          "Explain how you design REST API endpoints and manage JSON serialization.",
+          "What is your understanding of async/await concurrency in modern web frameworks?",
+          "What software projects have you built using Git version control and team branches?"
+        ]
+      }
+    ];
+
+    // Compute composite score dynamically
+    function calculateFinalScore(cand) {
+      const s = cand.subscores;
+      const score = (
+        weights.req * s.req +
+        weights.pref * s.pref +
+        weights.exp * s.exp +
+        weights.edu * s.edu +
+        weights.sim * s.sim
+      );
+      return Math.round(score * 10) / 10;
+    }
+
+    function getTierInfo(score) {
+      if (score >= 80.0) return { label: "Excellent Match", color: "emerald", badge: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30" };
+      if (score >= 60.0) return { label: "Good Match", color: "blue", badge: "bg-blue-500/20 text-blue-300 border-blue-500/30" };
+      if (score >= 40.0) return { label: "Moderate Match", color: "amber", badge: "bg-amber-500/20 text-amber-300 border-amber-500/30" };
+      return { label: "Low Match", color: "rose", badge: "bg-rose-500/20 text-rose-300 border-rose-500/30" };
+    }
+
+    // -------------------------------------------------------------
+    // RENDER LEADERBOARD
+    // -------------------------------------------------------------
+    function renderLeaderboard() {
+      const tbody = document.getElementById("leaderboardTbody");
+      tbody.innerHTML = "";
+
+      // Sort by final score descending
+      const sorted = [...candidates].map(c => ({
+        ...c,
+        computedScore: calculateFinalScore(c)
+      })).sort((a, b) => b.computedScore - a.computedScore);
+
+      sorted.forEach((c, idx) => {
+        const tier = getTierInfo(c.computedScore);
+        const displayName = isBlindMode ? c.blindToken : c.name;
+
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-900/60 transition-colors cursor-pointer";
+        tr.onclick = () => {
+          document.getElementById("deepdiveSelect").value = c.id;
+          renderDeepDiveCandidate(c.id);
+          switchTab("deepdive");
+        };
+
+        const rankBadge = idx === 0 
+          ? `<span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 font-bold flex items-center justify-center text-xs">#1</span>`
+          : `<span class="text-slate-400 font-semibold pl-1.5">#${idx + 1}</span>`;
+
+        tr.innerHTML = `
+          <td class="py-3 px-4">${rankBadge}</td>
+          <td class="py-3 px-4">
+            <div class="font-bold text-slate-100">${displayName}</div>
+            <div class="text-[11px] text-slate-500">${c.degree}</div>
+          </td>
+          <td class="py-3 px-4 text-slate-400 font-mono text-[11px]">${c.format}</td>
+          <td class="py-3 px-4">
+            <span class="font-bold text-blue-400">${c.subscores.req}%</span>
+            <span class="text-slate-500 text-[10px]">(${c.matchedCount})</span>
+          </td>
+          <td class="py-3 px-4 text-slate-300">${c.expYears}</td>
+          <td class="py-3 px-4">
+            <div class="flex items-center gap-2">
+              <span class="font-black text-sm text-${tier.color}-400">${c.computedScore}%</span>
+              <div class="w-16 h-1.5 bg-slate-800 rounded-full overflow-hidden hidden sm:block">
+                <div class="h-full bg-${tier.color}-500" style="width: ${c.computedScore}%"></div>
+              </div>
+            </div>
+          </td>
+          <td class="py-3 px-4">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${tier.badge}">${tier.label}</span>
+          </td>
+          <td class="py-3 px-4 text-[11px]">
+            ${c.fraudScore > 0 ? `<span class="text-rose-400 font-bold">${c.forensicStatus}</span>` : `<span class="text-emerald-400 font-semibold">${c.forensicStatus}</span>`}
+          </td>
+          <td class="py-3 px-4 text-right">
+            <button class="px-2 py-1 rounded bg-slate-800 text-blue-400 hover:bg-slate-700 text-[11px] font-medium border border-slate-700">
+              Inspect &rarr;
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // -------------------------------------------------------------
+    // WEIGHT SLIDERS HANDLER
+    // -------------------------------------------------------------
+    function onWeightChange() {
+      const r = parseInt(document.getElementById("slider-w-req").value);
+      const p = parseInt(document.getElementById("slider-w-pref").value);
+      const ex = parseInt(document.getElementById("slider-w-exp").value);
+      const ed = parseInt(document.getElementById("slider-w-edu").value);
+      const sm = parseInt(document.getElementById("slider-w-sim").value);
+
+      const total = r + p + ex + ed + sm;
+      weights.req = r / total;
+      weights.pref = p / total;
+      weights.exp = ex / total;
+      weights.edu = ed / total;
+      weights.sim = sm / total;
+
+      document.getElementById("label-w-req").textContent = Math.round(weights.req * 100) + "%";
+      document.getElementById("label-w-pref").textContent = Math.round(weights.pref * 100) + "%";
+      document.getElementById("label-w-exp").textContent = Math.round(weights.exp * 100) + "%";
+      document.getElementById("label-w-edu").textContent = Math.round(weights.edu * 100) + "%";
+      document.getElementById("label-w-sim").textContent = Math.round(weights.sim * 100) + "%";
+
+      renderLeaderboard();
+      const currentSelected = document.getElementById("deepdiveSelect").value;
+      renderDeepDiveCandidate(currentSelected);
+    }
+
+    function resetDefaultWeights() {
+      document.getElementById("slider-w-req").value = 40;
+      document.getElementById("slider-w-pref").value = 15;
+      document.getElementById("slider-w-exp").value = 15;
+      document.getElementById("slider-w-edu").value = 10;
+      document.getElementById("slider-w-sim").value = 20;
+      onWeightChange();
+    }
+
+    // -------------------------------------------------------------
+    // BLIND MODE TOGGLE
+    // -------------------------------------------------------------
+    function toggleBlindMode() {
+      isBlindMode = !isBlindMode;
+      const statusText = document.getElementById("blindStatusText");
+      const toggleBtn = document.getElementById("blindToggleBtn");
+      const deiBadge = document.getElementById("deiStatusBadge");
+
+      if (isBlindMode) {
+        statusText.textContent = "ON (Active)";
+        statusText.className = "text-emerald-400 font-bold";
+        toggleBtn.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 flex items-center gap-2 bg-emerald-950/40 text-emerald-300 border-emerald-500/40";
+        deiBadge.textContent = "Blind Mode Active (Candidate PII Redacted)";
+        deiBadge.className = "text-emerald-400 font-bold";
+      } else {
+        statusText.textContent = "OFF";
+        statusText.className = "text-slate-400 font-bold";
+        toggleBtn.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 flex items-center gap-2 bg-slate-800 text-slate-300 border-slate-700 hover:border-slate-600";
+        deiBadge.textContent = "Standard Mode";
+        deiBadge.className = "text-slate-400 font-bold";
+      }
+
+      renderLeaderboard();
+      const currentSelected = document.getElementById("deepdiveSelect").value;
+      renderDeepDiveCandidate(currentSelected);
+    }
+
+    // -------------------------------------------------------------
+    // CANDIDATE DEEP DIVE & RADAR CHART
+    // -------------------------------------------------------------
+    let radarChartInstance = null;
+
+    function renderDeepDiveCandidate(candId) {
+      const cand = candidates.find(c => c.id === candId) || candidates[0];
+      const score = calculateFinalScore(cand);
+      const tier = getTierInfo(score);
+
+      document.getElementById("dd-name").textContent = isBlindMode ? cand.blindToken : cand.name;
+      document.getElementById("dd-score").textContent = score + "%";
+      document.getElementById("dd-score").className = `text-2xl font-black text-${tier.color}-400`;
+
+      const tierBadge = document.getElementById("dd-tier-badge");
+      tierBadge.textContent = tier.label;
+      tierBadge.className = `px-2 py-0.5 rounded text-[11px] font-bold border ${tier.badge}`;
+
+      const forBadge = document.getElementById("dd-forensic-badge");
+      forBadge.textContent = cand.forensicStatus;
+      forBadge.className = cand.fraudScore > 0 
+        ? "px-2 py-0.5 rounded text-[11px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30"
+        : "px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+
+      document.getElementById("dd-meta").textContent = isBlindMode
+        ? `Candidate ID: ${cand.id.toUpperCase()} • Experience: ${cand.expYears} • Institution: [Anonymized for Fairness]`
+        : `${cand.degree} • Experience: ${cand.expYears} • Format: ${cand.format}`;
+
+      document.getElementById("dd-matched-count").textContent = `(${cand.matchedSkills.length}/13 matched)`;
+      document.getElementById("dd-missing-count").textContent = `(${cand.missingSkills.length} missing)`;
+
+      // Matched Chips
+      const matchedContainer = document.getElementById("dd-matched-chips");
+      matchedContainer.innerHTML = "";
+      cand.matchedSkills.forEach(s => {
+        const chip = document.createElement("span");
+        chip.className = "px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-[11px] flex items-center gap-1";
+        chip.innerHTML = `<i class="fa-solid fa-check text-[10px]"></i> ${s}`;
+        matchedContainer.appendChild(chip);
+      });
+
+      // Missing Chips
+      const missingContainer = document.getElementById("dd-missing-chips");
+      missingContainer.innerHTML = "";
+      cand.missingSkills.forEach(s => {
+        const chip = document.createElement("span");
+        chip.className = "px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30 text-[11px] flex items-center gap-1";
+        chip.innerHTML = `<i class="fa-solid fa-xmark text-[10px]"></i> ${s}`;
+        missingContainer.appendChild(chip);
+      });
+
+      // Interview Kit Questions
+      const kitContainer = document.getElementById("dd-interview-kit");
+      kitContainer.innerHTML = "";
+      cand.interviewQs.forEach((q, idx) => {
+        const p = document.createElement("p");
+        p.className = "flex items-start gap-1.5";
+        p.innerHTML = `<span class="text-blue-400 font-bold">${idx + 1}.</span> <span>${q}</span>`;
+        kitContainer.appendChild(p);
+      });
+
+      // Radar Chart
+      const radarCtx = document.getElementById("radarChart").getContext("2d");
+      const chartData = [
+        cand.subscores.req,
+        cand.subscores.pref,
+        cand.subscores.exp,
+        cand.subscores.edu,
+        cand.subscores.sim
+      ];
+
+      if (radarChartInstance) {
+        radarChartInstance.data.datasets[0].label = isBlindMode ? cand.blindToken : cand.name;
+        radarChartInstance.data.datasets[0].data = chartData;
+        radarChartInstance.update();
+      } else {
+        radarChartInstance = new Chart(radarCtx, {
+          type: 'radar',
+          data: {
+            labels: ['Required Skills (40%)', 'Preferred (15%)', 'Experience (15%)', 'Education (10%)', 'Semantic Sim (20%)'],
+            datasets: [{
+              label: isBlindMode ? cand.blindToken : cand.name,
+              data: chartData,
+              backgroundColor: 'rgba(59, 130, 246, 0.25)',
+              borderColor: 'rgba(59, 130, 246, 0.9)',
+              borderWidth: 2,
+              pointBackgroundColor: '#3b82f6',
+              pointBorderColor: '#ffffff',
+              pointRadius: 3
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              r: {
+                angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
+                grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                pointLabels: { color: '#94a3b8', font: { size: 10, family: 'Inter' } },
+                suggestedMin: 0,
+                suggestedMax: 100,
+                ticks: { display: false, stepSize: 20 }
+              }
+            },
+            plugins: {
+              legend: {
+                labels: { color: '#e2e8f0', font: { size: 11, family: 'Inter', weight: 'bold' } }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // -------------------------------------------------------------
+    // TAB SWITCHER
+    // -------------------------------------------------------------
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-pane").forEach(el => el.classList.add("hidden"));
+      document.querySelectorAll(".tab-btn").forEach(el => {
+        el.className = "tab-btn px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-all flex items-center gap-2 whitespace-nowrap";
+      });
+
+      const targetPane = document.getElementById(`tab-${tabId}`);
+      if (targetPane) targetPane.classList.remove("hidden");
+
+      const targetBtn = document.getElementById(`tabBtn-${tabId}`);
+      if (targetBtn) {
+        targetBtn.className = "tab-btn px-3 py-2 rounded-lg text-blue-400 bg-blue-500/10 border border-blue-500/20 flex items-center gap-2 whitespace-nowrap";
+      }
+
+      if (tabId === 'deepdive') {
+        const candId = document.getElementById("deepdiveSelect").value;
+        setTimeout(() => renderDeepDiveCandidate(candId), 50);
+      }
+    }
+
+    // -------------------------------------------------------------
+    // INIT TIER BAR CHART
+    // -------------------------------------------------------------
+    function initTierChart() {
+      const ctx = document.getElementById("tierChart").getContext("2d");
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Excellent (≥80%)', 'Good (60-79%)', 'Moderate (40-59%)', 'Low (<40%)'],
+          datasets: [{
+            label: 'Candidates in Pool',
+            data: [0, 2, 1, 2],
+            backgroundColor: [
+              'rgba(16, 185, 129, 0.65)',
+              'rgba(59, 130, 246, 0.65)',
+              'rgba(245, 158, 11, 0.65)',
+              'rgba(239, 68, 68, 0.65)'
+            ],
+            borderColor: [
+              '#10b981',
+              '#3b82f6',
+              '#f59e0b',
+              '#ef4444'
+            ],
+            borderWidth: 1.5,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: '#94a3b8', font: { size: 11, family: 'Inter' } }
+            },
+            y: {
+              grid: { color: 'rgba(255, 255, 255, 0.06)' },
+              ticks: { color: '#94a3b8', stepSize: 1, precision: 0 },
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+
+    // -------------------------------------------------------------
+    // CLIENT SIDE SCREENING STUDIO
+    // -------------------------------------------------------------
+    const CANONICAL_SKILLS = [
+      "python", "java", "c++", "c#", "javascript", "typescript", "go", "rust",
+      "fastapi", "django", "flask", "react", "next.js", "angular", "vue.js", "node.js", "html", "css",
+      "machine learning", "deep learning", "natural language processing", "computer vision", "scikit-learn",
+      "pytorch", "tensorflow", "keras", "pandas", "numpy", "spacy", "hugging face", "llm",
+      "postgresql", "mysql", "mongodb", "redis", "sqlite", "sql", "nosql",
+      "aws", "azure", "docker", "kubernetes", "terraform", "ci/cd", "git", "github", "linux", "rest api"
+    ];
+
+    function loadSampleResume(type) {
+      const textarea = document.getElementById("resumeInputText");
+      if (type === 'aman') {
+        textarea.value = `Aman Verma\nEmail: aman.verma.dev@example.com | Phone: +91 98765 43210\nEducation: B.Tech in Computer Science & Engineering - GNIOT (2022)\n\nExperience: Senior Software Engineer (4 years)\n- Designed and scaled backend microservices using Python, FastAPI, and Django.\n- Deployed production ML models using Scikit-learn, Pandas, and NumPy.\n- Orchestrated containers using Docker, AWS EC2/S3, and automated CI/CD.\n- Architected relational database schemas in PostgreSQL and SQL with Redis caching.`;
+      } else if (type === 'priya') {
+        textarea.value = `Priya Sharma\nEmail: priya.sharma.ml@example.com | Phone: +91 98123 45678\nEducation: M.Tech in Artificial Intelligence - Delhi University (2023)\n\nExperience: Data Scientist (2.5 years)\n- Specialized in Natural Language Processing and Deep Learning with PyTorch and TensorFlow.\n- Trained feature extraction models with spaCy, scikit-learn, and Pandas.\n- Managed data ingestion pipelines with MySQL and Python scripting.`;
+      } else if (type === 'rahul') {
+        textarea.value = `Rahul Kumar\nEmail: rahul.kumar.web@example.com | Phone: +91 97234 56789\nEducation: BCA - AKTU (2024)\n\nExperience: Junior Web Developer (1.2 years)\n- Built responsive frontends with React, JavaScript, HTML, and Tailwind CSS.\n- Created backend endpoints using Node.js, Express.js, and MongoDB.\n- Utilized Git for version control and consumed REST APIs.`;
+      } else {
+        textarea.value = "";
+      }
+    }
+
+    function runScreeningOnInput() {
+      const text = document.getElementById("resumeInputText").value.toLowerCase();
+      if (!text.trim()) {
+        alert("Please enter or paste candidate resume text first.");
+        return;
+      }
+
+      // Exact word-boundary match against canonical skill taxonomy
+      const matched = [];
+      CANONICAL_SKILLS.forEach(skill => {
+        const regex = new RegExp(`(^|[^a-zA-Z0-9_])${skill.replace("+", "\\+")}(?=[^a-zA-Z0-9_]|$)`, 'i');
+        if (regex.test(text)) {
+          matched.push(skill.toUpperCase());
+        }
+      });
+
+      // Required skills comparison (13 required)
+      const REQ_SKILLS = ["PYTHON", "FASTAPI", "DJANGO", "SCIKIT-LEARN", "SQL", "DOCKER", "AWS", "GIT", "GITHUB", "PANDAS", "MACHINE LEARNING", "REST API", "ALGORITHMS"];
+      const matchedReq = REQ_SKILLS.filter(r => matched.includes(r));
+      const reqPct = Math.round((matchedReq.length / REQ_SKILLS.length) * 100);
+
+      // Estimate overall score
+      const simEst = Math.min(25, matched.length * 1.5);
+      const estScore = Math.min(100, Math.round(0.40 * reqPct + 0.15 * 50 + 0.15 * 80 + 0.10 * 75 + 0.20 * simEst));
+      const tier = getTierInfo(estScore);
+
+      document.getElementById("screenResultScore").textContent = estScore + "%";
+      document.getElementById("screenResultScore").className = `text-3xl font-black text-${tier.color}-400`;
+      document.getElementById("screenResultTier").textContent = tier.label;
+      document.getElementById("screenResultTier").className = `px-2 py-0.5 rounded text-[11px] font-bold border ${tier.badge}`;
+      document.getElementById("screenSkillsCount").textContent = matched.length;
+
+      const chipsContainer = document.getElementById("screenSkillsChips");
+      chipsContainer.innerHTML = "";
+      if (matched.length === 0) {
+        chipsContainer.innerHTML = `<span class="text-rose-400">No canonical skills matched in taxonomy.</span>`;
+      } else {
+        matched.forEach(s => {
+          const chip = document.createElement("span");
+          chip.className = "px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[10px] font-bold";
+          chip.textContent = s;
+          chipsContainer.appendChild(chip);
+        });
+      }
+    }
+
+    // -------------------------------------------------------------
+    // EXPORT UTILITIES
+    // -------------------------------------------------------------
+    function exportCSV() {
+      let csv = "Rank,Candidate_Name,Format,Required_Skills_Match,Experience,Final_Score,Tier,Forensic_Status\n";
+      candidates.forEach((c, i) => {
+        const score = calculateFinalScore(c);
+        const tier = getTierInfo(score);
+        const name = isBlindMode ? c.blindToken : c.name;
+        csv += `${i + 1},"${name}","${c.format}","${c.subscores.req}%","${c.expYears}","${score}%","${tier.label}","${c.forensicStatus}"\n`;
+      });
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `RecruMatch_Leaderboard_Export_${Date.now()}.csv`;
+      a.click();
+    }
+
+    function downloadReportDocx() {
+      alert("The 65-page academic project report ('RecruMatch_BTech_Mini_Project_Report.docx') is available in the repository root.");
+    }
+
+    function downloadReportMd() {
+      switchTab('report');
+    }
+
+    // Initialize on load
+    window.addEventListener("DOMContentLoaded", () => {
+      renderLeaderboard();
+      initTierChart();
+      loadSampleResume('aman');
+    });
+  </script>
+</body>
+</html>
+

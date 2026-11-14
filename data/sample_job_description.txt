@@ -1,0 +1,29 @@
+Job Title: Senior Python & Machine Learning Engineer
+Company: Apex Innovations
+Location: Hybrid / Remote
+
+About the Role:
+We are seeking an experienced and passionate Senior Python & Machine Learning Engineer to design, build, and deploy production-grade machine learning pipelines and microservices. You will collaborate with cross-functional teams to integrate intelligent algorithms into our core SaaS platform.
+
+Required Qualifications & Skills:
+- Strong proficiency in Python with hands-on software development experience.
+- Demonstrated experience in Machine Learning, Scikit-learn, and Pandas for model training and data preprocessing.
+- Solid understanding of SQL and relational database systems.
+- Practical experience with containerization using Docker.
+- Experience building RESTful APIs using FastAPI or Django.
+- Experience with Cloud deployments on AWS (Amazon Web Services).
+- Proficient with version control systems including Git and GitHub.
+- Minimum 3+ years of professional software development experience.
+- Bachelor's degree (B.Tech / B.E. / B.S.) in Computer Science, Information Technology, or related discipline.
+
+Preferred / Good-to-Have Skills:
+- Hands-on experience with Kubernetes for container orchestration.
+- Familiarity with PostgreSQL, Redis caching, and microservices architecture.
+- Knowledge of Deep Learning frameworks such as TensorFlow or PyTorch.
+- Familiarity with CI/CD automation pipelines.
+- Master's degree in Computer Science, Data Science, or Artificial Intelligence.
+
+Key Responsibilities:
+- Architect and maintain scalable backend services and predictive analytics models.
+- Build clean, documented, and testable code following engineering best practices.
+- Monitor model performance, latency, and data drift in production environments.
