@@ -136,19 +136,11 @@
       </div>
 
       <!-- Action & Controls -->
-      <div class="flex items-center gap-3">
-        <!-- Blind Recruitment Toggle -->
-        <button id="blindToggleBtn" onclick="toggleBlindMode()" class="px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 flex items-center gap-2 bg-surface-container-low text-on-surface-variant border-outline-variant/30 hover:border-primary/50">
-          <span class="material-symbols-outlined text-[16px] text-primary">security</span>
-          <span>Blind Mode: <b id="blindStatusText" class="text-on-surface font-mono font-bold">OFF</b></span>
+      <div class="flex items-center gap-2.5">
+        <button id="headerSettingsBtn" onclick="openWeightModal()" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 flex items-center gap-2 bg-surface-container-high hover:bg-surface-container-highest text-secondary border-primary/30 hover:border-primary shadow-sm">
+          <span class="material-symbols-outlined text-[17px] text-primary">tune</span>
+          <span>Customize Weights &amp; Scoring</span>
         </button>
-
-        <a href="#report" onclick="switchTab('report')" class="hidden sm:flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-secondary border border-outline-variant/30 transition-colors">
-          <span class="material-symbols-outlined text-[16px]">menu_book</span>
-          <span>Project Report</span>
-        </a>
-
-
       </div>
     </div>
 
@@ -170,8 +162,8 @@
         <span class="material-symbols-outlined text-[17px] text-error">gpp_maybe</span> Resume Security & Tampering
         <span class="px-1.5 py-0.2 rounded bg-error-container text-on-error-container font-mono text-[10px] font-bold">1 Alert</span>
       </button>
-      <button onclick="switchTab('report')" id="tabBtn-report" class="tab-btn px-3.5 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-2 whitespace-nowrap">
-        <span class="material-symbols-outlined text-[17px] text-secondary">description</span> Project Documentation
+      <button onclick="switchTab('settings')" id="tabBtn-settings" class="tab-btn px-3.5 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-2 whitespace-nowrap">
+        <span class="material-symbols-outlined text-[17px] text-primary">tune</span> Scoring Preferences &amp; Weights
       </button>
     </div>
   </header>
@@ -998,103 +990,340 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
     </section>
 
     <!-- ============================================================= -->
-    <!-- TAB 6: PROJECT DOCUMENTATION & METHODOLOGY -->
+    <!-- TAB 6: SCORING PREFERENCES & CRITERIA WEIGHTS -->
     <!-- ============================================================= -->
-    <section id="tab-report" class="tab-pane hidden space-y-6">
-      <div class="p-6 rounded-xl bg-surface-container border border-outline-variant/30 space-y-6 shadow-sm">
-        
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-outline-variant/20">
+    <section id="tab-settings" class="tab-pane hidden space-y-6">
+      <!-- Header Banner -->
+      <div class="p-6 rounded-xl bg-surface-container border border-outline-variant/30 space-y-4 shadow-sm">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-outline-variant/20">
           <div>
-            <span class="text-xs font-bold text-secondary uppercase tracking-wider font-mono">Project Documentation</span>
-            <h2 class="text-lg font-bold text-on-surface mt-0.5">RecruMatch: Project Report & Academic Specifications</h2>
-            <p class="text-xs text-on-surface-variant">Department of Computer Science & Engineering, GNIOT (AKTU) • Academic Session 2026–2027</p>
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-primary animate-pulse"></span>
+              <span class="text-xs font-bold text-primary uppercase tracking-wider font-mono">Algorithm Calibration</span>
+            </div>
+            <h2 class="text-xl font-bold text-on-surface mt-1">Customizable Scoring Weights &amp; Evaluation Criteria</h2>
+            <p class="text-xs text-on-surface-variant max-w-2xl mt-0.5">
+              Customize the relative importance of required skills, bonus competencies, work experience, education level, and full-text contextual similarity. Rankings update deterministically in real time.
+            </p>
           </div>
-          <div class="flex items-center gap-2">
-            <button onclick="downloadReportDocx()" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-primary hover:bg-primary-hover text-white flex items-center gap-1.5 shadow-sm transition-colors">
-              <span class="material-symbols-outlined text-[16px]">file_download</span> Word Report (.docx)
+          <div class="flex items-center gap-2 flex-wrap">
+            <button onclick="resetDefaultWeights()" class="px-3.5 py-2 text-xs font-medium rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface border border-outline-variant/40 flex items-center gap-1.5 transition-colors">
+              <span class="material-symbols-outlined text-[16px]">restart_alt</span> Reset Defaults
             </button>
-            <button onclick="downloadReportMd()" class="px-3.5 py-1.5 text-xs font-medium rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface border border-outline-variant/40 flex items-center gap-1.5 transition-colors">
-              <span class="material-symbols-outlined text-[16px]">article</span> View Outline
+            <button onclick="switchTab('leaderboard')" class="px-4 py-2 text-xs font-bold rounded-lg bg-primary hover:bg-primary-hover text-white flex items-center gap-1.5 shadow-sm transition-colors">
+              <span class="material-symbols-outlined text-[16px]">leaderboard</span> View Ranked Leaderboard
             </button>
           </div>
         </div>
 
-        <!-- 3 Highlights -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-          <div class="bg-surface-container-low p-4 rounded-lg border border-outline-variant/20">
-            <div class="text-primary font-bold mb-1 flex items-center gap-1.5">
-              <span class="material-symbols-outlined text-primary text-[16px]">psychology</span> Deterministic NLP vs. LLMs
-            </div>
-            <p class="text-on-surface-variant leading-relaxed">
-              Deterministic taxonomy matching eliminates stochastic hallucinations, operates 100% offline with zero external API dependencies, preserves candidate privacy, and executes with sub-400ms latency.
-            </p>
+        <!-- Allocation Status Bar -->
+        <div class="p-4 rounded-lg bg-surface-container-low border border-outline-variant/20 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <span class="text-xs font-semibold text-on-surface">Mathematical Allocation Status:</span>
+            <span id="tabSumBadge" class="font-mono text-xs px-3 py-1 rounded-full bg-tertiary-container/30 text-tertiary font-bold border border-tertiary/30 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[14px]">check_circle</span> 100% Valid &amp; Balanced
+            </span>
           </div>
-
-          <div class="bg-surface-container-low p-4 rounded-lg border border-outline-variant/20">
-            <div class="text-tertiary font-bold mb-1 flex items-center gap-1.5">
-              <span class="material-symbols-outlined text-tertiary text-[16px]">balance</span> Unconscious Bias Mitigation
-            </div>
-            <p class="text-on-surface-variant leading-relaxed">
-              Non-job-related attributes (gender, age, marital status, photo) are excluded. The Blind Recruitment Mode dynamically scrubs names and prestige markers, ensuring evaluation rests solely on verified merit.
-            </p>
-          </div>
-
-          <div class="bg-surface-container-low p-4 rounded-lg border border-outline-variant/20">
-            <div class="text-error font-bold mb-1 flex items-center gap-1.5">
-              <span class="material-symbols-outlined text-error text-[16px]">shield</span> Resume Tampering Detection
-            </div>
-            <p class="text-on-surface-variant leading-relaxed">
-              Pre-flight PDF stream inspection parses font color triples (R, G, B) to detect invisible white text (#FFFFFF), micro-fonts (&lt;2.0 pt), and Cyrillic homoglyphs before text reaches scoring.
-            </p>
+          <div class="flex items-center gap-2 text-xs text-outline font-mono">
+            <span>Formula: Convex Combination &Sigma;(W<sub>i</sub> &times; S<sub>i</sub>)</span>
+            <button onclick="normalizeWeightsAction()" class="px-2.5 py-1 text-[11px] rounded bg-surface-container text-secondary hover:text-primary font-mono border border-outline-variant/30 transition-colors">
+              Auto-Balance to 100%
+            </button>
           </div>
         </div>
 
-        <!-- Mathematical Scoring Formula Code Block -->
-        <div class="bg-surface-container-lowest p-4 rounded-lg border border-outline-variant/20 text-xs">
-          <div class="text-on-surface font-bold mb-2 flex items-center justify-between font-mono">
-            <span>Mathematical Equation 5.1: Explainable Multi-Criteria Scoring Formulation</span>
-            <span class="text-[10px] text-primary">Convex Combination (Sum = 1.0)</span>
+        <!-- 5 Interactive Sliders Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <!-- Required Skills -->
+          <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col justify-between gap-3 hover:border-primary/50 transition-colors">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-on-surface flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-primary text-[16px]">verified</span> Required Skills
+                </span>
+                <span id="label-set-req" class="font-mono text-sm font-bold text-primary px-2 py-0.5 rounded bg-primary/10">40%</span>
+              </div>
+              <p class="text-[11px] text-on-surface-variant mt-2 leading-relaxed">
+                Mandatory prerequisites and canonical synonyms extracted directly from the job requisition.
+              </p>
+            </div>
+            <div class="space-y-2 pt-2 border-t border-outline-variant/10">
+              <input type="range" id="slider-set-req" min="5" max="80" value="40" oninput="onSettingsWeightChange('req', this.value)" class="w-full accent-primary cursor-pointer h-2 bg-surface-container-highest rounded">
+              <div class="flex justify-between text-[10px] font-mono text-outline">
+                <span>Min: 5%</span>
+                <span>Max: 80%</span>
+              </div>
+            </div>
           </div>
-          <pre class="text-secondary leading-relaxed overflow-x-auto text-[11px] font-mono">
-Final Score = w_req * S_req + w_pref * S_pref + w_exp * S_exp + w_edu * S_edu + w_sim * S_sim
 
-Enterprise Default Weights:
-  - w_req  = 0.40  (Required Skills: 40%)
-  - w_pref = 0.15  (Preferred / Bonus Skills: 15%)
-  - w_exp  = 0.15  (Experience Relevance: 15%)
-  - w_edu  = 0.10  (Educational Qualification: 10%)
-  - w_sim  = 0.20  (Contextual Semantic Similarity: 20%)
+          <!-- Preferred Skills -->
+          <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col justify-between gap-3 hover:border-secondary/50 transition-colors">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-on-surface flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-secondary text-[16px]">star</span> Preferred Skills
+                </span>
+                <span id="label-set-pref" class="font-mono text-sm font-bold text-secondary px-2 py-0.5 rounded bg-secondary/10">15%</span>
+              </div>
+              <p class="text-[11px] text-on-surface-variant mt-2 leading-relaxed">
+                Bonus credit for secondary competencies and nice-to-have tools that enhance fit.
+              </p>
+            </div>
+            <div class="space-y-2 pt-2 border-t border-outline-variant/10">
+              <input type="range" id="slider-set-pref" min="0" max="50" value="15" oninput="onSettingsWeightChange('pref', this.value)" class="w-full accent-primary cursor-pointer h-2 bg-surface-container-highest rounded">
+              <div class="flex justify-between text-[10px] font-mono text-outline">
+                <span>Min: 0%</span>
+                <span>Max: 50%</span>
+              </div>
+            </div>
+          </div>
 
-Where:
-  S_req  = (|Skills_cand ∩ Req_skills|) / |Req_skills|
-  S_pref = (|Skills_cand ∩ Pref_skills|) / |Pref_skills|
-  S_exp  = min(1.0, E_cand / E_min)
-  S_edu  = Academic Tier Assignment (Ph.D. = 1.0, M.Tech = 0.90, B.Tech = 0.75, BCA = 0.50)
-  S_sim  = (v_cand · v_jd) / (||v_cand|| * ||v_jd||)  [Cosine Similarity on TF-IDF sparse vector]
-          </pre>
+          <!-- Experience Tenure -->
+          <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col justify-between gap-3 hover:border-tertiary/50 transition-colors">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-on-surface flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-tertiary text-[16px]">history_edu</span> Experience
+                </span>
+                <span id="label-set-exp" class="font-mono text-sm font-bold text-tertiary px-2 py-0.5 rounded bg-tertiary/10">15%</span>
+              </div>
+              <p class="text-[11px] text-on-surface-variant mt-2 leading-relaxed">
+                Evaluates total relevant years of industry tenure against the role requirement.
+              </p>
+            </div>
+            <div class="space-y-2 pt-2 border-t border-outline-variant/10">
+              <input type="range" id="slider-set-exp" min="0" max="50" value="15" oninput="onSettingsWeightChange('exp', this.value)" class="w-full accent-primary cursor-pointer h-2 bg-surface-container-highest rounded">
+              <div class="flex justify-between text-[10px] font-mono text-outline">
+                <span>Min: 0%</span>
+                <span>Max: 50%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Education Attainment -->
+          <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col justify-between gap-3 hover:border-warning/50 transition-colors">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-on-surface flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-warning text-[16px]">school</span> Education
+                </span>
+                <span id="label-set-edu" class="font-mono text-sm font-bold text-warning px-2 py-0.5 rounded bg-warning/10">10%</span>
+              </div>
+              <p class="text-[11px] text-on-surface-variant mt-2 leading-relaxed">
+                Academic tier scoring: Ph.D. (1.0), M.Tech / M.S. (0.90), B.Tech / B.E. (0.75), BCA (0.50).
+              </p>
+            </div>
+            <div class="space-y-2 pt-2 border-t border-outline-variant/10">
+              <input type="range" id="slider-set-edu" min="0" max="40" value="10" oninput="onSettingsWeightChange('edu', this.value)" class="w-full accent-primary cursor-pointer h-2 bg-surface-container-highest rounded">
+              <div class="flex justify-between text-[10px] font-mono text-outline">
+                <span>Min: 0%</span>
+                <span>Max: 40%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Text / Contextual Similarity -->
+          <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col justify-between gap-3 hover:border-primary/50 transition-colors">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-on-surface flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-primary text-[16px]">compare_arrows</span> Similarity
+                </span>
+                <span id="label-set-sim" class="font-mono text-sm font-bold text-primary px-2 py-0.5 rounded bg-primary/10">20%</span>
+              </div>
+              <p class="text-[11px] text-on-surface-variant mt-2 leading-relaxed">
+                Full-document TF-IDF vector cosine similarity between candidate resume and job description.
+              </p>
+            </div>
+            <div class="space-y-2 pt-2 border-t border-outline-variant/10">
+              <input type="range" id="slider-set-sim" min="0" max="50" value="20" oninput="onSettingsWeightChange('sim', this.value)" class="w-full accent-primary cursor-pointer h-2 bg-surface-container-highest rounded">
+              <div class="flex justify-between text-[10px] font-mono text-outline">
+                <span>Min: 0%</span>
+                <span>Max: 50%</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- Chapter Outline Summary -->
-        <div>
-          <h4 class="text-xs font-bold text-on-surface uppercase tracking-wider mb-3 font-mono">10-Chapter Academic Report Structure (GNIOT / AKTU)</h4>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono">
-            <div class="p-2.5 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant"><b class="text-primary font-bold">Chapter 1:</b> Introduction & Objectives (Pages 1–5)</div>
-            <div class="p-2.5 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant"><b class="text-primary font-bold">Chapter 2:</b> System Analysis & Need Identification (Pages 6–10)</div>
-            <div class="p-2.5 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant"><b class="text-primary font-bold">Chapter 3:</b> Feasibility Study (Tech, Econ, Ops) (Pages 11–15)</div>
-            <div class="p-2.5 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant"><b class="text-primary font-bold">Chapter 4:</b> Specifications & DFDs / ER Diagram (Pages 16–22)</div>
-            <div class="p-2.5 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant"><b class="text-primary font-bold">Chapter 5:</b> Proposed System & Algorithmic Engines (Pages 23–31)</div>
-            <div class="p-2.5 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant"><b class="text-primary font-bold">Chapter 6:</b> User Interface & Screen Shots (Pages 32–35)</div>
-            <div class="p-2.5 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant"><b class="text-primary font-bold">Chapter 7:</b> Modular System Coding (Pages 36–42)</div>
-            <div class="p-2.5 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant"><b class="text-primary font-bold">Chapter 8:</b> Experimental Results & Benchmarks (Pages 43–47)</div>
-            <div class="p-2.5 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant"><b class="text-primary font-bold">Chapter 9:</b> Conclusion & Future Scope (Pages 48–49)</div>
-            <div class="p-2.5 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant"><b class="text-primary font-bold">Chapter 10:</b> IEEE References & Glossary (Pages 50–52)</div>
+        <!-- Preset Profiles Row -->
+        <div class="pt-4 border-t border-outline-variant/20">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold text-on-surface font-mono uppercase tracking-wider">Quick Preset Configurations</span>
+            <span class="text-[11px] text-outline">1-Click Role Adjustments</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <button onclick="applyPresetWeights(40, 15, 15, 10, 20)" class="p-3 text-left rounded-lg bg-surface-container-low hover:bg-surface-container-highest border border-outline-variant/30 transition-all group">
+              <div class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors flex items-center justify-between">
+                <span>Standard Enterprise</span>
+                <span class="font-mono text-[10px] text-primary">Default</span>
+              </div>
+              <div class="text-[11px] text-on-surface-variant mt-1 font-mono">40% Req • 15% Pref • 15% Exp • 10% Edu • 20% Sim</div>
+            </button>
+
+            <button onclick="applyPresetWeights(55, 15, 15, 5, 10)" class="p-3 text-left rounded-lg bg-surface-container-low hover:bg-surface-container-highest border border-outline-variant/30 transition-all group">
+              <div class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors flex items-center justify-between">
+                <span>Engineering &amp; Hard Tech</span>
+                <span class="font-mono text-[10px] text-secondary">Skills Heavy</span>
+              </div>
+              <div class="text-[11px] text-on-surface-variant mt-1 font-mono">55% Req • 15% Pref • 15% Exp • 5% Edu • 10% Sim</div>
+            </button>
+
+            <button onclick="applyPresetWeights(25, 10, 40, 10, 15)" class="p-3 text-left rounded-lg bg-surface-container-low hover:bg-surface-container-highest border border-outline-variant/30 transition-all group">
+              <div class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors flex items-center justify-between">
+                <span>Senior Leadership / SRE</span>
+                <span class="font-mono text-[10px] text-tertiary">Tenure Heavy</span>
+              </div>
+              <div class="text-[11px] text-on-surface-variant mt-1 font-mono">25% Req • 10% Pref • 40% Exp • 10% Edu • 15% Sim</div>
+            </button>
+
+            <button onclick="applyPresetWeights(25, 10, 10, 35, 20)" class="p-3 text-left rounded-lg bg-surface-container-low hover:bg-surface-container-highest border border-outline-variant/30 transition-all group">
+              <div class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors flex items-center justify-between">
+                <span>Research &amp; Data Science</span>
+                <span class="font-mono text-[10px] text-warning">Degree Heavy</span>
+              </div>
+              <div class="text-[11px] text-on-surface-variant mt-1 font-mono">25% Req • 10% Pref • 10% Exp • 35% Edu • 20% Sim</div>
+            </button>
           </div>
         </div>
 
+        <!-- Real-Time Ranking Impact Simulation -->
+        <div class="pt-4 border-t border-outline-variant/20">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold text-on-surface font-mono uppercase tracking-wider">Live Candidate Re-Calculation Simulation</span>
+            <span class="text-[11px] text-tertiary flex items-center gap-1 font-mono">
+              <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span> Dynamic Preview
+            </span>
+          </div>
+          <div class="rounded-lg bg-surface-container-lowest border border-outline-variant/30 overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-surface-container-high/60 text-outline uppercase font-mono text-[10px]">
+                <tr>
+                  <th class="py-2.5 px-3">Rank</th>
+                  <th class="py-2.5 px-3">Candidate</th>
+                  <th class="py-2.5 px-3">Req Score</th>
+                  <th class="py-2.5 px-3">Pref Score</th>
+                  <th class="py-2.5 px-3">Exp Score</th>
+                  <th class="py-2.5 px-3">Edu Score</th>
+                  <th class="py-2.5 px-3">Sim Score</th>
+                  <th class="py-2.5 px-3">Calibrated Score</th>
+                  <th class="py-2.5 px-3">Tier</th>
+                </tr>
+              </thead>
+              <tbody id="settingsSimulationTbody" class="divide-y divide-outline-variant/10 text-on-surface">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </section>
 
   </main>
+
+  <!-- ============================================================= -->
+  <!-- MODAL: CUSTOMIZE WEIGHTS POPUP (ACCESSIBLE FROM ANYWHERE) -->
+  <!-- ============================================================= -->
+  <div id="weightModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity duration-200">
+    <div class="w-full max-w-2xl bg-surface-container rounded-2xl border border-outline-variant/40 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <!-- Modal Header -->
+      <div class="px-6 py-4 bg-surface-container-high border-b border-outline-variant/30 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <span class="w-8 h-8 rounded-lg bg-primary/20 text-primary flex items-center justify-center">
+            <span class="material-symbols-outlined text-[18px]">tune</span>
+          </span>
+          <div>
+            <h3 class="text-sm font-bold text-on-surface">Scoring Criteria Weight Calibration</h3>
+            <p class="text-[11px] text-on-surface-variant">Adjust weights in real-time across all candidate rankings.</p>
+          </div>
+        </div>
+        <button onclick="closeWeightModal()" class="w-7 h-7 rounded-lg bg-surface-container hover:bg-surface-variant text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+
+      <!-- Modal Body (Sliders) -->
+      <div class="p-6 overflow-y-auto space-y-4">
+        <!-- Sum Badge -->
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/20 flex items-center justify-between text-xs">
+          <span class="text-on-surface-variant font-medium">Mathematical Allocation:</span>
+          <span id="modalSumBadge" class="font-mono font-bold text-tertiary bg-tertiary-container/30 border border-tertiary/30 px-2.5 py-0.5 rounded">100% Balanced</span>
+        </div>
+
+        <!-- Sliders -->
+        <div class="space-y-3.5">
+          <!-- Required Skills -->
+          <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/20">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs font-semibold text-on-surface flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[15px] text-primary">verified</span> Required Skills
+              </span>
+              <span id="modal-label-req" class="font-mono text-xs font-bold text-primary">40%</span>
+            </div>
+            <input type="range" id="modal-slider-req" min="5" max="80" value="40" oninput="onModalWeightChange('req', this.value)" class="w-full accent-primary cursor-pointer h-1.5 bg-surface-container-highest rounded">
+          </div>
+
+          <!-- Preferred Skills -->
+          <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/20">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs font-semibold text-on-surface flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[15px] text-secondary">star</span> Preferred Skills
+              </span>
+              <span id="modal-label-pref" class="font-mono text-xs font-bold text-secondary">15%</span>
+            </div>
+            <input type="range" id="modal-slider-pref" min="0" max="50" value="15" oninput="onModalWeightChange('pref', this.value)" class="w-full accent-primary cursor-pointer h-1.5 bg-surface-container-highest rounded">
+          </div>
+
+          <!-- Experience -->
+          <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/20">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs font-semibold text-on-surface flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[15px] text-tertiary">history_edu</span> Experience Tenure
+              </span>
+              <span id="modal-label-exp" class="font-mono text-xs font-bold text-tertiary">15%</span>
+            </div>
+            <input type="range" id="modal-slider-exp" min="0" max="50" value="15" oninput="onModalWeightChange('exp', this.value)" class="w-full accent-primary cursor-pointer h-1.5 bg-surface-container-highest rounded">
+          </div>
+
+          <!-- Education -->
+          <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/20">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs font-semibold text-on-surface flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[15px] text-warning">school</span> Education Tier
+              </span>
+              <span id="modal-label-edu" class="font-mono text-xs font-bold text-warning">10%</span>
+            </div>
+            <input type="range" id="modal-slider-edu" min="0" max="40" value="10" oninput="onModalWeightChange('edu', this.value)" class="w-full accent-primary cursor-pointer h-1.5 bg-surface-container-highest rounded">
+          </div>
+
+          <!-- Similarity -->
+          <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/20">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs font-semibold text-on-surface flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[15px] text-primary">compare_arrows</span> Contextual Similarity
+              </span>
+              <span id="modal-label-sim" class="font-mono text-xs font-bold text-primary">20%</span>
+            </div>
+            <input type="range" id="modal-slider-sim" min="0" max="50" value="20" oninput="onModalWeightChange('sim', this.value)" class="w-full accent-primary cursor-pointer h-1.5 bg-surface-container-highest rounded">
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-3.5 bg-surface-container-high border-t border-outline-variant/30 flex items-center justify-between">
+        <button onclick="switchTab('settings'); closeWeightModal();" class="text-xs text-secondary hover:text-primary font-mono flex items-center gap-1">
+          Open Full Settings Workspace &rarr;
+        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="resetDefaultWeights()" class="px-3 py-1.5 text-xs font-medium rounded-lg bg-surface-container hover:bg-surface-variant text-on-surface border border-outline-variant/30">
+            Reset
+          </button>
+          <button onclick="closeWeightModal()" class="px-4 py-1.5 text-xs font-bold rounded-lg bg-primary hover:bg-primary-hover text-white">
+            Apply &amp; Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ============================================================= -->
   <!-- FOOTER -->
@@ -1339,70 +1568,165 @@ Where:
       }
     }
 
-    function onWeightChange() {
-      const r = parseInt(document.getElementById("slider-w-req").value);
-      const p = parseInt(document.getElementById("slider-w-pref").value);
-      const ex = parseInt(document.getElementById("slider-w-exp").value);
-      const ed = parseInt(document.getElementById("slider-w-edu").value);
-      const sm = parseInt(document.getElementById("slider-w-sim").value);
+    // Current raw integer values (defaults sum to 100)
+    let rawWeights = {
+      req: 40,
+      pref: 15,
+      exp: 15,
+      edu: 10,
+      sim: 20
+    };
 
-      const total = r + p + ex + ed + sm;
-      weights.req = r / total;
-      weights.pref = p / total;
-      weights.exp = ex / total;
-      weights.edu = ed / total;
-      weights.sim = sm / total;
+    function updateWeightsFromRaw() {
+      const sum = rawWeights.req + rawWeights.pref + rawWeights.exp + rawWeights.edu + rawWeights.sim;
+      const divisor = sum > 0 ? sum : 100;
+      weights.req = rawWeights.req / divisor;
+      weights.pref = rawWeights.pref / divisor;
+      weights.exp = rawWeights.exp / divisor;
+      weights.edu = rawWeights.edu / divisor;
+      weights.sim = rawWeights.sim / divisor;
 
-      document.getElementById("label-w-req").textContent = Math.round(weights.req * 100) + "%";
-      document.getElementById("label-w-pref").textContent = Math.round(weights.pref * 100) + "%";
-      document.getElementById("label-w-exp").textContent = Math.round(weights.exp * 100) + "%";
-      document.getElementById("label-w-edu").textContent = Math.round(weights.edu * 100) + "%";
-      document.getElementById("label-w-sim").textContent = Math.round(weights.sim * 100) + "%";
-
+      syncAllWeightUI(sum);
       renderLeaderboard();
-      const currentSelected = document.getElementById("deepdiveSelect").value;
+      const currentSelected = document.getElementById("deepdiveSelect")?.value || "aman";
       renderDeepDiveCandidate(currentSelected);
+      renderSettingsSimulation();
+    }
+
+    function syncAllWeightUI(sum) {
+      if (sum === undefined) {
+        sum = rawWeights.req + rawWeights.pref + rawWeights.exp + rawWeights.edu + rawWeights.sim;
+      }
+      const isBalanced = (sum === 100);
+
+      const keys = ['req', 'pref', 'exp', 'edu', 'sim'];
+      keys.forEach(k => {
+        // Leaderboard drawer
+        const dSlider = document.getElementById(`slider-w-${k}`);
+        const dLabel = document.getElementById(`label-w-${k}`);
+        if (dSlider) dSlider.value = rawWeights[k];
+        if (dLabel) dLabel.textContent = rawWeights[k] + "%";
+
+        // Tab settings
+        const sSlider = document.getElementById(`slider-set-${k}`);
+        const sLabel = document.getElementById(`label-set-${k}`);
+        if (sSlider) sSlider.value = rawWeights[k];
+        if (sLabel) sLabel.textContent = rawWeights[k] + "%";
+
+        // Modal
+        const mSlider = document.getElementById(`modal-slider-${k}`);
+        const mLabel = document.getElementById(`modal-label-${k}`);
+        if (mSlider) mSlider.value = rawWeights[k];
+        if (mLabel) mLabel.textContent = rawWeights[k] + "%";
+      });
+
+      // Update sum badges
+      const badgeText = isBalanced ? "100% Valid & Balanced" : `Allocated: ${sum}% (Must equal 100%)`;
+      const badgeCls = isBalanced 
+        ? "font-mono text-xs px-2.5 py-0.5 rounded bg-tertiary-container/30 text-tertiary font-semibold border border-tertiary/30"
+        : "font-mono text-xs px-2.5 py-0.5 rounded bg-error-container/30 text-error font-semibold border border-error/30 animate-pulse";
+
+      ['sumBadge', 'tabSumBadge', 'modalSumBadge'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.textContent = badgeText;
+          el.className = badgeCls;
+        }
+      });
+    }
+
+    function onSettingsWeightChange(key, val) {
+      rawWeights[key] = parseInt(val) || 0;
+      updateWeightsFromRaw();
+    }
+
+    function onModalWeightChange(key, val) {
+      rawWeights[key] = parseInt(val) || 0;
+      updateWeightsFromRaw();
+    }
+
+    function onWeightChange() {
+      rawWeights.req = parseInt(document.getElementById("slider-w-req")?.value || 40);
+      rawWeights.pref = parseInt(document.getElementById("slider-w-pref")?.value || 15);
+      rawWeights.exp = parseInt(document.getElementById("slider-w-exp")?.value || 15);
+      rawWeights.edu = parseInt(document.getElementById("slider-w-edu")?.value || 10);
+      rawWeights.sim = parseInt(document.getElementById("slider-w-sim")?.value || 20);
+      updateWeightsFromRaw();
+    }
+
+    function applyPresetWeights(r, p, ex, ed, sm) {
+      rawWeights.req = r;
+      rawWeights.pref = p;
+      rawWeights.exp = ex;
+      rawWeights.edu = ed;
+      rawWeights.sim = sm;
+      updateWeightsFromRaw();
     }
 
     function resetDefaultWeights() {
-      document.getElementById("slider-w-req").value = 40;
-      document.getElementById("slider-w-pref").value = 15;
-      document.getElementById("slider-w-exp").value = 15;
-      document.getElementById("slider-w-edu").value = 10;
-      document.getElementById("slider-w-sim").value = 20;
-      onWeightChange();
+      applyPresetWeights(40, 15, 15, 10, 20);
     }
 
-    // -------------------------------------------------------------
-    // BLIND MODE TOGGLE
-    // -------------------------------------------------------------
-    function toggleBlindMode() {
-      isBlindMode = !isBlindMode;
-      const statusText = document.getElementById("blindStatusText");
-      const toggleBtn = document.getElementById("blindToggleBtn");
-      const deiBadge = document.getElementById("deiStatusBadge");
-
-      if (isBlindMode) {
-        statusText.textContent = "ON (Active)";
-        statusText.className = "text-tertiary font-mono font-bold";
-        toggleBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 flex items-center gap-2 bg-tertiary/10 text-tertiary border-tertiary/40";
-        if (deiBadge) {
-          deiBadge.textContent = "Blind Mode Active (PII Redacted)";
-          deiBadge.className = "text-tertiary font-bold";
-        }
-      } else {
-        statusText.textContent = "OFF";
-        statusText.className = "text-on-surface font-mono font-bold";
-        toggleBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 flex items-center gap-2 bg-surface-container-low text-on-surface-variant border-outline-variant/30 hover:border-primary/50";
-        if (deiBadge) {
-          deiBadge.textContent = "Standard Mode";
-          deiBadge.className = "text-on-surface-variant font-bold";
-        }
+    function normalizeWeightsAction() {
+      const sum = rawWeights.req + rawWeights.pref + rawWeights.exp + rawWeights.edu + rawWeights.sim;
+      if (sum === 0) {
+        resetDefaultWeights();
+        return;
       }
+      const factor = 100 / sum;
+      rawWeights.req = Math.round(rawWeights.req * factor);
+      rawWeights.pref = Math.round(rawWeights.pref * factor);
+      rawWeights.exp = Math.round(rawWeights.exp * factor);
+      rawWeights.edu = Math.round(rawWeights.edu * factor);
+      const partial = rawWeights.req + rawWeights.pref + rawWeights.exp + rawWeights.edu;
+      rawWeights.sim = Math.max(0, 100 - partial);
+      updateWeightsFromRaw();
+    }
 
-      renderLeaderboard();
-      const currentSelected = document.getElementById("deepdiveSelect").value;
-      renderDeepDiveCandidate(currentSelected);
+    function openWeightModal() {
+      const modal = document.getElementById("weightModal");
+      if (modal) {
+        syncAllWeightUI();
+        modal.classList.remove("hidden");
+      }
+    }
+
+    function closeWeightModal() {
+      const modal = document.getElementById("weightModal");
+      if (modal) {
+        modal.classList.add("hidden");
+      }
+    }
+
+    function renderSettingsSimulation() {
+      const tbody = document.getElementById("settingsSimulationTbody");
+      if (!tbody) return;
+      tbody.innerHTML = "";
+
+      const sorted = [...candidates].map(c => {
+        return {
+          ...c,
+          computedScore: calculateFinalScore(c)
+        };
+      }).sort((a, b) => b.computedScore - a.computedScore);
+
+      sorted.forEach((c, idx) => {
+        const tier = getTierInfo(c.computedScore);
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-surface-container transition-colors";
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 font-mono font-bold text-outline">#${idx + 1}</td>
+          <td class="py-2.5 px-3 font-semibold text-on-surface">${c.name}</td>
+          <td class="py-2.5 px-3 font-mono text-primary">${c.subscores.req}%</td>
+          <td class="py-2.5 px-3 font-mono text-secondary">${c.subscores.pref}%</td>
+          <td class="py-2.5 px-3 font-mono text-tertiary">${c.subscores.exp}%</td>
+          <td class="py-2.5 px-3 font-mono text-warning">${c.subscores.edu}%</td>
+          <td class="py-2.5 px-3 font-mono text-primary">${c.subscores.sim}%</td>
+          <td class="py-2.5 px-3 font-mono font-bold text-sm text-${tier.color}">${c.computedScore}%</td>
+          <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${tier.badge}">${tier.label}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
     }
 
     // -------------------------------------------------------------
@@ -1562,6 +1886,10 @@ Where:
       if (tabId === 'deepdive') {
         const candId = document.getElementById("deepdiveSelect").value;
         setTimeout(() => renderDeepDiveCandidate(candId), 50);
+      } else if (tabId === 'settings') {
+        renderSettingsSimulation();
+      } else if (tabId === 'leaderboard') {
+        renderLeaderboard();
       }
     }
 
@@ -1750,9 +2078,11 @@ Where:
 
     // Initialize on page load
     window.addEventListener("DOMContentLoaded", () => {
+      syncAllWeightUI();
       renderLeaderboard();
       initTierChart();
       loadSampleResume('aman');
+      renderSettingsSimulation();
     });
   </script>
 </body>

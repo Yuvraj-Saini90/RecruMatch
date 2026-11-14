@@ -317,16 +317,7 @@ with st.sidebar:
     st.caption("Active Target Role:")
     st.markdown(f"**{curr_role}**")
 
-    # Quick Blind Screening Mode
-    st.markdown("<hr style='margin: 10px 0; border: none; border-top: 1px solid #1e293b;'>", unsafe_allow_html=True)
-    blind_toggle = st.toggle(
-        "Blind Screening Mode",
-        value=st.session_state.blind_mode,
-        help="Redacts candidate names, emails, phone numbers, and institution names to eliminate unconscious bias during initial review."
-    )
-    if blind_toggle != st.session_state.blind_mode:
-        st.session_state.blind_mode = blind_toggle
-        st.rerun()
+
 
     # Quick Workspace Actions
     st.markdown("<hr style='margin: 10px 0 14px 0; border: none; border-top: 1px solid #1e293b;'>", unsafe_allow_html=True)
