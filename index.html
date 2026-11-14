@@ -1373,10 +1373,10 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
   <!-- ============================================================= -->
   <!-- FOOTER -->
   <!-- ============================================================= -->
-  <footer class="border-t border-surface-container-high bg-surface-container-lowest py-4 text-center text-xs text-on-surface-variant">
+  <footer class="border-t border-surface-container-high bg-surface-container-lowest py-3 text-center text-xs text-on-surface-variant">
     <div class="max-w-[1560px] mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>
-        RecruMatch &copy; 2026 • Enterprise Candidate Screening &amp; Forensic Verification Platform
+      <div class="font-medium text-on-surface-variant">
+        RecruMatch Platform
       </div>
       <div class="flex items-center space-x-4 text-outline font-mono text-[11px]">
         <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[13px] text-tertiary">speed</span> Latency: &lt;400ms</span>
@@ -2137,11 +2137,11 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
 
       // 2. Experience Extraction
       let expYears = 2.0;
-      let expText = "2.0+ years threshold";
+      let expText = "2.0+ Years";
       const expMatch = lower.match(/(\d+(?:\.\d+)?)\s*(?:\+|-\s*\d+)?\s*(?:years?|yrs?)/);
       if (expMatch) {
         expYears = parseFloat(expMatch[1]) || 2.0;
-        expText = `${expYears}+ years threshold`;
+        expText = `${expYears}+ Years`;
       }
 
       // 3. Education Extraction
@@ -2330,7 +2330,7 @@ Education: Bachelor's or Master's in Computer Science or related engineering fie
       if (reqPreviewEl) reqPreviewEl.textContent = reqSkills.slice(0, 6).join(", ") + (reqSkills.length > 6 ? "..." : "");
 
       const expYearsEl = document.getElementById("activeExpYears");
-      if (expYearsEl) expYearsEl.textContent = analysis.expText;
+      if (expYearsEl) expYearsEl.textContent = `${analysis.expYears}+`;
 
       const eduTextEl = document.getElementById("activeEduText");
       if (eduTextEl) eduTextEl.textContent = analysis.education;
