@@ -2,7 +2,7 @@
 
 A transparent, explainable recruitment screening workspace designed for human
 recruiters and hiring managers. Features multi-criteria qualification scoring,
-spacy canonical skill extraction, resume tampering inspection, DEI blind screening,
+spacy canonical skill extraction, resume tampering inspection, fair multi-criteria ranking,
 and structured interview generation.
 """
 
@@ -175,8 +175,6 @@ if "thresholds" not in st.session_state:
     st.session_state.thresholds = DEFAULT_THRESHOLDS.copy()
 if "matching_method" not in st.session_state:
     st.session_state.matching_method = "TF-IDF"
-if "blind_mode" not in st.session_state:
-    st.session_state.blind_mode = False
 
 
 def get_initials(name: str) -> str:
@@ -496,15 +494,9 @@ elif menu_selection == "🎯 Candidate Pipeline (Native)":
             tier_label = cat.get("label", "Moderate Match")
             rank_num = c.get("rank", 1)
 
-            # Blind mode check
-            if st.session_state.blind_mode:
-                display_name = f"Candidate #{rank_num}"
-                display_email = "[PII Redacted for Fairness]"
-                avatar_text = f"C{rank_num}"
-            else:
-                display_name = c.get("candidate_name", "Candidate")
-                display_email = c.get("candidate_profile", {}).get("email", "Not listed")
-                avatar_text = get_initials(display_name)
+            display_name = c.get("candidate_name", "Candidate")
+            display_email = c.get("candidate_profile", {}).get("email", "Not listed")
+            avatar_text = get_initials(display_name)
 
             # Forensic status
             f_report = c.get("candidate_profile", {}).get("forensic_report") or {}
@@ -638,16 +630,10 @@ elif menu_selection == "👤 Candidate Inspector":
             tier_label = cat.get("label", "Moderate Match")
 
             # Header Profile Card
-            if st.session_state.blind_mode:
-                c_name = f"Candidate #{cand.get('rank')}"
-                c_email = "[Redacted for Blind Evaluation]"
-                c_phone = "[Redacted]"
-                avatar_text = f"C{cand.get('rank')}"
-            else:
-                c_name = cand.get("candidate_name", "Candidate")
-                c_email = prof.get("email", "Not listed")
-                c_phone = prof.get("phone", "Not listed")
-                avatar_text = get_initials(c_name)
+            c_name = cand.get("candidate_name", "Candidate")
+            c_email = prof.get("email", "Not listed")
+            c_phone = prof.get("phone", "Not listed")
+            avatar_text = get_initials(c_name)
 
             st.markdown(
                 f"""
@@ -1003,6 +989,16 @@ elif menu_selection == "📥 Resume Ingestion":
                 clean_text = forensic_report["clean_text"] if (forensic_report and forensic_report.get("clean_text")) else parse_res["text"]
                 sk_info = extract_skills_from_text(clean_text)
                 profile = parse_resume_content(clean_text)
+                if not profile.get("candidate_name") or profile.get("candidate_name") in ("Not detected", "Candidate", "Unknown"):
+                    import re
+                    base = fname.rsplit(".", 1)[0]
+                    base = re.sub(r"[_\-]+", " ", base)
+                    base = re.sub(r"\b(resume|cv|senior|junior|lead|dev|developer|engineer|scientist|analyst|fullstack|backend|frontend|python|java|cloud|devops|data|adversarial|exploit|clean)\b", "", base, flags=re.IGNORECASE)
+                    cleaned = " ".join(base.split()).strip()
+                    if len(cleaned) >= 2:
+                        profile["candidate_name"] = cleaned.title()
+                    else:
+                        profile["candidate_name"] = f"Candidate {len(new_profiles) + 1}"
                 profile["skills"] = sk_info["skills"]
                 profile["filename"] = fname
                 profile["candidate_id"] = fname.replace(".", "_")

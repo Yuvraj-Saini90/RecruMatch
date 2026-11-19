@@ -75,6 +75,17 @@
   <!-- Chart.js for Radar & Bar charts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+  <!-- PDF.js for in-browser PDF text extraction -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    if (window.pdfjsLib) {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+  </script>
+
+  <!-- Mammoth.js for in-browser DOCX text extraction -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -1376,7 +1387,6 @@
   <!-- CLIENT JAVASCRIPT STATE & ENGINE -->
   <!-- ============================================================= -->
   <script>
-    let isBlindMode = false;
     let isDrawerOpen = false;
 
     let weights = {
@@ -1391,7 +1401,6 @@
       {
         id: "vikram",
         name: "Vikram Malhotra*",
-        blindToken: "Candidate #1 [Token: vk73a1]",
         format: "PDF (Exploit)",
         rawScoreLegacy: 96.0,
         subscores: { req: 76.9, pref: 100.0, exp: 100.0, edu: 100.0, sim: 11.7 },
@@ -1415,7 +1424,6 @@
       {
         id: "aman",
         name: "Aman Verma",
-        blindToken: "Candidate #2 [Token: am49b2]",
         format: "PDF (Clean)",
         rawScoreLegacy: 65.2,
         subscores: { req: 84.6, pref: 37.5, exp: 100.0, edu: 75.0, sim: 16.2 },
@@ -1439,7 +1447,6 @@
       {
         id: "priya",
         name: "Priya Sharma",
-        blindToken: "Candidate #3 [Token: pr88c4]",
         format: "PDF (Clean)",
         rawScoreLegacy: 48.9,
         subscores: { req: 46.2, pref: 37.5, exp: 83.3, edu: 100.0, sim: 11.8 },
@@ -1463,7 +1470,6 @@
       {
         id: "sneha",
         name: "Sneha Gupta",
-        blindToken: "Candidate #4 [Token: sn19d9]",
         format: "DOCX (Clean)",
         rawScoreLegacy: 37.1,
         subscores: { req: 23.1, pref: 25.0, exp: 100.0, edu: 75.0, sim: 7.9 },
@@ -1487,7 +1493,6 @@
       {
         id: "rahul",
         name: "Rahul Kumar",
-        blindToken: "Candidate #5 [Token: rk55e3]",
         format: "DOCX (Clean)",
         rawScoreLegacy: 23.8,
         subscores: { req: 23.1, pref: 0.0, exp: 40.0, edu: 75.0, sim: 5.3 },
@@ -1585,7 +1590,7 @@
 
       sorted.forEach((c, idx) => {
         const tier = getTierInfo(c.computedScore);
-        const displayName = isBlindMode ? c.blindToken : c.name;
+        const displayName = c.name;
 
         const tr = document.createElement("tr");
         tr.className = "hover:bg-surface-container-high transition-colors cursor-pointer";
@@ -1879,7 +1884,7 @@
       const score = calculateFinalScore(cand);
       const tier = getTierInfo(score);
 
-      const displayName = isBlindMode ? cand.blindToken : cand.name;
+      const displayName = cand.name;
       document.getElementById("dd-name").textContent = displayName;
       document.getElementById("dd-top-name").textContent = displayName;
       document.getElementById("dd-score").textContent = score + "%";
@@ -1898,9 +1903,7 @@
         ? "px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-error/20 text-error border border-error/30"
         : "px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-tertiary/20 text-tertiary border border-tertiary/30";
 
-      document.getElementById("dd-meta").textContent = isBlindMode
-        ? `Candidate ID: ${cand.id.toUpperCase()} • Experience: ${cand.expYears} • Institution: [Anonymized for Fairness]`
-        : `${cand.degree} • Experience: ${cand.expYears} • Format: ${cand.format}`;
+      document.getElementById("dd-meta").textContent = `${cand.degree} • Experience: ${cand.expYears} • Format: ${cand.format}`;
 
       const totalReqCount = currentJDAnalysis ? currentJDAnalysis.requiredSkills.length : 13;
       document.getElementById("dd-matched-count").textContent = `(${cand.matchedSkills.length}/${totalReqCount} matched)`;
@@ -1965,7 +1968,7 @@
       ];
 
       if (radarChartInstance) {
-        radarChartInstance.data.datasets[0].label = isBlindMode ? cand.blindToken : cand.name;
+        radarChartInstance.data.datasets[0].label = cand.name;
         radarChartInstance.data.datasets[0].data = chartData;
         radarChartInstance.update();
       } else {
@@ -1974,7 +1977,7 @@
           data: {
             labels: ['Required Skills (40%)', 'Preferred (15%)', 'Experience (15%)', 'Education (10%)', 'Text Cosine (20%)'],
             datasets: [{
-              label: isBlindMode ? cand.blindToken : cand.name,
+              label: cand.name,
               data: chartData,
               backgroundColor: 'rgba(139, 92, 246, 0.22)',
               borderColor: '#8b5cf6',
@@ -2595,38 +2598,146 @@
       }
     }
 
-    function handleFileSelect(event) {
-      const files = event.target.files;
-      if (!files || files.length === 0) return;
-      
-      const fileNames = Array.from(files).map(f => f.name).join(", ");
-      const reader = new FileReader();
-      const firstFile = files[0];
+    // -------------------------------------------------------------
+    // CLIENT-SIDE PDF & DOCX EXTRACTION ENGINE
+    // -------------------------------------------------------------
+    let currentUploadedFilename = "";
 
-      reader.onload = function(e) {
-        document.getElementById("resumeInputText").value = `[Ingested File: ${firstFile.name}]\n` + (e.target.result || "").slice(0, 2000);
-        const scoreBox = document.getElementById("screenResultBox");
-        if (scoreBox) {
-          scoreBox.scrollIntoView({ behavior: 'smooth' });
-        }
-      };
-
-      if (firstFile.type.includes("text") || firstFile.name.endsWith(".txt")) {
-        reader.readAsText(firstFile);
-      } else {
-        document.getElementById("resumeInputText").value = `[Ingested ${files.length} File(s): ${fileNames}]\nBinary PDF/DOCX structure detected. Click 'Screen Candidates' to run deterministic parsing.`;
+    async function extractTextFromPDF(file) {
+      if (!window.pdfjsLib) {
+        throw new Error("PDF parser library (pdfjsLib) is not loaded.");
       }
+      const arrayBuffer = await file.arrayBuffer();
+      const typedArray = new Uint8Array(arrayBuffer);
+      const pdf = await window.pdfjsLib.getDocument({ data: typedArray }).promise;
+      let fullText = "";
+
+      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        const page = await pdf.getPage(pageNum);
+        const textContent = await page.getTextContent();
+        let lastY = null;
+        let pageStr = "";
+
+        for (const item of textContent.items) {
+          if (lastY !== null && Math.abs(item.transform[5] - lastY) > 5) {
+            pageStr += "\n";
+          } else if (pageStr.length > 0 && !pageStr.endsWith(" ") && !pageStr.endsWith("\n")) {
+            pageStr += " ";
+          }
+          pageStr += item.str;
+          lastY = item.transform[5];
+        }
+        fullText += pageStr.trim() + "\n\n";
+      }
+      return fullText.trim();
     }
 
-    function runScreeningOnInput() {
+    async function extractTextFromDOCX(file) {
+      if (!window.mammoth) {
+        throw new Error("DOCX parser library (mammoth) is not loaded.");
+      }
+      const arrayBuffer = await file.arrayBuffer();
+      const result = await window.mammoth.extractRawText({ arrayBuffer: arrayBuffer });
+      return (result && result.value) ? result.value.trim() : "";
+    }
+
+    function extractCandidateName(text, filename) {
+      if (!text && !filename) return "Candidate " + (candidates.length + 1);
+
+      const rawLines = (text || "").split("\n").map(l => l.trim()).filter(l => l.length > 0);
+      
+      const forbiddenTitles = [
+        "resume", "curriculum vitae", "cv", "profile", "contact",
+        "contact information", "summary", "professional summary",
+        "objective", "career objective", "experience", "education",
+        "skills", "technical skills", "projects", "certifications",
+        "personal details", "phone", "email", "address", "portfolio",
+        "work experience", "employment history", "qualifications",
+        "ingested file", "binary pdf", "binary docx"
+      ];
+
+      // 1. Explicit name prefixes in top 15 lines (e.g. "Name: Aman Verma" or "Candidate Name: Priya Sharma")
+      for (const line of rawLines.slice(0, 15)) {
+        const labelMatch = line.match(/^(?:Candidate\s*Name|Full\s*Name|Candidate|Name)\s*[:\-]\s*(.+)$/i);
+        if (labelMatch && labelMatch[1]) {
+          const candidate = labelMatch[1].trim().replace(/[*#]/g, "");
+          if (candidate.length >= 2 && candidate.length <= 40 && !candidate.toLowerCase().includes("resume")) {
+            return candidate;
+          }
+        }
+      }
+
+      // 2. Scan top 8 non-empty lines for typical person name pattern
+      for (let i = 0; i < Math.min(rawLines.length, 8); i++) {
+        let line = rawLines[i].replace(/[*#]/g, "").trim();
+        const lower = line.toLowerCase();
+        
+        // Skip obvious header or metadata lines
+        if (forbiddenTitles.some(w => lower === w || lower.startsWith(w + ":") || lower.startsWith(w + " -"))) continue;
+        if (lower.startsWith("[ingested") || lower.includes("binary pdf") || lower.includes("binary docx")) continue;
+        
+        // If line contains pipe or bullet separator (e.g. "Aman Verma | aman@example.com | +91...")
+        if (line.includes("|") || line.includes("•") || line.includes(" - ")) {
+          const parts = line.split(/[|•]| - /).map(p => p.trim());
+          for (const part of parts) {
+            if (/^[A-Z][a-zA-Z.'-]+(?:\s+[A-Z][a-zA-Z.'-]+){1,3}$/.test(part)) {
+              if (!forbiddenTitles.some(w => part.toLowerCase().includes(w))) {
+                return part;
+              }
+            }
+          }
+        }
+
+        // Clean standalone name: 2 to 4 capitalized words, no punctuation/digits/emails
+        if (/^[A-Z][a-zA-Z.'-]+(?:\s+[A-Z][a-zA-Z.'-]+){1,3}$/.test(line)) {
+          if (!forbiddenTitles.some(w => lower.includes(w)) && !lower.includes("@") && !lower.includes("http")) {
+            return line;
+          }
+        }
+      }
+
+      // 3. Fallback: Parse filename (e.g. "Aman_Verma_Senior_Python_Dev.pdf" -> "Aman Verma")
+      if (filename) {
+        let clean = filename.replace(/\.(pdf|docx|txt|doc)$/i, "");
+        clean = clean.replace(/[_-]+/g, " ");
+        clean = clean.replace(/\b(resume|cv|senior|junior|lead|developer|dev|engineer|scientist|analyst|fullstack|frontend|backend|cloud|devops|data|machine|learning|ai|ml|python|java|adversarial|exploit|clean|v\d+|\d+)\b/gi, "").trim();
+        clean = clean.replace(/\s+/g, " ").trim();
+        if (clean.length >= 2) {
+          return clean.split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(" ");
+        }
+        const rawTokens = filename.replace(/\.(pdf|docx|txt|doc)$/i, "").split(/[_\s-]+/).filter(t => t.length > 1);
+        if (rawTokens.length >= 2) {
+          return rawTokens.slice(0, 2).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(" ");
+        }
+      }
+
+      // 4. Fallback: Parse email username (e.g. aman.verma.dev@example.com -> "Aman Verma")
+      const emailMatch = (text || "").match(/([a-zA-Z0-9._%+-]+)@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+      if (emailMatch && emailMatch[1]) {
+        let userPart = emailMatch[1].replace(/[0-9_.-]+/g, " ");
+        userPart = userPart.replace(/\b(dev|engineer|mail|test|work|job)\b/gi, "").trim();
+        const parts = userPart.split(/\s+/).filter(p => p.length >= 2);
+        if (parts.length >= 2) {
+          return parts.slice(0, 2).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(" ");
+        }
+      }
+
+      // 5. Final fallback: If first line is reasonably short and contains letters
+      if (rawLines.length > 0) {
+        const fl = rawLines[0].replace(/^(Name|Candidate|Resume):\s*/i, "").trim();
+        if (fl.length >= 2 && fl.length <= 35 && !fl.includes(":") && !fl.includes("[") && !fl.toLowerCase().includes("resume")) {
+          return fl;
+        }
+      }
+
+      return "Candidate " + (candidates.length + 1);
+    }
+
+    function processSingleResume(text, filename) {
       // 1. Ensure current JD is freshly parsed
       extractAndApplyJD();
 
-      const text = document.getElementById("resumeInputText").value;
-      if (!text.trim()) {
-        alert("Please enter resume text or select a candidate file first.");
-        return;
-      }
+      if (!text || !text.trim()) return null;
 
       // 2. Extract candidate skills from resume text
       const candSkills = extractSkillsFromText(text);
@@ -2675,39 +2786,42 @@
       ));
       const tier = getTierInfo(estScore);
 
-      document.getElementById("screenResultScore").textContent = estScore + "%";
-      document.getElementById("screenResultTier").textContent = tier.label;
-      document.getElementById("screenResultTier").className = `px-2 py-0.5 rounded text-[11px] font-bold border font-mono ${tier.badge}`;
-      document.getElementById("screenSkillsCount").textContent = candSkills.length;
+      // Update Quick Screening Result UI
+      const scoreEl = document.getElementById("screenResultScore");
+      if (scoreEl) scoreEl.textContent = estScore + "%";
+      const tierEl = document.getElementById("screenResultTier");
+      if (tierEl) {
+        tierEl.textContent = tier.label;
+        tierEl.className = `px-2 py-0.5 rounded text-[11px] font-bold border font-mono ${tier.badge}`;
+      }
+      const countEl = document.getElementById("screenSkillsCount");
+      if (countEl) countEl.textContent = candSkills.length;
 
       const chipsContainer = document.getElementById("screenSkillsChips");
-      chipsContainer.innerHTML = "";
-      if (candSkills.length === 0) {
-        chipsContainer.innerHTML = `<span class="text-error font-mono">No canonical skills matched in taxonomy.</span>`;
-      } else {
-        // Show matched required skills
-        matchedReq.forEach(s => {
-          const chip = document.createElement("span");
-          chip.className = "px-2 py-0.5 rounded bg-tertiary-container/30 text-tertiary border border-tertiary/40 text-[10px] font-bold font-mono";
-          chip.textContent = `✓ ${s}`;
-          chipsContainer.appendChild(chip);
-        });
-
-        // Show matched preferred skills
-        matchedPref.forEach(s => {
-          const chip = document.createElement("span");
-          chip.className = "px-2 py-0.5 rounded bg-primary/20 text-secondary border border-primary/30 text-[10px] font-bold font-mono";
-          chip.textContent = `★ ${s}`;
-          chipsContainer.appendChild(chip);
-        });
-
-        // Show missing required skills
-        missingReq.forEach(s => {
-          const chip = document.createElement("span");
-          chip.className = "px-2 py-0.5 rounded bg-error-container/20 text-error border border-error/30 text-[10px] font-mono opacity-80";
-          chip.textContent = `✗ ${s}`;
-          chipsContainer.appendChild(chip);
-        });
+      if (chipsContainer) {
+        chipsContainer.innerHTML = "";
+        if (candSkills.length === 0) {
+          chipsContainer.innerHTML = `<span class="text-error font-mono">No canonical skills matched in taxonomy.</span>`;
+        } else {
+          matchedReq.forEach(s => {
+            const chip = document.createElement("span");
+            chip.className = "px-2 py-0.5 rounded bg-tertiary-container/30 text-tertiary border border-tertiary/40 text-[10px] font-bold font-mono";
+            chip.textContent = `✓ ${s}`;
+            chipsContainer.appendChild(chip);
+          });
+          matchedPref.forEach(s => {
+            const chip = document.createElement("span");
+            chip.className = "px-2 py-0.5 rounded bg-primary/20 text-secondary border border-primary/30 text-[10px] font-bold font-mono";
+            chip.textContent = `★ ${s}`;
+            chipsContainer.appendChild(chip);
+          });
+          missingReq.forEach(s => {
+            const chip = document.createElement("span");
+            chip.className = "px-2 py-0.5 rounded bg-error-container/20 text-error border border-error/30 text-[10px] font-mono opacity-80";
+            chip.textContent = `✗ ${s}`;
+            chipsContainer.appendChild(chip);
+          });
+        }
       }
 
       // Exploit Detection Check
@@ -2716,15 +2830,23 @@
       const forensicStatus = hasExploit ? "Tampering Flagged" : "Clean Verified";
 
       // Candidate Name extraction
-      const firstLine = text.split("\n")[0].trim().replace(/^(Name|Candidate|Resume):\s*/i, "");
-      const candName = firstLine && firstLine.length < 35 && !firstLine.includes(":") ? firstLine : "Candidate #" + (candidates.length + 1);
-
+      const candName = extractCandidateName(text, filename);
       const candId = "cand_" + candName.toLowerCase().replace(/[^a-z0-9]/g, "_");
+
+      // Format description
+      let formatDesc = "Verified Document";
+      if (hasExploit) {
+        formatDesc = "PDF (Exploit Flagged)";
+      } else if (filename && filename.toLowerCase().endsWith(".pdf")) {
+        formatDesc = "PDF (Clean)";
+      } else if (filename && filename.toLowerCase().endsWith(".docx")) {
+        formatDesc = "DOCX (Clean)";
+      }
+
       const candObj = {
         id: candId,
         name: candName,
-        blindToken: `Candidate #${candidates.length + 1} [Token: ${candId.slice(-6)}]`,
-        format: hasExploit ? "PDF (Exploit Flagged)" : "Verified Document",
+        format: formatDesc,
         rawScoreLegacy: estScore,
         subscores: {
           req: Math.round(reqPct * 10) / 10,
@@ -2763,6 +2885,74 @@
       updateDashboardMetrics();
       syncDeepDiveSelect();
       renderSettingsSimulation();
+
+      return candObj;
+    }
+
+    async function handleFileSelect(event) {
+      const files = event.target.files;
+      if (!files || files.length === 0) return;
+
+      const textArea = document.getElementById("resumeInputText");
+      let processedCount = 0;
+      let firstExtractedText = "";
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        currentUploadedFilename = file.name;
+        if (textArea) {
+          textArea.value = `Extracting and analyzing "${file.name}" (${i + 1}/${files.length})... Please wait.`;
+        }
+
+        try {
+          let text = "";
+          const fNameLower = file.name.toLowerCase();
+
+          if (fNameLower.endsWith(".pdf") || file.type === "application/pdf") {
+            text = await extractTextFromPDF(file);
+          } else if (fNameLower.endsWith(".docx") || file.type.includes("wordprocessingml") || file.type.includes("msword")) {
+            text = await extractTextFromDOCX(file);
+          } else {
+            text = await new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = (e) => resolve(e.target.result || "");
+              reader.onerror = reject;
+              reader.readAsText(file);
+            });
+          }
+
+          if (text && text.trim()) {
+            if (i === 0) {
+              firstExtractedText = text;
+            }
+            processSingleResume(text, file.name);
+            processedCount++;
+          }
+        } catch (err) {
+          console.error(`Failed to extract text from ${file.name}:`, err);
+        }
+      }
+
+      if (firstExtractedText && textArea) {
+        textArea.value = firstExtractedText;
+        showNotificationToast(`✅ Extracted and screened ${processedCount} candidate resume(s)!`);
+        const scoreBox = document.getElementById("screenResultBox");
+        if (scoreBox) {
+          scoreBox.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else if (textArea && processedCount === 0) {
+        textArea.value = `Unable to extract text from the selected file. Please make sure it contains selectable text.`;
+      }
+    }
+
+    function runScreeningOnInput() {
+      const text = document.getElementById("resumeInputText").value;
+      if (!text.trim()) {
+        alert("Please enter resume text or select a candidate file first.");
+        return;
+      }
+      processSingleResume(text, currentUploadedFilename);
+      showNotificationToast("Evaluated candidate against active criteria.");
     }
 
     // -------------------------------------------------------------
@@ -2862,7 +3052,7 @@
       candidates.forEach((c, i) => {
         const score = calculateFinalScore(c);
         const tier = getTierInfo(score);
-        const name = isBlindMode ? c.blindToken : c.name;
+        const name = c.name;
         csv += `${i + 1},"${name}","${c.format}","${c.subscores.req}%","${c.expYears}","${score}%","${tier.label}","${c.forensicStatus}"\n`;
       });
       const blob = new Blob([csv], { type: "text/csv" });
