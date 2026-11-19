@@ -234,11 +234,15 @@ def load_demo_data():
         if fname.endswith(".pdf"):
             res = extract_text_from_pdf(filepath)
             try:
-                forensic_report = inspector.inspect_pdf(filepath)
+                forensic_report = inspector.inspect_pdf(filepath, filename=fname)
             except Exception:
                 forensic_report = None
         elif fname.endswith(".docx"):
             res = extract_text_from_docx(filepath)
+            try:
+                forensic_report = inspector.inspect_docx(filepath, filename=fname)
+            except Exception:
+                forensic_report = None
         else:
             continue
 
@@ -968,12 +972,17 @@ elif menu_selection == "📥 Resume Ingestion":
                 try:
                     file_bytes = file.read()
                     file.seek(0)
-                    forensic_report = inspector.inspect_pdf(file_bytes)
+                    forensic_report = inspector.inspect_pdf(file_bytes, filename=fname)
                     file.seek(0)
                 except Exception:
                     file.seek(0)
                 parse_res = extract_text_from_pdf(file)
             elif fname.lower().endswith(".docx"):
+                try:
+                    forensic_report = inspector.inspect_docx(file, filename=fname)
+                    file.seek(0)
+                except Exception:
+                    file.seek(0)
                 parse_res = extract_text_from_docx(file)
             elif fname.lower().endswith(".txt"):
                 try:
@@ -981,6 +990,7 @@ elif menu_selection == "📥 Resume Ingestion":
                 except Exception:
                     file.seek(0)
                     txt = file.read().decode("latin-1", errors="ignore")
+                forensic_report = inspector.inspect_text(txt, filename=fname)
                 parse_res = {"success": True, "text": txt}
             else:
                 parse_res = {"success": False, "error": "Unsupported file format."}
