@@ -137,6 +137,10 @@
 
       <!-- Action & Controls -->
       <div class="flex items-center gap-2.5">
+        <button id="headerDemoBtn" onclick="loadFullDemoShowcase()" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 flex items-center gap-1.5 bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border-emerald-500/30 hover:border-emerald-400 shadow-sm cursor-pointer">
+          <span class="material-symbols-outlined text-[17px]">play_circle</span>
+          <span>Load Demo Data</span>
+        </button>
         <button id="headerSettingsBtn" onclick="openWeightModal()" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 flex items-center gap-2 bg-surface-container-high hover:bg-surface-container-highest text-secondary border-primary/30 hover:border-primary shadow-sm">
           <span class="material-symbols-outlined text-[17px] text-primary">tune</span>
           <span>Customize Weights &amp; Scoring</span>
@@ -287,19 +291,27 @@
             <div>
               <div class="flex items-center justify-between mb-1.5">
                 <span class="text-[11px] font-semibold text-on-surface-variant">Benchmark Candidate Test Resumes:</span>
-                <span class="text-[11px] text-outline font-mono">Instant Test Profiles</span>
+                <button type="button" onclick="loadFullDemoShowcase()" class="text-[11px] text-emerald-400 hover:text-emerald-300 font-mono font-semibold flex items-center gap-1 cursor-pointer">
+                  <span class="material-symbols-outlined text-[14px]">bolt</span> Load All 5 Demo Profiles
+                </button>
               </div>
-              <div class="flex flex-wrap gap-2">
-                <button type="button" onclick="loadSampleResume('aman')" class="px-2.5 py-1 text-xs rounded bg-surface-container-high hover:bg-surface-variant text-on-surface border border-outline-variant/40 flex items-center gap-1">
+              <div class="flex flex-wrap gap-1.5">
+                <button type="button" onclick="loadSampleResume('aman')" class="px-2.5 py-1 text-xs rounded bg-surface-container-high hover:bg-surface-variant text-on-surface border border-outline-variant/40 flex items-center gap-1 cursor-pointer">
                   <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Aman Verma (Clean PDF)
                 </button>
-                <button type="button" onclick="loadSampleResume('priya')" class="px-2.5 py-1 text-xs rounded bg-surface-container-high hover:bg-surface-variant text-on-surface border border-outline-variant/40 flex items-center gap-1">
+                <button type="button" onclick="loadSampleResume('priya')" class="px-2.5 py-1 text-xs rounded bg-surface-container-high hover:bg-surface-variant text-on-surface border border-outline-variant/40 flex items-center gap-1 cursor-pointer">
                   <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Priya Sharma (Clean PDF)
                 </button>
-                <button type="button" onclick="loadSampleResume('rahul')" class="px-2.5 py-1 text-xs rounded bg-surface-container-high hover:bg-surface-variant text-on-surface border border-outline-variant/40 flex items-center gap-1">
+                <button type="button" onclick="loadSampleResume('rahul')" class="px-2.5 py-1 text-xs rounded bg-surface-container-high hover:bg-surface-variant text-on-surface border border-outline-variant/40 flex items-center gap-1 cursor-pointer">
                   <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Rahul Kumar (Clean DOCX)
                 </button>
-                <button type="button" onclick="loadSampleResume('custom')" class="px-2.5 py-1 text-xs rounded bg-surface-container-high hover:bg-surface-variant text-secondary border border-outline-variant/40">
+                <button type="button" onclick="loadSampleResume('sneha')" class="px-2.5 py-1 text-xs rounded bg-surface-container-high hover:bg-surface-variant text-on-surface border border-outline-variant/40 flex items-center gap-1 cursor-pointer">
+                  <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Sneha Gupta (Cloud DOCX)
+                </button>
+                <button type="button" onclick="loadSampleResume('vikram')" class="px-2.5 py-1 text-xs rounded bg-surface-container-high hover:bg-surface-variant text-error border border-error/30 flex items-center gap-1 cursor-pointer">
+                  <span class="w-1.5 h-1.5 rounded-full bg-error"></span> Vikram (Tamper PDF)
+                </button>
+                <button type="button" onclick="loadSampleResume('custom')" class="px-2.5 py-1 text-xs rounded bg-surface-container-high hover:bg-surface-variant text-secondary border border-outline-variant/40 cursor-pointer">
                   Clear
                 </button>
               </div>
@@ -311,11 +323,21 @@
               <textarea id="resumeInputText" rows="6" class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-lg p-3 text-xs text-on-surface focus:outline-none focus:border-primary font-mono leading-relaxed custom-scroll" placeholder="Extracted candidate text will appear here..."></textarea>
             </div>
 
-            <!-- Primary Screening Action Button -->
-            <button id="btnRunScreening" onclick="runScreeningOnInput()" class="w-full py-3 px-5 text-sm font-semibold rounded-lg bg-primary hover:bg-primary-hover text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
-              <span class="material-symbols-outlined text-[20px]">bolt</span>
-              <span>Screen Candidates & Calculate Rankings</span>
-            </button>
+            <!-- Primary Screening Action Buttons -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+              <button id="btnRunScreening" onclick="runScreeningOnInput()" class="flex-1 py-3 px-5 text-sm font-semibold rounded-lg bg-primary hover:bg-primary-hover text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20 cursor-pointer">
+                <span class="material-symbols-outlined text-[20px]">bolt</span>
+                <span>Screen Candidates &amp; Calculate Rankings</span>
+              </button>
+              <button id="btnLoadDemoMain" onclick="loadFullDemoShowcase()" type="button" class="py-3 px-4 text-xs font-semibold rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 transition-all flex items-center justify-center gap-1.5 shadow-sm whitespace-nowrap cursor-pointer">
+                <span class="material-symbols-outlined text-[18px]">play_arrow</span>
+                <span>Try Demo</span>
+              </button>
+              <button id="btnResetWorkspace" onclick="resetWorkspace()" type="button" class="py-3 px-3.5 text-xs font-semibold rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface border border-outline-variant/30 transition-all flex items-center justify-center gap-1 shadow-sm cursor-pointer" title="Reset workspace to clean empty state">
+                <span class="material-symbols-outlined text-[18px]">restart_alt</span>
+                <span class="hidden md:inline">Reset</span>
+              </button>
+            </div>
 
             <!-- Instant Screening Assessment Feedback -->
             <div id="screenResultBox" class="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant/30 flex flex-col gap-3">
@@ -1529,9 +1551,15 @@
               <span class="material-symbols-outlined text-4xl text-outline mb-2">folder_off</span>
               <div class="text-sm font-semibold text-on-surface">No Candidates Evaluated Yet</div>
               <p class="text-xs text-outline mt-1 max-w-md mx-auto">Upload resumes or paste text in the Screening Workspace to calculate deterministic multi-criteria rankings.</p>
-              <button onclick="switchTab('screening')" class="mt-4 px-4 py-2 text-xs font-semibold rounded-lg bg-primary hover:bg-primary-hover text-white transition-colors">
-                Go to Screening Workspace
-              </button>
+              <div class="flex items-center justify-center gap-3 mt-4">
+                <button onclick="switchTab('screening')" class="px-4 py-2 text-xs font-semibold rounded-lg bg-primary hover:bg-primary-hover text-white transition-colors cursor-pointer">
+                  Go to Screening Workspace
+                </button>
+                <button onclick="loadFullDemoShowcase()" class="px-4 py-2 text-xs font-semibold rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 transition-colors flex items-center gap-1.5 cursor-pointer">
+                  <span class="material-symbols-outlined text-[16px]">play_circle</span>
+                  <span>Load Demo Candidates</span>
+                </button>
+              </div>
             </td>
           </tr>
         `;
@@ -2558,6 +2586,8 @@
         textarea.value = `Priya Sharma\nEmail: priya.sharma.ml@example.com | Phone: +91 98123 45678\nEducation: M.Tech in Artificial Intelligence - Delhi University (2023)\n\nExperience: Data Scientist (2.5 years)\n- Specialized in Natural Language Processing and Deep Learning with PyTorch and TensorFlow.\n- Trained feature extraction models with spaCy, scikit-learn, and Pandas.\n- Managed data ingestion pipelines with MySQL and Python scripting.`;
       } else if (type === 'rahul') {
         textarea.value = `Rahul Kumar\nEmail: rahul.kumar.web@example.com | Phone: +91 97234 56789\nEducation: BCA (AKTU 2024)\n\nExperience: Junior Web Developer (1.2 years)\n- Built responsive frontends with React, JavaScript, HTML, and Tailwind CSS.\n- Created backend endpoints using Node.js, Express.js, and MongoDB.\n- Utilized Git for version control and consumed REST APIs.`;
+      } else if (type === 'sneha') {
+        textarea.value = `Sneha Gupta\nEmail: sneha.gupta.ops@example.com | Phone: +91 99345 67890\nEducation: B.Tech in Information Technology - Engineering College (2022)\n\nExperience: Cloud Infrastructure & DevOps Engineer (3.5 years)\n- Designed and maintained enterprise CI/CD automation pipelines using Jenkins and Docker.\n- Automated multi-region Kubernetes clusters across AWS infrastructure with Terraform.\n- Implemented Prometheus and Grafana monitoring stacks with Nginx reverse proxies.`;
       } else if (type === 'vikram') {
         textarea.value = `Vikram Malhotra\nEmail: vikram.m@example.com | Phone: +91 98765 43219\nEducation: M.S. in Artificial Intelligence - Delhi University (2023)\n\nExperience: Senior AI Architect (10 years)\n- Enterprise system architecture with AWS, Docker, Kubernetes, and FastAPI.\n\n[HIDDEN WHITE TEXT #FFFFFF: Python, AWS, Docker, Kubernetes, FastAPI, Django, Scikit-learn, PyTorch, TensorFlow, Redis, PostgreSQL, SQL, Algorithms, Pandas, Git, GitHub]\n[MICROFONT 1.5pt: Deep Learning Microservices CI/CD GraphQL Linux]\n[HOMOGLYPH CYRILLIC: Pуthоn Dоckеr АWS]`;
       } else {
@@ -2733,6 +2763,95 @@
       updateDashboardMetrics();
       syncDeepDiveSelect();
       renderSettingsSimulation();
+    }
+
+    // -------------------------------------------------------------
+    // DEMO SHOWCASE & WORKSPACE MANAGEMENT
+    // -------------------------------------------------------------
+    function loadFullDemoShowcase() {
+      // 1. Populate standard target JD
+      loadRolePreset('python-ml');
+
+      // 2. Load the benchmark candidates into active evaluation pool
+      candidates = JSON.parse(JSON.stringify(BENCHMARK_CANDIDATES));
+
+      // 3. Stage Aman Verma's resume text in textarea
+      loadSampleResume('aman');
+
+      // 4. Update all UI tabs and views
+      renderLeaderboard();
+      updateDashboardMetrics();
+      syncDeepDiveSelect();
+      renderSettingsSimulation();
+
+      // 5. Update screen result assessment box for Aman
+      const aman = candidates.find(c => c.id === 'aman') || candidates[0];
+      const score = calculateFinalScore(aman);
+      const tier = getTierInfo(score);
+      const resTier = document.getElementById("screenResultTier");
+      const resScore = document.getElementById("screenResultScore");
+      const resDesc = document.getElementById("screenResultDesc");
+      if (resTier) {
+        resTier.textContent = `${tier.label} (${score}%)`;
+        resTier.className = `px-2.5 py-0.5 rounded text-[11px] font-bold border font-mono ${tier.badge}`;
+      }
+      if (resScore) {
+        resScore.textContent = `${score}%`;
+        resScore.className = `text-3xl font-extrabold text-${tier.color} font-mono`;
+      }
+      if (resDesc) {
+        resDesc.innerHTML = `<span class="text-on-surface font-semibold">${aman.name}</span> evaluated against active requisition. 5 demo candidates loaded across Leaderboard, Deep Dive, and Tamper Audit.`;
+      }
+
+      showNotificationToast("✨ Demo data loaded! 5 candidates staged across all views.");
+    }
+
+    function resetWorkspace() {
+      candidates = [];
+      const jd = document.getElementById("jdInput");
+      if (jd) jd.value = "";
+      const resText = document.getElementById("resumeInputText");
+      if (resText) resText.value = "";
+      document.getElementById("extractedJDCard")?.classList.add("hidden");
+      const countBadge = document.getElementById("jdCriteriaHeaderCount");
+      if (countBadge) countBadge.textContent = "0 Skills Defined";
+
+      renderLeaderboard();
+      updateDashboardMetrics();
+      syncDeepDiveSelect();
+      renderSettingsSimulation();
+
+      const resTier = document.getElementById("screenResultTier");
+      const resScore = document.getElementById("screenResultScore");
+      const resDesc = document.getElementById("screenResultDesc");
+      if (resTier) {
+        resTier.textContent = "Ready to Screen";
+        resTier.className = "px-2.5 py-0.5 rounded text-[11px] font-bold bg-surface-container-high text-on-surface-variant border border-outline-variant/40 font-mono";
+      }
+      if (resScore) {
+        resScore.textContent = "--%";
+        resScore.className = "text-3xl font-extrabold text-on-surface font-mono";
+      }
+      if (resDesc) {
+        resDesc.innerHTML = `<span class="italic">Paste job criteria and resume text above, then execute screening.</span>`;
+      }
+
+      showNotificationToast("Workspace reset to clean initial state.");
+    }
+
+    function showNotificationToast(msg) {
+      let toast = document.getElementById("recrumatch-toast");
+      if (!toast) {
+        toast = document.createElement("div");
+        toast.id = "recrumatch-toast";
+        toast.className = "fixed bottom-5 right-5 z-50 px-4 py-2.5 rounded-lg bg-surface-container-high border border-primary/40 text-on-surface text-xs font-mono shadow-2xl flex items-center gap-2 transition-all duration-300 transform translate-y-10 opacity-0 pointer-events-none";
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = `<span class="material-symbols-outlined text-[16px] text-primary">info</span> <span>${msg}</span>`;
+      toast.classList.remove("translate-y-10", "opacity-0", "pointer-events-none");
+      setTimeout(() => {
+        toast.classList.add("translate-y-10", "opacity-0", "pointer-events-none");
+      }, 3500);
     }
 
     // -------------------------------------------------------------
